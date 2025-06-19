@@ -1,8 +1,13 @@
 class World {
   character = new Character();
-  enemies = [new Chicken(), new Chicken(), new Chicken()];
+  enemies = [new Chicken(), new Chicken(), new Chicken(), new SmallChicken(), new SmallChicken(), new SmallChicken()];
   clouds = [new Clouds()];
-  backgroundObjects = [new BackgroundObjects('img/5_background/layers/1_first_layer/1.png')];
+  backgroundObjects = [
+    new BackgroundObjects('img/5_background/layers/air.png', 0),
+    new BackgroundObjects('img/5_background/layers/3_third_layer/1.png', 0),
+    new BackgroundObjects('img/5_background/layers/2_second_layer/1.png', 0),
+    new BackgroundObjects('img/5_background/layers/1_first_layer/1.png', 0),
+  ];
   canvas;
   ctx;
 
@@ -13,12 +18,13 @@ class World {
   }
 
   draw() {
+    // canvas wird gelöscht
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    // objects werden der welt hinzugefügt
+    this.addObjectsToMap(this.backgroundObjects);
     this.addToMap(this.character);
     this.addObjectsToMap(this.enemies);
     this.addObjectsToMap(this.clouds);
-    this.addObjectsToMap(this.backgroundObjects);
 
     let self = this;
     requestAnimationFrame(function () {
