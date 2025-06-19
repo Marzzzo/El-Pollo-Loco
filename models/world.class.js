@@ -1,7 +1,9 @@
 class World {
   character = new Character();
-  enemies = [new Chicken(), new Chicken(), new Chicken(), new SmallChicken(), new SmallChicken(), new SmallChicken()];
+  enemies = [new Chicken(), new Chicken(), new SmallChicken(), new SmallChicken()];
   clouds = [new Clouds()];
+  coins = [new Coins(), new Coins(), new Coins(), new Coins(), new Coins(), new Coins()];
+  bottles = [new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles()];
   backgroundObjects = [
     new BackgroundObjects('img/5_background/layers/air.png', 0),
     new BackgroundObjects('img/5_background/layers/3_third_layer/1.png', 0),
@@ -23,6 +25,8 @@ class World {
     // objects werden der welt hinzugefügt
     this.addObjectsToMap(this.backgroundObjects);
     this.addToMap(this.character);
+    this.addObjectsToMap(this.coins);
+    this.addObjectsToMap(this.bottles);
     this.addObjectsToMap(this.enemies);
     this.addObjectsToMap(this.clouds);
 
