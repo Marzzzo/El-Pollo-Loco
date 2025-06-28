@@ -2,7 +2,9 @@ class Character extends MoveableObjects {
   y = 150;
   x = 10;
   height = 280;
-  speed = 3;
+  speed = 2;
+  defaultSpeed = 2;
+  world;
 
   IMAGES_IDLE = [
     'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -26,8 +28,6 @@ class Character extends MoveableObjects {
     'img/2_character_pepe/2_walk/W-26.png',
   ];
 
-  world;
-
   constructor() {
     super();
     this.loadImage(this.IMAGES_WALKING[0]);
@@ -45,6 +45,11 @@ class Character extends MoveableObjects {
       if (this.world.keyboard.LEFT) {
         this.x -= this.speed;
         this.otherDirection = true;
+      }
+      if (this.world.keyboard.SHIFT) {
+        this.speed = this.defaultSpeed * 1.8;
+      } else {
+        this.speed = this.defaultSpeed;
       }
     }, 1000 / 60);
 
