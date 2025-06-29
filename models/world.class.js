@@ -4,15 +4,12 @@ class World {
   clouds = [new Clouds()];
   coins = [new Coins(), new Coins(), new Coins(), new Coins(), new Coins(), new Coins()];
   bottles = [new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles()];
-  backgroundObjects = [
-    new BackgroundObjects('img/5_background/layers/air.png', 0),
-    new BackgroundObjects('img/5_background/layers/3_third_layer/1.png', 0),
-    new BackgroundObjects('img/5_background/layers/2_second_layer/1.png', 0),
-    new BackgroundObjects('img/5_background/layers/1_first_layer/1.png', 0),
-  ];
+  backgroundObjects = [];
+
   canvas;
   ctx;
   keyboard;
+  camera_x = -100;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext('2d');
@@ -20,6 +17,30 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+    this.createBackgroundImages();
+  }
+
+  createBackgroundImages() {
+    const firstSet = [
+      'img/5_background/layers/air.png',
+      'img/5_background/layers/3_third_layer/1.png',
+      'img/5_background/layers/2_second_layer/1.png',
+      'img/5_background/layers/1_first_layer/1.png',
+    ];
+    const secondSet = [
+      'img/5_background/layers/air.png',
+      'img/5_background/layers/3_third_layer/2.png',
+      'img/5_background/layers/2_second_layer/2.png',
+      'img/5_background/layers/1_first_layer/2.png',
+    ];
+    const sets = [firstSet, secondSet]; // abwechselnd verwenden
+    for (let i = 0; i < 6; i++) {
+      const set = sets[i % 2]; // wechsle zwischen erstem und zweitem Set
+      const offsetX = i * 719;
+      for (let path of set) {
+        this.backgroundObjects.push(new BackgroundObjects(path, offsetX));
+      }
+    }
   }
 
   setWorld() {
@@ -30,12 +51,14 @@ class World {
     // canvas wird gelöscht
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
     // objects werden der welt hinzugefügt
+    this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.backgroundObjects);
     this.addToMap(this.character);
     this.addObjectsToMap(this.coins);
     this.addObjectsToMap(this.bottles);
     this.addObjectsToMap(this.enemies);
     this.addObjectsToMap(this.clouds);
+    this.ctx.translate(-this.camera_x, 0);
 
     let self = this;
     requestAnimationFrame(function () {

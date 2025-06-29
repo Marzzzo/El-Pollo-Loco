@@ -2,8 +2,8 @@ class Character extends MoveableObjects {
   y = 150;
   x = 10;
   height = 280;
-  speed = 2;
-  defaultSpeed = 2;
+  speed = 3;
+
   world;
 
   IMAGES_IDLE = [
@@ -46,11 +46,8 @@ class Character extends MoveableObjects {
         this.x -= this.speed;
         this.otherDirection = true;
       }
-      if (this.world.keyboard.SHIFT) {
-        this.speed = this.defaultSpeed * 1.8;
-      } else {
-        this.speed = this.defaultSpeed;
-      }
+
+      this.world.camera_x = -this.x;
     }, 1000 / 60);
 
     setInterval(() => {
