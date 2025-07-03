@@ -1,10 +1,10 @@
 class World {
   character = new Character();
-  enemies = [new Chicken(), new Chicken(), new SmallChicken(), new SmallChicken()];
-  clouds = [new Clouds()];
-  coins = [new Coins(), new Coins(), new Coins(), new Coins(), new Coins(), new Coins()];
-  bottles = [new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles(), new Bottles()];
-  backgroundObjects = [];
+  enemies = level1.enemies;
+  clouds = level1.clouds;
+  coins = level1.coins;
+  bottles = level1.bottles;
+  backgroundObjects = level1.backgroundObjects;
 
   canvas;
   ctx;
@@ -17,30 +17,6 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
-    this.createBackgroundImages();
-  }
-
-  createBackgroundImages() {
-    const firstSet = [
-      'img/5_background/layers/air.png',
-      'img/5_background/layers/3_third_layer/1.png',
-      'img/5_background/layers/2_second_layer/1.png',
-      'img/5_background/layers/1_first_layer/1.png',
-    ];
-    const secondSet = [
-      'img/5_background/layers/air.png',
-      'img/5_background/layers/3_third_layer/2.png',
-      'img/5_background/layers/2_second_layer/2.png',
-      'img/5_background/layers/1_first_layer/2.png',
-    ];
-    const sets = [firstSet, secondSet]; // abwechselnd verwenden
-    for (let i = 0; i < 6; i++) {
-      const set = sets[i % 2]; // wechsle zwischen erstem und zweitem Set
-      const offsetX = i * 719;
-      for (let path of set) {
-        this.backgroundObjects.push(new BackgroundObjects(path, offsetX));
-      }
-    }
   }
 
   setWorld() {
