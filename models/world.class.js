@@ -1,10 +1,6 @@
 class World {
   character = new Character();
-  enemies = level1.enemies;
-  clouds = level1.clouds;
-  coins = level1.coins;
-  bottles = level1.bottles;
-  backgroundObjects = level1.backgroundObjects;
+  level = level1;
 
   canvas;
   ctx;
@@ -28,12 +24,12 @@ class World {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
     // objects werden der welt hinzugefügt
     this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.backgroundObjects);
+    this.addObjectsToMap(this.level.backgroundObjects);
     this.addToMap(this.character);
-    this.addObjectsToMap(this.coins);
-    this.addObjectsToMap(this.bottles);
-    this.addObjectsToMap(this.enemies);
-    this.addObjectsToMap(this.clouds);
+    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.clouds);
     this.ctx.translate(-this.camera_x, 0);
 
     let self = this;

@@ -2,7 +2,7 @@ class Character extends MoveableObjects {
   y = 150;
   x = 10;
   height = 280;
-  speed = 3;
+  speed = 6;
 
   world;
 
@@ -38,16 +38,17 @@ class Character extends MoveableObjects {
 
   animate() {
     setInterval(() => {
-      if (this.world.keyboard.Right) {
+      if (this.world.keyboard.Right && this.x < this.world.level.level_end_x) {
         this.x += this.speed;
         this.otherDirection = false;
       }
-      if (this.world.keyboard.LEFT) {
+
+      if (this.world.keyboard.LEFT && this.x > -650) {
         this.x -= this.speed;
         this.otherDirection = true;
       }
 
-      this.world.camera_x = -this.x;
+      this.world.camera_x = -this.x + 50;
     }, 1000 / 60);
 
     setInterval(() => {
@@ -57,7 +58,7 @@ class Character extends MoveableObjects {
         this.img = this.imageCache[path];
         this.currentImage++;
       }
-    }, 100);
+    }, 50);
   }
   jump() {}
 }
