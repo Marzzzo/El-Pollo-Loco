@@ -1,5 +1,5 @@
 class Character extends MoveableObjects {
-  y = 150;
+  y = 20;
   x = 10;
   height = 280;
   speed = 6;
@@ -33,6 +33,7 @@ class Character extends MoveableObjects {
     this.loadImage(this.IMAGES_WALKING[0]);
     // this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_WALKING);
+    this.applyGravity();
     this.animate();
   }
 
