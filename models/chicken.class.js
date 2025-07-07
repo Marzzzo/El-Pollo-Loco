@@ -20,7 +20,7 @@ class Chicken extends MoveableObjects {
   }
   animate() {
     setInterval(() => {
-      this.playAnimation(this.IMAGES_WALKING);
-    }, 150);
+      this.playAnimationEnemies(this.IMAGES_WALKING);
+    }, 200);
   }
 }
