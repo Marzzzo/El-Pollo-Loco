@@ -1,1 +1,1 @@
-fixed collisionfield with Offsetpoints
+fixed collisionfield for coins and bottles

@@ -3,6 +3,13 @@ class Bottles extends MoveableObjects {
   height = 70;
   width = 60;
 
+  offset = {
+    top: 60,
+    bottom: 115,
+    left: 30,
+    right: 50,
+  };
+
   IMAGES_BOTTLES = ['img/6_salsa_bottle/1_salsa_bottle_on_ground.png', 'img/6_salsa_bottle/2_salsa_bottle_on_ground.png'];
 
   constructor() {

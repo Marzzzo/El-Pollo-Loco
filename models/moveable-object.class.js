@@ -12,10 +12,10 @@ class MoveableObjects {
   acceleration = 2.5;
 
   offset = {
-    top: 10,
+    top: 7,
     bottom: 20,
-    left: 5,
-    right: 10,
+    left: 2,
+    right: 6,
   };
 
   applyGravity() {
