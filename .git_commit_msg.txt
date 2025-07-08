@@ -1,1 +1,1 @@
-get drawframe for collision
+fixed collisionfield with Offsetpoints

@@ -4,6 +4,13 @@ class Character extends MoveableObjects {
   height = 280;
   speed = 6;
 
+  offset = {
+    top: 120,
+    bottom: 135,
+    left: 20,
+    right: 50,
+  };
+
   world;
 
   IMAGES_IDLE = [
