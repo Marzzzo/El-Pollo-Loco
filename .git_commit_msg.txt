@@ -1,1 +1,1 @@
-update Character.js 
+get drawframe for collision

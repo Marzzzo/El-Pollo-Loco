@@ -77,7 +77,6 @@ class Character extends MoveableObjects {
       }
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
-        this.playAnimation(this.IMAGES_JUMPING);
       }
 
       this.cameraTracking();
@@ -86,6 +85,12 @@ class Character extends MoveableObjects {
     setInterval(() => {
       if (this.world.keyboard.Right || this.world.keyboard.LEFT) {
         this.playAnimation(this.IMAGES_WALKING);
+      }
+    }, 80);
+
+    setInterval(() => {
+      if (this.world.keyboard.SPACE) {
+        this.playAnimation(this.IMAGES_JUMPING);
       }
     }, 80);
   }

@@ -19,5 +19,4 @@ if "%~1"=="" (
 :commit
 git add .
 git commit -F "%msgFile%"
-del "%msgFile%"
 git push

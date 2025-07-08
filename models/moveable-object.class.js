@@ -10,7 +10,7 @@ class MoveableObjects {
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
-  isJumping = false;
+
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
@@ -27,6 +27,27 @@ class MoveableObjects {
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
+  }
+
+  draw(ctx) {
+    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  }
+
+  drawFrame(ctx) {
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof SmallChicken ||
+      this instanceof Endboss ||
+      this instanceof Bottles ||
+      this instanceof Coins
+    ) {
+      ctx.beginPath();
+      ctx.lineWidth = '1';
+      ctx.strokeStyle = 'red';
+      ctx.rect(this.x, this.y, this.width, this.height);
+      ctx.stroke();
+    }
   }
 
   loadImages(arr) {
@@ -50,7 +71,6 @@ class MoveableObjects {
 
   moveLeft() {
     this.x -= this.speed;
-    this.isJumping = true;
   }
 
   jump() {

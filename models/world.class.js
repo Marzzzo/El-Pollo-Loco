@@ -38,23 +38,34 @@ class World {
     });
   }
 
-  addToMap(mo) {
-    if (mo.otherDirection) {
-      this.ctx.save();
-      this.ctx.translate(mo.width, 0);
-      this.ctx.scale(-1, 1);
-      mo.x = mo.x * -1;
-    }
-    this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
-    if (mo.otherDirection) {
-      this.ctx.restore();
-      mo.x = mo.x * -1;
-    }
-  }
-
   addObjectsToMap(objects) {
     objects.forEach((objects) => {
       this.addToMap(objects);
     });
+  }
+
+  addToMap(mo) {
+    if (mo.otherDirection) {
+      this.flipImage(mo);
+    }
+
+    mo.draw(this.ctx);
+    mo.drawFrame(this.ctx);
+
+    if (mo.otherDirection) {
+      this.flipImageBack(mo);
+    }
+  }
+
+  flipImage(mo) {
+    this.ctx.save();
+    this.ctx.translate(mo.width, 0);
+    this.ctx.scale(-1, 1);
+    mo.x = mo.x * -1;
+  }
+
+  flipImageBack(mo) {
+    this.ctx.restore();
+    mo.x = mo.x * -1;
   }
 }
