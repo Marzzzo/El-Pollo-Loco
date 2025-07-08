@@ -17,13 +17,17 @@ class SmallChicken extends MoveableObjects {
     this.loadImages(this.IMAGES_WALKING);
     this.x = 200 + Math.random(200) * 1000;
     this.speed = 0.15 + Math.random() * 0.25;
-    this.animate();
     this.moveLeft();
+    this.animate();
   }
 
   animate() {
     setInterval(() => {
-      this.playAnimationEnemies(this.IMAGES_WALKING);
+      this.x -= this.speed;
+    }, 1000 / 60);
+
+    setInterval(() => {
+      this.playAnimation(this.IMAGES_WALKING);
     }, 200);
   }
 }

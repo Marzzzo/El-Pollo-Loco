@@ -1,1 +1,1 @@
-added Character jump,idle,longidle Animation
+update Character.js 

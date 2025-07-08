@@ -10,7 +10,7 @@ class MoveableObjects {
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
-
+  isJumping = false;
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
@@ -37,22 +37,7 @@ class MoveableObjects {
     });
   }
 
-  playAnimationCharacter(images, delay) {
-    if (this.currentImages !== images) {
-      this.currentImages = images;
-      this.currentImageIndex = 0;
-      this.lastFrameTime = 0;
-    }
-    const now = Date.now();
-    if (now - this.lastFrameTime > delay) {
-      const i = this.currentImageIndex % images.length;
-      this.img = this.imageCache[images[i]];
-      this.currentImageIndex++;
-      this.lastFrameTime = now;
-    }
-  }
-
-  playAnimationEnemies(images) {
+  playAnimation(images) {
     let i = this.currentImage % this.IMAGES_WALKING.length;
     let path = images[i];
     this.img = this.imageCache[path];
@@ -60,12 +45,19 @@ class MoveableObjects {
   }
 
   moveRight() {
-    console.log('Moving Right');
+    this.x += this.speed;
   }
 
   moveLeft() {
-    setInterval(() => {
-      this.x -= this.speed;
-    }, 1000 / 60);
+    this.x -= this.speed;
+    this.isJumping = true;
+  }
+
+  jump() {
+    this.speedY = 30;
+  }
+
+  cameraTracking() {
+    this.world.camera_x = -this.x + 50;
   }
 }

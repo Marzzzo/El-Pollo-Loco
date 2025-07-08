@@ -3,8 +3,6 @@ class Character extends MoveableObjects {
   x = 10;
   height = 280;
   speed = 6;
-  lastActivityTime = Date.now();
-  inLongIdle = false;
 
   world;
 
@@ -68,47 +66,27 @@ class Character extends MoveableObjects {
 
   animate() {
     setInterval(() => {
-      if (this.world.keyboard.Right || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-        this.lastActivityTime = Date.now();
-      }
-    }, 50);
-
-    setInterval(() => {
       if (this.world.keyboard.Right && this.x < this.world.level.level_end_x) {
-        this.x += this.speed;
         this.otherDirection = false;
+        this.moveRight();
       }
 
       if (this.world.keyboard.LEFT && this.x > -650) {
-        this.x -= this.speed;
         this.otherDirection = true;
+        this.moveLeft();
+      }
+      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+        this.jump();
+        this.playAnimation(this.IMAGES_JUMPING);
       }
 
-      this.world.camera_x = -this.x + 50;
+      this.cameraTracking();
     }, 1000 / 60);
 
     setInterval(() => {
-      const now = Date.now();
-      const inactiveTime = now - this.lastActivityTime;
-
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.speedY = 25;
-        this.lastActivityTime = Date.now();
-        this.inLongIdle = false;
+      if (this.world.keyboard.Right || this.world.keyboard.LEFT) {
+        this.playAnimation(this.IMAGES_WALKING);
       }
-
-      if (this.isAboveGround()) {
-        this.playAnimationCharacter(this.IMAGES_JUMPING, 50);
-      } else if (this.world.keyboard.Right || this.world.keyboard.LEFT) {
-        this.playAnimationCharacter(this.IMAGES_WALKING, 80);
-      } else if (inactiveTime < 4000) {
-        this.inLongIdle = false;
-        this.playAnimationCharacter(this.IMAGES_IDLE, 300);
-      } else {
-        this.inLongIdle = true;
-        this.playAnimationCharacter(this.IMAGES_LONGIDLE, 300);
-      }
-    }, 50);
+    }, 80);
   }
-  jump() {}
 }
