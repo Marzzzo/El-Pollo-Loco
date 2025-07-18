@@ -1,4 +1,4 @@
-class SmallChicken extends MoveableObjects {
+class SmallChicken extends MoveableObject {
   y = 380;
   height = 50;
   width = 50;

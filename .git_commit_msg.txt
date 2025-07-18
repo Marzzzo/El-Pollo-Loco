@@ -1,4 +1,9 @@
-added hurt and dead Images.
+fixed MoveableObjects to MoveableObject.
 
-when hit goes Energy down and Show Images for hit.
-Is the Energy = 0 , Show the dead Images.
+added DrawableObject class.
+
+move to DrawableObject:
+
+-loadImage()
+-draw()
+-loadImages()

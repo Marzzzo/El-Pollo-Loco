@@ -1,4 +1,4 @@
-class Coins extends MoveableObjects {
+class Coins extends MoveableObject {
   IMAGES_COINS = ['img/8_coin/coin_1.png', 'img/8_coin/coin_2.png'];
 
   offset = {

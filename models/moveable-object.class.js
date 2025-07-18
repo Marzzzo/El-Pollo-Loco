@@ -1,11 +1,4 @@
-class MoveableObjects {
-  x = 0;
-  y = 250;
-  img;
-  height = 150;
-  width = 100;
-  imageCache = {};
-  currentImage = 0;
+class MoveableObject extends DrawableObject {
   speed = 0.15;
   otherDirection = false;
   speedY = 0;
@@ -31,15 +24,6 @@ class MoveableObjects {
 
   isAboveGround() {
     return this.y < 150;
-  }
-
-  loadImage(path) {
-    this.img = new Image();
-    this.img.src = path;
-  }
-
-  draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
   drawFrame(ctx) {
@@ -90,14 +74,6 @@ class MoveableObjects {
       this.x < mo.x &&
       this.y < mo.y + mo.height
     );
-  }
-
-  loadImages(arr) {
-    arr.forEach((path) => {
-      let img = new Image();
-      img.src = path;
-      this.imageCache[path] = img;
-    });
   }
 
   playAnimation(images) {
