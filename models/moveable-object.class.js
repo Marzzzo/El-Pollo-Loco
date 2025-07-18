@@ -26,30 +26,8 @@ class MoveableObject extends DrawableObject {
     return this.y < 150;
   }
 
-  drawFrame(ctx) {
-    if (
-      this instanceof Character ||
-      this instanceof Chicken ||
-      this instanceof SmallChicken ||
-      this instanceof Endboss ||
-      this instanceof Bottles ||
-      this instanceof Coins
-    ) {
-      ctx.beginPath();
-      ctx.lineWidth = '1';
-      ctx.strokeStyle = 'red';
-      ctx.rect(
-        this.x + this.offset.left,
-        this.y + this.offset.top,
-        this.width - this.offset.right,
-        this.height - this.offset.bottom
-      );
-      ctx.stroke();
-    }
-  }
-
   hit() {
-    this.energy -= 2;
+    this.energy -= 5;
     if (this.energy < 0) {
       this.energy = 0;
     } else {
