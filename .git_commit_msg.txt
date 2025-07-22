@@ -1,1 +1,1 @@
-status bar added and when enemies touch you, you lose Energy.
+jump animation adjusted and idle animation added.

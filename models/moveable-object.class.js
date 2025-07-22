@@ -26,6 +26,10 @@ class MoveableObject extends DrawableObject {
     return this.y < 150;
   }
 
+  isOnGround() {
+    return this.y;
+  }
+
   hit() {
     this.energy -= 5;
     if (this.energy < 0) {
