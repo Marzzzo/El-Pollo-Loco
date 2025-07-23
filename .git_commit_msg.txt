@@ -1,1 +1,1 @@
-jump animation adjusted and idle animation added.
+added statusbar from Endboss.
