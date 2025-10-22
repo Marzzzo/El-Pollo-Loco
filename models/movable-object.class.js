@@ -1,7 +1,15 @@
 class MovableObject {
-  position_x = 120;
-  position_y = 400;
+  x = 120;
+  y = 400;
+  height = 150;
+  width = 100;
   img;
+
+  // Erstellt ein neues bild
+  loadImage(path) {
+    this.img = new Image();
+    this.img.src = path;
+  }
 
   moveRight() {
     // nach rechts bewegen
