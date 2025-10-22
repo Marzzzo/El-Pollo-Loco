@@ -1,0 +1,1 @@
+class Chick extends MovableObject {}

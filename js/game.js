@@ -1,10 +1,13 @@
+// Variablen
 let canvas;
-let ctx;
-let character = new Image();
+let ctx; // ctx in der Regel für "Context" und wird meist als Variablenname für das CanvasRenderingContext2D verwendet.
+let world = new World(); // Variable für eine neue welt.
 
+// Ruft diese function über onload auf, wenn html geladen ist.
 function init() {
-  canvas = document.getElementById('canvas');
-  ctx = canvas.getContext('2d');
-  character.src = '../img/2_character_pepe/1_idle/idle/I-1.png';
-  ctx.drawImage(character, 20, 20, 50, 150);
+  canvas = document.getElementById('canvas'); // greift auf das canvas über die ID zu.
+  ctx = canvas.getContext('2d'); // CanvasRenderingContext2D.
+
+  console.log('Mein Character ist', world.character);
+  console.log('Meine Enemies sind', world.enemies);
 }
