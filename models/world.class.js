@@ -13,19 +13,19 @@ class World {
     this.ctx = canvas.getContext('2d'); // CanvasRenderingContext2D (das man auf dem canvas zeichnen kann).
     this.canvas = canvas;
     // Hier werden die klassen und der Count übergeben.
-    this.addSingleEnemies(Chicken, this.chickenCount);
-    this.addSingleEnemies(Chick, this.chickCount);
+    this.addSingleEnemy(Chicken, this.chickenCount);
+    this.addSingleEnemy(Chick, this.chickCount);
     this.draw();
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
-  addSingleEnemies(classEnemy, count) {
+  addSingleEnemy(classEnemy, count) {
     for (let i = 0; i < count; i++) this.enemies.push(new classEnemy());
   }
 
   // Zeichnet Objekte
   draw() {
-    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // character
     this.ctx.drawImage(this.character.img, this.character.x, this.character.y, this.character.width, this.character.height);
     // endboss
