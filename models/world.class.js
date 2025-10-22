@@ -6,10 +6,12 @@ class World {
   endboss = new Endboss();
   enemies = [];
 
+  canvas;
   ctx;
 
   constructor(canvas) {
     this.ctx = canvas.getContext('2d'); // CanvasRenderingContext2D (das man auf dem canvas zeichnen kann).
+    this.canvas = canvas;
     // Hier werden die klassen und der Count übergeben.
     this.addSingleEnemies(Chicken, this.chickenCount);
     this.addSingleEnemies(Chick, this.chickCount);
@@ -23,6 +25,7 @@ class World {
 
   // Zeichnet Objekte
   draw() {
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
     // character
     this.ctx.drawImage(this.character.img, this.character.x, this.character.y, this.character.width, this.character.height);
     // endboss
@@ -30,6 +33,12 @@ class World {
     // Geht mit einer Schleife durch den Array enemies und Zeichnet diese.
     this.enemies.forEach((enemy) => {
       this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+    });
+
+    // Draw() wird immer wieder aufgerufen.
+    let self = this;
+    requestAnimationFrame(function () {
+      self.draw();
     });
   }
 }
