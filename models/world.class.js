@@ -1,10 +1,11 @@
 class World {
-  chickenCount = 4;
-  chickCount = 4;
+  chickenCount = 2;
+  chickCount = 2;
 
   character = new Character();
   endboss = new Endboss();
   enemies = [];
+  cloud = new Cloud();
 
   canvas;
   ctx;
@@ -34,6 +35,8 @@ class World {
     this.enemies.forEach((enemy) => {
       this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
     });
+    // Clouds
+    this.ctx.drawImage(this.cloud.img, this.cloud.x, this.cloud.y, this.cloud.width, this.cloud.height);
 
     // Draw() wird immer wieder aufgerufen.
     let self = this;
