@@ -1,11 +1,25 @@
 class World {
-  chickenCount = 2;
-  chickCount = 2;
+  chickenCount = 1;
+  chickCount = 1;
+  showEndboss = true;
 
   character = new Character();
   endboss = new Endboss();
   enemies = [];
-  cloud = new Cloud();
+
+  backgroundObjects = [
+    new BackgroundObject('img/5_background/layers/air.png', 0),
+    new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 0),
+    new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 0),
+    new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 0),
+  ];
+
+  clouds = [
+    new Cloud('img/5_background/layers/4_clouds/1.png', 0),
+    new Cloud('img/5_background/layers/4_clouds/2.png', 750),
+    new Cloud('img/5_background/layers/4_clouds/1.png', 750 * 2),
+    new Cloud('img/5_background/layers/4_clouds/2.png', 750 * 3),
+  ];
 
   canvas;
   ctx;
@@ -26,22 +40,41 @@ class World {
 
   // Zeichnet Objekte
   draw() {
+    // cleared baum aufrufen das canvas.(Wenn man z.b den character bewegt, dass die alte position gelöscht wird).
+    // Sonst werden neue bilder gezeichnet und das alte bleibt.
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // character
-    this.ctx.drawImage(this.character.img, this.character.x, this.character.y, this.character.width, this.character.height);
-    // endboss
-    this.ctx.drawImage(this.endboss.img, this.endboss.x, this.endboss.y, this.endboss.width, this.endboss.height);
-    // Geht mit einer Schleife durch den Array enemies und Zeichnet diese.
-    this.enemies.forEach((enemy) => {
-      this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
-    });
-    // Clouds
-    this.ctx.drawImage(this.cloud.img, this.cloud.x, this.cloud.y, this.cloud.width, this.cloud.height);
+    this.addObjectsToMap(this.backgroundObjects);
+    this.addToMap(this.character);
+
+    // if abfrage wieder löschen
+    if (this.showEndboss) {
+      this.addToMap(this.endboss);
+    }
+
+    // Mehrere Objekte (clouds, enemies, background)
+    this.addObjectsToMap(this.clouds);
+    this.addObjectsToMap(this.enemies);
 
     // Draw() wird immer wieder aufgerufen.
+    this.animationFrame();
+  }
+
+  animationFrame() {
     let self = this;
     requestAnimationFrame(function () {
       self.draw();
+    });
+  }
+
+  // Das Argument was hier übergeben wird, ist aus den Klammern von draw()z.b  "this.addObjectsToMap(this.character)";
+  addToMap(movableObjects) {
+    this.ctx.drawImage(movableObjects.img, movableObjects.x, movableObjects.y, movableObjects.width, movableObjects.height);
+  }
+
+  // Geht durch die Objecte und Zeichnet diese. Z.b wo mehrere objecte in einem array sind.
+  addObjectsToMap(objects) {
+    objects.forEach((object) => {
+      this.addToMap(object);
     });
   }
 }
