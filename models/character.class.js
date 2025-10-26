@@ -78,7 +78,7 @@ class Character extends MovableObject {
     if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
     if (this.world.keyboard.RIGHT) this.moveRight(); // bewegt nach rechts
     if (this.world.keyboard.LEFT) this.moveLeft(); // bewegt nach links
-    this.world.camera_x = -this.x; // aktualisiert die Kameraposition basierend auf der Charakterposition
+    this.world.camera_x = -this.x + 80; // aktualisiert die Kameraposition basierend auf der Charakterposition
   }
 
   moveRight() {
