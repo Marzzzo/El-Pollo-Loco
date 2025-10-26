@@ -3,9 +3,10 @@ class MovableObject {
   y = 400;
   height = 100;
   width = 80;
-  // akutelles Bild
-  img;
+  speed = 0.15;
   imageCache = {};
+  currentImage = 0;
+  otherDirection = false;
 
   // Erstellt ein neues bild
   loadImage(path) {
@@ -27,6 +28,8 @@ class MovableObject {
   }
 
   moveLeft() {
-    // nach links bewegen
+    setInterval(() => {
+      this.x -= this.speed;
+    }, 1000 / 60);
   }
 }

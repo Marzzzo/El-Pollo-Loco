@@ -24,15 +24,22 @@ class World {
   ];
 
   canvas;
-  ctx;
+  ctx; // ctx in der Regel für "Context" und wird meist als Variablenname für das CanvasRenderingContext2D verwendet.
+  keyboard;
 
-  constructor(canvas) {
+  constructor(canvas, keyboard) {
     this.ctx = canvas.getContext('2d'); // CanvasRenderingContext2D (das man auf dem canvas zeichnen kann).
     this.canvas = canvas;
+    this.keyboard = keyboard;
     // Hier werden die klassen und der Count übergeben.
     this.addSingleEnemy(Chicken, this.chickenCount);
     this.addSingleEnemy(Chick, this.chickCount);
     this.draw();
+    this.setWorld();
+  }
+
+  setWorld() {
+    this.character.world = this;
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
@@ -68,15 +75,35 @@ class World {
     });
   }
 
-  // Das Argument was hier übergeben wird, ist aus den Klammern von draw()z.b  "this.addObjectsToMap(this.character)";
-  addToMap(movableObjects) {
-    this.ctx.drawImage(movableObjects.img, movableObjects.x, movableObjects.y, movableObjects.width, movableObjects.height);
-  }
-
   // Geht durch die Objecte und Zeichnet diese. Z.b wo mehrere objecte in einem array sind.
   addObjectsToMap(objects) {
     objects.forEach((object) => {
       this.addToMap(object);
     });
+  }
+
+  // Das Argument was hier übergeben wird, ist aus den Klammern von draw()z.b  "this.addObjectsToMap(this.character)";
+  addToMap(movableObjects) {
+    if (movableObjects.otherDirection) {
+      this.mirrorImgLeft(movableObjects);
+    }
+    this.ctx.drawImage(movableObjects.img, movableObjects.x, movableObjects.y, movableObjects.width, movableObjects.height);
+    if (movableObjects.otherDirection) {
+      this.mirrorImgRight(movableObjects);
+    }
+  }
+
+  // Spiegelt das Bild wenn man nach links läuft.
+  mirrorImgLeft(movableObjects) {
+    this.ctx.save();
+    this.ctx.translate(movableObjects.width, 0);
+    this.ctx.scale(-1, 1);
+    movableObjects.x = movableObjects.x * -1;
+  }
+
+  // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
+  mirrorImgRight(movableObjects) {
+    movableObjects.x = movableObjects.x * -1;
+    this.ctx.restore();
   }
 }
