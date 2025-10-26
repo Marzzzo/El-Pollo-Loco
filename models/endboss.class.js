@@ -23,7 +23,7 @@ class Endboss extends MovableObject {
   }
 
   animate() {
-    this.alertAnimation(300);
+    this.alertAnimation(600);
   }
 
   alertAnimation(frameRate) {

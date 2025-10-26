@@ -2,7 +2,7 @@ class Character extends MovableObject {
   x = 80;
   y = 230;
   height = 250;
-  speed = 3;
+  speed = 10;
 
   walkingImages = [
     'img/2_character_pepe/2_walk/W-21.png',
@@ -26,46 +26,70 @@ class Character extends MovableObject {
     'img/2_character_pepe/1_idle/idle/I-10.png',
   ];
 
+  jumpImages = [
+    'img/2_character_pepe/3_jump/J-31.png',
+    'img/2_character_pepe/3_jump/J-32.png',
+    'img/2_character_pepe/3_jump/J-33.png',
+    'img/2_character_pepe/3_jump/J-34.png',
+    'img/2_character_pepe/3_jump/J-35.png',
+    'img/2_character_pepe/3_jump/J-36.png',
+    'img/2_character_pepe/3_jump/J-37.png',
+    'img/2_character_pepe/3_jump/J-38.png',
+    'img/2_character_pepe/3_jump/J-39.png',
+  ];
+
   world;
 
   constructor() {
     super();
-    this.loadImage(this.walkingImages[0]);
-    this.loadImages(this.walkingImages);
-    this.animate();
+    this.loadImage(this.walkingImages[0]); // lädt das erste Bild als Startbild
+    this.loadImages(this.walkingImages); // lädt alle Bilder für die Animation
   }
 
   animate() {
-    this.walkingAnimation(100);
+    this.walkingAnimation(100); // startet die Geh-Animation mit einer Bildrate von 100ms
   }
 
   walkingAnimation(frameRate) {
-    setInterval(() => {
-      if (this.world.keyboard.RIGHT) this.moveRight();
-
-      if (this.world.keyboard.LEFT) this.moveLeft();
+    this.clearIntervals(); // löscht die intervals, um Doppelungen zu vermeiden.
+    this.movementInterval = setInterval(() => {
+      this.moveCharacter(); // bewegt die Figur basierend auf Tastatureingaben
     }, 1000 / 60);
 
     this.currentImage = 0;
 
-    setInterval(() => {
+    this.frameInterval = setInterval(() => {
+      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
       if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        let i = this.currentImage % this.walkingImages.length;
-        let path = this.walkingImages[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+        let i = this.currentImage % this.walkingImages.length; // sorgt dafür, dass die Bilder von vorne beginnen wenn das Ende erreicht ist.
+        let path = this.walkingImages[i]; // Pfad des aktuellen Bildes
+        this.img = this.imageCache[path]; // setzt das Bild des Charakters
+        this.currentImage++; // nächstes Bild
       }
     }, frameRate);
   }
 
+  clearIntervals() {
+    if (this.movementInterval) clearInterval(this.movementInterval); // löscht das Bewegungsintervall
+    if (this.frameInterval) clearInterval(this.frameInterval); // löscht das Frameintervall
+  }
+
+  moveCharacter() {
+    if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+    if (this.world.keyboard.RIGHT) this.moveRight(); // bewegt nach rechts
+    if (this.world.keyboard.LEFT) this.moveLeft(); // bewegt nach links
+    this.world.camera_x = -this.x; // aktualisiert die Kameraposition basierend auf der Charakterposition
+  }
+
   moveRight() {
-    this.x += this.speed;
-    this.otherDirection = false;
+    this.x += this.speed; // bewegt den Charakter nach rechts
+    this.otherDirection = false; // setzt die Richtung auf rechts
   }
 
   moveLeft() {
-    this.x -= this.speed;
-    this.otherDirection = true;
+    if (this.world.camera_x >= -3 && this.x <= 3) return; // verhindert, dass der Charakter über den linken Rand hinausgeht
+    this.x -= this.speed; // bewegt den Charakter nach links
+    this.otherDirection = true; // setzt die Richtung auf links
   }
 
   jump() {
