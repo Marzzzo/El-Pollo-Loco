@@ -5,46 +5,14 @@ class World {
 
   character = new Character();
   endboss = new Endboss();
-  enemies = [];
+  enemies = level1.enemies; // Array mit mehreren Enemys
+  backgroundObjects = level1.backgroundObjects; // Array mit mehreren BackgroundObjects
+  clouds = level1.clouds; // Array mit mehreren Clouds
 
   canvas;
   ctx; // ctx in der Regel für "Context" und wird meist als Variablenname für das CanvasRenderingContext2D verwendet.
   keyboard;
   camera_x = 0; // Kamera start position
-
-  backgroundObjects = [
-    new BackgroundObject('img/5_background/layers/air.png', -960),
-    new BackgroundObject('img/5_background/layers/3_third_layer/2.png', -960),
-    new BackgroundObject('img/5_background/layers/2_second_layer/2.png', -960),
-    new BackgroundObject('img/5_background/layers/1_first_layer/2.png', -960),
-    new BackgroundObject('img/5_background/layers/air.png', 0),
-    new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 0),
-    new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 0),
-    new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 0),
-    new BackgroundObject('img/5_background/layers/air.png', 960),
-    new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 960),
-    new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 960),
-    new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 960),
-    new BackgroundObject('img/5_background/layers/air.png', 960 * 2),
-    new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 960 * 2),
-    new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 960 * 2),
-    new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 960 * 2),
-    new BackgroundObject('img/5_background/layers/air.png', 960 * 3),
-    new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 960 * 3),
-    new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 960 * 3),
-    new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 960 * 3),
-  ];
-
-  clouds = [
-    new Cloud('img/5_background/layers/4_clouds/1.png', 0),
-    new Cloud('img/5_background/layers/4_clouds/2.png', 750),
-    new Cloud('img/5_background/layers/4_clouds/1.png', 750 * 2),
-    new Cloud('img/5_background/layers/4_clouds/2.png', 750 * 3),
-    new Cloud('img/5_background/layers/4_clouds/1.png', 750 * 4),
-    new Cloud('img/5_background/layers/4_clouds/2.png', 750 * 5),
-    new Cloud('img/5_background/layers/4_clouds/1.png', 750 * 6),
-    new Cloud('img/5_background/layers/4_clouds/2.png', 750 * 7),
-  ];
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext('2d'); // CanvasRenderingContext2D (das man auf dem canvas zeichnen kann).
