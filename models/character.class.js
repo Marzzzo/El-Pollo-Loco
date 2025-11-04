@@ -2,7 +2,7 @@ class Character extends MovableObject {
   x = 80;
   y = 230;
   height = 250;
-  speed = 10;
+  speed = 8;
 
   walkingImages = [
     'img/2_character_pepe/2_walk/W-21.png',
@@ -44,6 +44,7 @@ class Character extends MovableObject {
     super();
     this.loadImage(this.walkingImages[0]); // lädt das erste Bild als Startbild
     this.loadImages(this.walkingImages); // lädt alle Bilder für die Animation
+    this.currentImage = 0;
   }
 
   animate() {
@@ -55,8 +56,6 @@ class Character extends MovableObject {
     this.movementInterval = setInterval(() => {
       this.moveCharacter(); // bewegt die Figur basierend auf Tastatureingaben
     }, 1000 / 60);
-
-    this.currentImage = 0;
 
     this.frameInterval = setInterval(() => {
       if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
@@ -76,18 +75,22 @@ class Character extends MovableObject {
 
   moveCharacter() {
     if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-    if (this.world.keyboard.RIGHT) this.moveRight(); // bewegt nach rechts
-    if (this.world.keyboard.LEFT) this.moveLeft(); // bewegt nach links
-    this.world.camera_x = -this.x + 80; // aktualisiert die Kameraposition basierend auf der Charakterposition
+    let cameraStop = this.world.level.level_end_x; // Kamera Stopp Position
+    let levelEnd = this.world.level.level_end_x + 720; // Level Ende Position
+    if (this.world.keyboard.RIGHT && this.x < levelEnd) this.moveRight(); // bewegt nach rechts
+    if (this.world.keyboard.LEFT && this.x >= -800) this.moveLeft(); // bewegt nach links
+    if (this.x < cameraStop) {
+      // wenn die Charakterposition kleiner als die Kamera Stopp Position ist
+      this.world.camera_x = -this.x + 150; // aktualisiert die Kameraposition basierend auf der Charakterposition
+    }
   }
 
   moveRight() {
-    this.x += this.speed; // bewegt den Charakter nach rechts
+    this.x += this.speed; // bewegt den Charakter nach rechts mit normaler Geschwindigkeit
     this.otherDirection = false; // setzt die Richtung auf rechts
   }
 
   moveLeft() {
-    if (this.world.camera_x >= -3 && this.x <= 3) return; // verhindert, dass der Charakter über den linken Rand hinausgeht
     this.x -= this.speed; // bewegt den Charakter nach links
     this.otherDirection = true; // setzt die Richtung auf links
   }

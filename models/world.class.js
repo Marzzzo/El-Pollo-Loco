@@ -1,13 +1,7 @@
 class World {
-  chickenCount = 1;
-  chickCount = 1;
-  showEndboss = true;
-
   character = new Character();
   endboss = new Endboss();
-  enemies = level1.enemies; // Array mit mehreren Enemys
-  backgroundObjects = level1.backgroundObjects; // Array mit mehreren BackgroundObjects
-  clouds = level1.clouds; // Array mit mehreren Clouds
+  level = level1; // level wird aus der level1.js geholt.
 
   canvas;
   ctx; // ctx in der Regel für "Context" und wird meist als Variablenname für das CanvasRenderingContext2D verwendet.
@@ -16,25 +10,24 @@ class World {
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext('2d'); // CanvasRenderingContext2D (das man auf dem canvas zeichnen kann).
-    this.canvas = canvas;
-    this.keyboard = keyboard;
+    this.canvas = canvas; // Das canvas wird in der variable der klasse gespeichert.
+    this.keyboard = keyboard; // keyboard wird in der variable der klasse gespeichert.
+
     // Hier werden die klassen und der Count übergeben.
-    this.addSingleEnemy(Chicken, this.chickenCount);
-    this.addSingleEnemy(Chick, this.chickCount);
+    this.addSingleEnemy(Chicken, this.level.chickenCount);
+    this.addSingleEnemy(Chick, this.level.chickCount);
     this.draw();
     this.setWorld();
   }
 
   setWorld() {
-    this.character.world = this;
-    // Start character animations after assigning the world reference so
-    // `this.character` can safely read `this.character.world.keyboard`.
-    if (typeof this.character.animate === 'function') this.character.animate();
+    this.character.world = this; // damit der character zugriff auf die welt hat.
+    if (typeof this.character.animate === 'function') this.character.animate(); // ruft die animate function im character auf.
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
   addSingleEnemy(classEnemy, count) {
-    for (let i = 0; i < count; i++) this.enemies.push(new classEnemy());
+    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy());
   }
 
   // Zeichnet Objekte
@@ -43,17 +36,15 @@ class World {
     // Sonst werden neue bilder gezeichnet und das alte bleibt.
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.backgroundObjects);
-    this.addToMap(this.character);
 
-    // if abfrage wieder löschen
-    if (this.showEndboss) {
-      this.addToMap(this.endboss);
-    }
+    this.addObjectsToMap(this.level.backgroundObjects);
+
+    this.addToMap(this.character);
+    this.addToMap(this.endboss);
 
     // Mehrere Objekte (clouds, enemies, background)
-    this.addObjectsToMap(this.clouds);
-    this.addObjectsToMap(this.enemies);
+    this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.level.enemies);
     this.ctx.translate(-this.camera_x, 0);
 
     // Draw() wird immer wieder aufgerufen.

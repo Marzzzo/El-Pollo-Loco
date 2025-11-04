@@ -1,7 +1,10 @@
 class Level {
+  chickenCount = 3;
+  chickCount = 1;
   enemies;
   clouds;
   backgroundObjects;
+  level_end_x = 2900; // Kamera end position
 
   // Übergabe der Arrays
   constructor(enemies, clouds, backgroundObjects) {
