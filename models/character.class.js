@@ -42,35 +42,76 @@ class Character extends MovableObject {
 
   constructor() {
     super();
-    this.loadImage(this.walkingImages[0]); // lädt das erste Bild als Startbild
-    this.loadImages(this.walkingImages); // lädt alle Bilder für die Animation
     this.currentImage = 0;
+    this.loadImage(this.idleImages[0]); // lädt das erste Bild als Startbild
+    this.loadImages(this.idleImages); // lädt alle Bilder für die Animation
+    this.loadImages(this.walkingImages);
   }
 
   animate() {
-    this.walkingAnimation(100); // startet die Geh-Animation mit einer Bildrate von 100ms
+    this.clearAnimationInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
+    this.startAnimationLoop();
+    this.startMovementLoop();
+    this.playAnimation();
+
+    // this.idleAnimation(200); // startet die Geh-Animation mit einer Bildrate von 100ms
   }
 
-  walkingAnimation(frameRate) {
-    this.clearIntervals(); // löscht die intervals, um Doppelungen zu vermeiden.
-    this.movementInterval = setInterval(() => {
-      this.moveCharacter(); // bewegt die Figur basierend auf Tastatureingaben
-    }, 1000 / 60);
+  animations = {
+    idle: {
+      images: this.idleImages,
+      speed: 200,
+    },
+    walk: {
+      images: this.walkingImages,
+      speed: 100,
+    },
+  };
 
+  playAnimation(type) {
+    if (this.currentAnimation === type) return; // wenn die Animation bereits läuft, nichts tun
+
+    this.currentAnimation = type; // setzt die aktuelle Animation
+    this.currentImage = 0; // setzt das aktuelle Bild zurück
+    this.clearAnimationInterval(); // löscht das vorherige Animationsintervall
+    let animation = this.animations[type]; // holt die Animationsdaten
+    if (!animation) return; // Sicherheitsabfrage
+    this.animationInterval = setInterval(() => {
+      this.imageLoop(); // ruft die Bildschleifenfunktion auf
+    }, animation.speed); // Geschwindigkeit der Animation
+  }
+
+  imageLoop() {
+    let animation = this.animations[this.currentAnimation];
+    let i = this.currentImage % animation.images.length; // sorgt dafür, dass die Bilder von vorne beginnen wenn das Ende erreicht ist.
+    let path = animation.images[i]; // Pfad des aktuellen Bildes
+    this.img = this.imageCache[path]; // setzt das Bild des Charakters
+    this.currentImage++; // nächstes Bild
+  }
+
+  updateAnimation() {
+    if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      this.playAnimation('walk'); // spielt die Geh-Animation ab
+    } else {
+      this.playAnimation('idle'); // spielt die Idle-Animation ab
+    }
+  }
+
+  startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-      if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        let i = this.currentImage % this.walkingImages.length; // sorgt dafür, dass die Bilder von vorne beginnen wenn das Ende erreicht ist.
-        let path = this.walkingImages[i]; // Pfad des aktuellen Bildes
-        this.img = this.imageCache[path]; // setzt das Bild des Charakters
-        this.currentImage++; // nächstes Bild
-      }
-    }, frameRate);
+      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
+    }, 50);
   }
 
-  clearIntervals() {
-    if (this.movementInterval) clearInterval(this.movementInterval); // löscht das Bewegungsintervall
-    if (this.frameInterval) clearInterval(this.frameInterval); // löscht das Frameintervall
+  startMovementLoop() {
+    this.movementInterval = setInterval(() => {
+      this.moveCharacter();
+    }, 1000 / 60); // 60 FPS movement
+  }
+
+  clearAnimationInterval() {
+    if (this.animationInterval) clearInterval(this.animationInterval);
   }
 
   moveCharacter() {
