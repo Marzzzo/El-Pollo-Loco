@@ -3,6 +3,7 @@ class Character extends MovableObject {
   y = 230;
   height = 250;
   speed = 8;
+  idleTime = 0;
 
   walkingImages = [
     'img/2_character_pepe/2_walk/W-21.png',
@@ -26,6 +27,19 @@ class Character extends MovableObject {
     'img/2_character_pepe/1_idle/idle/I-10.png',
   ];
 
+  longIdleImages = [
+    'img/2_character_pepe/1_idle/long_idle/I-11.png',
+    'img/2_character_pepe/1_idle/long_idle/I-12.png',
+    'img/2_character_pepe/1_idle/long_idle/I-13.png',
+    'img/2_character_pepe/1_idle/long_idle/I-14.png',
+    'img/2_character_pepe/1_idle/long_idle/I-15.png',
+    'img/2_character_pepe/1_idle/long_idle/I-16.png',
+    'img/2_character_pepe/1_idle/long_idle/I-17.png',
+    'img/2_character_pepe/1_idle/long_idle/I-18.png',
+    'img/2_character_pepe/1_idle/long_idle/I-19.png',
+    'img/2_character_pepe/1_idle/long_idle/I-20.png',
+  ];
+
   jumpImages = [
     'img/2_character_pepe/3_jump/J-31.png',
     'img/2_character_pepe/3_jump/J-32.png',
@@ -46,20 +60,23 @@ class Character extends MovableObject {
     this.loadImage(this.idleImages[0]); // lädt das erste Bild als Startbild
     this.loadImages(this.idleImages); // lädt alle Bilder für die Animation
     this.loadImages(this.walkingImages);
+    this.loadImages(this.longIdleImages);
   }
 
   animate() {
     this.clearAnimationInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
-    this.startAnimationLoop();
-    this.startMovementLoop();
-    this.playAnimation();
-
-    // this.idleAnimation(200); // startet die Geh-Animation mit einer Bildrate von 100ms
+    this.startAnimationLoop(); // startet die Animationsschleife
+    this.startMovementLoop(); // startet die Bewegungsschleife
+    this.playAnimation('idle'); // startet mit der Idle-Animation
   }
 
   animations = {
     idle: {
       images: this.idleImages,
+      speed: 200,
+    },
+    longIdle: {
+      images: this.longIdleImages,
       speed: 200,
     },
     walk: {
@@ -70,7 +87,6 @@ class Character extends MovableObject {
 
   playAnimation(type) {
     if (this.currentAnimation === type) return; // wenn die Animation bereits läuft, nichts tun
-
     this.currentAnimation = type; // setzt die aktuelle Animation
     this.currentImage = 0; // setzt das aktuelle Bild zurück
     this.clearAnimationInterval(); // löscht das vorherige Animationsintervall
@@ -90,28 +106,50 @@ class Character extends MovableObject {
   }
 
   updateAnimation() {
+    if (this.idleTime > 5000) {
+      this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
+      return;
+    }
     if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
       this.playAnimation('walk'); // spielt die Geh-Animation ab
-    } else {
-      this.playAnimation('idle'); // spielt die Idle-Animation ab
+      return;
     }
+    this.playAnimation('idle'); // spielt die Idle-Animation ab
   }
 
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+      this.trackIdleTime();
       this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
     }, 50);
   }
 
   startMovementLoop() {
+    this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
     this.movementInterval = setInterval(() => {
-      this.moveCharacter();
-    }, 1000 / 60); // 60 FPS movement
+      this.moveCharacter(); // bewegt den Charakter basierend auf Tastatureingaben
+    }, 1000 / 60); // 60 FPS
+  }
+
+  trackIdleTime() {
+    if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
+      // wenn keine Bewegungstasten gedrückt werden
+      this.idleTime += 50; // erhöht die Leerlaufzeit um 50ms
+    } else {
+      // wenn eine Bewegungstaste gedrückt wird
+      this.idleTime = 0; // setzt die Leerlaufzeit zurück
+    }
   }
 
   clearAnimationInterval() {
-    if (this.animationInterval) clearInterval(this.animationInterval);
+    // löscht das Animationsintervall
+    if (this.animationInterval) clearInterval(this.animationInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
+  }
+
+  clearMovementInterval() {
+    // löscht das Bewegungsintervall
+    if (this.movementInterval) clearInterval(this.movementInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
   }
 
   moveCharacter() {
