@@ -4,6 +4,7 @@ class Character extends MovableObject {
   height = 250;
   speed = 8;
   idleTime = 0;
+  jumping = false;
 
   walkingImages = [
     'img/2_character_pepe/2_walk/W-21.png',
@@ -41,15 +42,12 @@ class Character extends MovableObject {
   ];
 
   jumpImages = [
-    'img/2_character_pepe/3_jump/J-31.png',
-    'img/2_character_pepe/3_jump/J-32.png',
     'img/2_character_pepe/3_jump/J-33.png',
     'img/2_character_pepe/3_jump/J-34.png',
     'img/2_character_pepe/3_jump/J-35.png',
     'img/2_character_pepe/3_jump/J-36.png',
     'img/2_character_pepe/3_jump/J-37.png',
     'img/2_character_pepe/3_jump/J-38.png',
-    'img/2_character_pepe/3_jump/J-39.png',
   ];
 
   world;
@@ -57,17 +55,19 @@ class Character extends MovableObject {
   constructor() {
     super();
     this.currentImage = 0;
+    this.applyGravity();
     this.loadImage(this.idleImages[0]); // lädt das erste Bild als Startbild
     this.loadImages(this.idleImages); // lädt alle Bilder für die Animation
     this.loadImages(this.walkingImages);
     this.loadImages(this.longIdleImages);
+    this.loadImages(this.jumpImages);
   }
 
   animate() {
     this.clearAnimationInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
+    this.playAnimation('idle'); // startet mit der Idle-Animation
     this.startAnimationLoop(); // startet die Animationsschleife
     this.startMovementLoop(); // startet die Bewegungsschleife
-    this.playAnimation('idle'); // startet mit der Idle-Animation
   }
 
   animations = {
@@ -82,6 +82,10 @@ class Character extends MovableObject {
     walk: {
       images: this.walkingImages,
       speed: 100,
+    },
+    jump: {
+      images: this.jumpImages,
+      speed: 150,
     },
   };
 
@@ -98,7 +102,7 @@ class Character extends MovableObject {
   }
 
   imageLoop() {
-    let animation = this.animations[this.currentAnimation];
+    let animation = this.animations[this.currentAnimation]; // holt die aktuelle Animation
     let i = this.currentImage % animation.images.length; // sorgt dafür, dass die Bilder von vorne beginnen wenn das Ende erreicht ist.
     let path = animation.images[i]; // Pfad des aktuellen Bildes
     this.img = this.imageCache[path]; // setzt das Bild des Charakters
@@ -106,14 +110,19 @@ class Character extends MovableObject {
   }
 
   updateAnimation() {
-    if (this.idleTime > 5000) {
-      this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
+    if (this.jumping) {
+      this.playAnimation('jump'); // spielt die Sprung-Animation ab
       return;
     }
     if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
       this.playAnimation('walk'); // spielt die Geh-Animation ab
       return;
     }
+    if (this.idleTime > 5000) {
+      this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
+      return;
+    }
+
     this.playAnimation('idle'); // spielt die Idle-Animation ab
   }
 
@@ -133,9 +142,9 @@ class Character extends MovableObject {
   }
 
   trackIdleTime() {
-    if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
+    if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT && !this.world.keyboard.SPACE) {
       // wenn keine Bewegungstasten gedrückt werden
-      this.idleTime += 50; // erhöht die Leerlaufzeit um 50ms
+      this.idleTime += 60; // erhöht die Leerlaufzeit um 50ms
     } else {
       // wenn eine Bewegungstaste gedrückt wird
       this.idleTime = 0; // setzt die Leerlaufzeit zurück
@@ -159,9 +168,9 @@ class Character extends MovableObject {
     if (this.world.keyboard.RIGHT && this.x < levelEnd) this.moveRight(); // bewegt nach rechts
     if (this.world.keyboard.LEFT && this.x >= -800) this.moveLeft(); // bewegt nach links
     if (this.x < cameraStop) {
-      // wenn die Charakterposition kleiner als die Kamera Stopp Position ist
       this.world.camera_x = -this.x + 150; // aktualisiert die Kameraposition basierend auf der Charakterposition
     }
+    this.jump(); // überprüft und führt den Sprung aus
   }
 
   moveRight() {
@@ -175,6 +184,9 @@ class Character extends MovableObject {
   }
 
   jump() {
-    // springen
+    if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
+      this.speedY = 20;
+      this.jumping = true;
+    }
   }
 }
