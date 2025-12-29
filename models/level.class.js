@@ -1,6 +1,7 @@
 class Level {
   chickenCount = 4;
   chickCount = 1;
+  endbossCount = 1;
   enemies;
   clouds;
   backgroundObjects;

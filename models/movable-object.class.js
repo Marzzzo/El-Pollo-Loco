@@ -47,6 +47,15 @@ class MovableObject {
       ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
     }
   }
+  // Prüft ob dieses Objekt mit einem anderen Objekt kollidiert.
+  isColliding(movableObject) {
+    return (
+      this.x + this.width - 20 > movableObject.x && // rechte seite des aktuellen objekts ist rechts von der linken seite des anderen objekts
+      this.x + 20 < movableObject.x + movableObject.width && // linke seite des aktuellen objekts ist links von der rechten seite des anderen objekts
+      this.y + this.height > movableObject.y && // untere seite des aktuellen objekts ist unter der oberen seite des anderen objekts
+      this.y < movableObject.y + movableObject.height // obere seite des aktuellen objekts ist über der unteren seite des anderen objekts
+    );
+  }
 
   // Erstellt ein neues bild
   loadImage(path) {

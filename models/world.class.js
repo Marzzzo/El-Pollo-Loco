@@ -1,6 +1,5 @@
 class World {
   character = new Character();
-  endboss = new Endboss();
   level = level1; // level wird aus der level1.js geholt.
 
   canvas;
@@ -16,13 +15,26 @@ class World {
     // Hier werden die klassen und der Count übergeben.
     this.addSingleEnemy(Chicken, this.level.chickenCount);
     this.addSingleEnemy(Chick, this.level.chickCount);
+    this.addSingleEnemy(Endboss, this.level.endbossCount);
     this.draw();
     this.setWorld();
+    this.checkCollisions();
   }
 
   setWorld() {
     this.character.world = this; // damit der character zugriff auf die welt hat.
     if (typeof this.character.animate === 'function') this.character.animate(); // ruft die animate function im character auf.
+  }
+
+  // überprüft Kollisionen zwischen dem Charakter und den Feinden
+  checkCollisions() {
+    setInterval(() => {
+      this.level.enemies.forEach((enemy) => {
+        if (this.character.isColliding(enemy)) {
+          this.character.hit(); // character wird getroffen
+        }
+      });
+    }, 200);
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
@@ -36,17 +48,12 @@ class World {
     // Sonst werden neue bilder gezeichnet und das alte bleibt.
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
-
     this.addObjectsToMap(this.level.backgroundObjects);
-
     this.addToMap(this.character);
-    this.addToMap(this.endboss);
-
     // Mehrere Objekte (clouds, enemies, background)
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.ctx.translate(-this.camera_x, 0);
-
     // Draw() wird immer wieder aufgerufen.
     this.animationFrame();
   }

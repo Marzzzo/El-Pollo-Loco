@@ -136,6 +136,10 @@ class Character extends MovableObject {
   }
 
   updateAnimation() {
+    if (this.isHurt()) {
+      this.playAnimation('hurt'); // spielt die Hurt-Animation ab
+      return;
+    }
     if (this.jumping) {
       this.playAnimation('jump'); // spielt die Sprung-Animation ab
       return;
@@ -144,6 +148,7 @@ class Character extends MovableObject {
       this.playAnimation('walk'); // spielt die Geh-Animation ab
       return;
     }
+
     if (this.idleTime > 5000) {
       this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
       return;
@@ -214,5 +219,13 @@ class Character extends MovableObject {
       this.speedY = 17;
       this.jumping = true;
     }
+  }
+
+  hit() {
+    this.hurtUntil = new Date().getTime() + 1000; // 1 Sekunde unverwundbar nach Treffer
+  }
+
+  isHurt() {
+    return new Date().getTime() < this.hurtUntil;
   }
 }

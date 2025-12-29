@@ -1,5 +1,5 @@
 const level1 = new Level(
-  [],
+  [], // enemies werden in der world.class.js hinzugefügt.
 
   [
     new Cloud('img/5_background/layers/4_clouds/1.png', 0),
