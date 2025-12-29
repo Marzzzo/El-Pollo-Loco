@@ -2,9 +2,13 @@ class Character extends MovableObject {
   x = 80;
   y = 230;
   height = 250;
-  speed = 8;
+  speed = 1;
   idleTime = 0;
   jumping = false;
+  knockbackVX = 0;
+  knockbackUntil = 0;
+
+  offset = { top: 120, right: 25, bottom: 12, left: 15 };
 
   walkingImages = [
     'img/2_character_pepe/2_walk/W-21.png',
@@ -107,7 +111,7 @@ class Character extends MovableObject {
     },
     hurt: {
       images: this.hurtImages,
-      speed: 100,
+      speed: 200,
     },
     dead: {
       images: this.deadImages,
@@ -226,6 +230,6 @@ class Character extends MovableObject {
   }
 
   isHurt() {
-    return new Date().getTime() < this.hurtUntil;
+    return new Date().getTime() < this.hurtUntil; // überprüft ob der Charakter unverwundbar ist
   }
 }

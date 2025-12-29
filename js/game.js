@@ -9,7 +9,6 @@ function init() {
   world = new World(canvas, keyboard); // neue welt wird erstellt und das canvas wird übergeben in den constructor in der world.
 
   console.log('Mein Character ist', world.character);
-  console.log('Mein Endboss ist', world.endboss);
   console.log('Meine Enemies sind', world.level.enemies);
 }
 

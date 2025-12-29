@@ -31,10 +31,10 @@ class World {
     setInterval(() => {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
-          this.character.hit(); // character wird getroffen
+          this.character.hit();
         }
       });
-    }, 200);
+    }, 50);
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.

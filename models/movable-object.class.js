@@ -12,6 +12,8 @@ class MovableObject {
 
   otherDirection = false;
 
+  offset = { top: 0, right: 0, bottom: 0, left: 0 };
+
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
@@ -46,14 +48,26 @@ class MovableObject {
       ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
       ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
     }
+    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+      ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+      ctx.lineWidth = '2'; // linienbreite für den pfad.
+      ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
+      ctx.rect(
+        this.x + this.offset.left,
+        this.y + this.offset.top,
+        this.width - this.offset.left - this.offset.right,
+        this.height - this.offset.top - this.offset.bottom
+      ); // erstellt ein rechteck (für Kollisionsboxen etc).
+      ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+    }
   }
   // Prüft ob dieses Objekt mit einem anderen Objekt kollidiert.
   isColliding(movableObject) {
     return (
-      this.x + this.width - 20 > movableObject.x && // rechte seite des aktuellen objekts ist rechts von der linken seite des anderen objekts
-      this.x + 20 < movableObject.x + movableObject.width && // linke seite des aktuellen objekts ist links von der rechten seite des anderen objekts
-      this.y + this.height > movableObject.y && // untere seite des aktuellen objekts ist unter der oberen seite des anderen objekts
-      this.y < movableObject.y + movableObject.height // obere seite des aktuellen objekts ist über der unteren seite des anderen objekts
+      this.x + this.width - this.offset.right > movableObject.x + movableObject.offset.left && // rechte seite dieses objekts ist rechts von der linken seite des anderen objekts
+      this.x + this.offset.left < movableObject.x + movableObject.width - movableObject.offset.right && // linke seite dieses objekts ist links von der rechten seite des anderen objekts
+      this.y + this.height - this.offset.bottom > movableObject.y + movableObject.offset.top && // untere seite dieses objekts ist unter der oberen seite des anderen objekts
+      this.y + this.offset.top < movableObject.y + movableObject.height - movableObject.offset.bottom // obere seite dieses objekts ist über der unteren seite des anderen objekts
     );
   }
 
