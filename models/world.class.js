@@ -69,12 +69,11 @@ class World {
   addToMap(movableObjects) {
     // Das Argument was hier übergeben wird, ist aus den Klammern von draw()z.b  "this.addObjectsToMap(this.character)";
     if (movableObjects.otherDirection) {
-      // wenn otherDirection true ist, wird das bild gespiegelt.
       this.mirrorImgLeft(movableObjects); // Spiegelt das Bild wenn man nach links läuft.
     }
-    this.ctx.drawImage(movableObjects.img, movableObjects.x, movableObjects.y, movableObjects.width, movableObjects.height); // zeichnet das bild.
+    movableObjects.draw(this.ctx);
+    movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
     if (movableObjects.otherDirection) {
-      // wenn otherDirection true ist, wird das bild wieder in die standard richtung gespiegelt.
       this.mirrorImgRight(movableObjects); // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
     }
   }

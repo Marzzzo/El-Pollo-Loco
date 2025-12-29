@@ -1,5 +1,5 @@
 class Level {
-  chickenCount = 3;
+  chickenCount = 4;
   chickCount = 1;
   enemies;
   clouds;

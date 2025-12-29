@@ -50,6 +50,22 @@ class Character extends MovableObject {
     'img/2_character_pepe/3_jump/J-38.png',
   ];
 
+  hurtImages = [
+    'img/2_character_pepe/4_hurt/H-41.png',
+    'img/2_character_pepe/4_hurt/H-42.png',
+    'img/2_character_pepe/4_hurt/H-43.png',
+  ];
+
+  deadImages = [
+    'img/2_character_pepe/5_dead/D-51.png',
+    'img/2_character_pepe/5_dead/D-52.png',
+    'img/2_character_pepe/5_dead/D-53.png',
+    'img/2_character_pepe/5_dead/D-54.png',
+    'img/2_character_pepe/5_dead/D-55.png',
+    'img/2_character_pepe/5_dead/D-56.png',
+    'img/2_character_pepe/5_dead/D-57.png',
+  ];
+
   world;
 
   constructor() {
@@ -61,6 +77,8 @@ class Character extends MovableObject {
     this.loadImages(this.walkingImages);
     this.loadImages(this.longIdleImages);
     this.loadImages(this.jumpImages);
+    this.loadImages(this.hurtImages);
+    this.loadImages(this.deadImages);
   }
 
   animate() {
@@ -85,6 +103,14 @@ class Character extends MovableObject {
     },
     jump: {
       images: this.jumpImages,
+      speed: 145,
+    },
+    hurt: {
+      images: this.hurtImages,
+      speed: 100,
+    },
+    dead: {
+      images: this.deadImages,
       speed: 150,
     },
   };
@@ -185,7 +211,7 @@ class Character extends MovableObject {
 
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
-      this.speedY = 20;
+      this.speedY = 17;
       this.jumping = true;
     }
   }

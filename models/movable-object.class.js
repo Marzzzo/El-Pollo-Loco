@@ -5,7 +5,7 @@ class MovableObject {
   width = 80;
   speed = 0.15;
   speedY = 0;
-  acceleration = 1.7;
+  acceleration = 1.15;
   imageCache = {};
   currentImage = 0;
   groundLevel = 230;
@@ -15,23 +15,37 @@ class MovableObject {
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
+        this.y -= this.speedY; // aktualisiert die y-Position basierend auf der vertikalen geschwindigkeit.
+        this.speedY -= this.acceleration; // verringert die vertikale geschwindigkeit, um den fall zu simulieren.
       }
       if (this.y >= this.groundLevel) {
-        this.y = this.groundLevel;
-        this.speedY = 0;
-        this.jumping = false;
+        this.y = this.groundLevel; // setzt y auf bodenlevel, wenn es darunter geht.
+        this.speedY = 0; // setzt die vertikale geschwindigkeit auf 0, wenn der charakter den boden berührt.
+        this.jumping = false; // setzt jumping auf false, wenn der charakter den boden berührt.
       }
-    }, 1000 / 21);
+    }, 1000 / 30);
   }
 
   isAboveGround() {
-    return this.y < this.groundLevel;
+    return this.y < this.groundLevel; // wenn y kleiner als bodenlevel ist, dann ist es über dem boden.
   }
 
   isOnGround() {
-    return this.y === this.groundLevel;
+    return this.y === this.groundLevel; // wenn y gleich dem bodenlevel ist, dann ist es auf dem boden.
+  }
+
+  draw(ctx) {
+    ctx.drawImage(this.img, this.x, this.y, this.width, this.height); // zeichnet das bild.
+  }
+
+  drawFrame(ctx) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+      ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+      ctx.lineWidth = '2'; // linienbreite für den pfad.
+      ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
+      ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
+      ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+    }
   }
 
   // Erstellt ein neues bild
