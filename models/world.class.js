@@ -32,9 +32,11 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
+
+          console.log('Collision with Character, Energy', this.character.energy);
         }
       });
-    }, 50);
+    }, 200);
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
@@ -79,7 +81,7 @@ class World {
       this.mirrorImgLeft(movableObjects); // Spiegelt das Bild wenn man nach links läuft.
     }
     movableObjects.draw(this.ctx);
-    movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
+    // movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
     if (movableObjects.otherDirection) {
       this.mirrorImgRight(movableObjects); // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
     }

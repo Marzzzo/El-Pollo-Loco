@@ -5,22 +5,23 @@ class MovableObject {
   width = 80;
   speed = 0.15;
   speedY = 0;
-  acceleration = 1.15;
+  acceleration = 1;
   imageCache = {};
   currentImage = 0;
   groundLevel = 230;
-
+  energy = 100;
   otherDirection = false;
 
   offset = { top: 0, right: 0, bottom: 0, left: 0 };
 
   applyGravity() {
     setInterval(() => {
+      if (this.isDead()) return; // keine Schwerkraft anwenden, wenn das Objekt tot ist
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY; // aktualisiert die y-Position basierend auf der vertikalen geschwindigkeit.
         this.speedY -= this.acceleration; // verringert die vertikale geschwindigkeit, um den fall zu simulieren.
       }
-      if (this.y >= this.groundLevel) {
+      if (!this.isDead() && this.y >= this.groundLevel) {
         this.y = this.groundLevel; // setzt y auf bodenlevel, wenn es darunter geht.
         this.speedY = 0; // setzt die vertikale geschwindigkeit auf 0, wenn der charakter den boden berührt.
         this.jumping = false; // setzt jumping auf false, wenn der charakter den boden berührt.
@@ -40,27 +41,27 @@ class MovableObject {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height); // zeichnet das bild.
   }
 
-  drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
-      ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-      ctx.lineWidth = '2'; // linienbreite für den pfad.
-      ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
-      ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
-      ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-    }
-    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
-      ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-      ctx.lineWidth = '2'; // linienbreite für den pfad.
-      ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
-      ctx.rect(
-        this.x + this.offset.left,
-        this.y + this.offset.top,
-        this.width - this.offset.left - this.offset.right,
-        this.height - this.offset.top - this.offset.bottom
-      ); // erstellt ein rechteck (für Kollisionsboxen etc).
-      ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-    }
-  }
+  // drawFrame(ctx) {
+  //   if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+  //     ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+  //     ctx.lineWidth = '2'; // linienbreite für den pfad.
+  //     ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
+  //     ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
+  //     ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+  //   }
+  //   if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+  //     ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+  //     ctx.lineWidth = '2'; // linienbreite für den pfad.
+  //     ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
+  //     ctx.rect(
+  //       this.x + this.offset.left,
+  //       this.y + this.offset.top,
+  //       this.width - this.offset.left - this.offset.right,
+  //       this.height - this.offset.top - this.offset.bottom
+  //     ); // erstellt ein rechteck (für Kollisionsboxen etc).
+  //     ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+  //   }
+  // }
   // Prüft ob dieses Objekt mit einem anderen Objekt kollidiert.
   isColliding(movableObject) {
     return (
@@ -69,6 +70,25 @@ class MovableObject {
       this.y + this.height - this.offset.bottom > movableObject.y + movableObject.offset.top && // untere seite dieses objekts ist unter der oberen seite des anderen objekts
       this.y + this.offset.top < movableObject.y + movableObject.height - movableObject.offset.bottom // obere seite dieses objekts ist über der unteren seite des anderen objekts
     );
+  }
+
+  hit() {
+    this.hurtUntil = new Date().getTime() + 1000; // 1 Sekunde unverwundbar nach Treffer
+    this.world.character.energy -= 2; // Energie um 2 reduzieren bei Treffer
+    if (this.energy < 0) {
+      this.energy = 0; // Energie darf nicht unter 0 fallen
+    }
+  }
+
+  isDead() {
+    return this.energy == 0; // überprüft ob die energie 0 oder weniger ist
+  }
+  deadJump() {
+    if (this.isDead()) {
+      this.acceleration = 1.5;
+      this.y -= this.speedY; // hoch, solange speedY positiv ist
+      this.speedY -= this.acceleration; // wird kleiner -> irgendwann negativ -> fallen
+    }
   }
 
   // Erstellt ein neues bild

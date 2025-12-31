@@ -2,9 +2,11 @@ class Character extends MovableObject {
   x = 80;
   y = 230;
   height = 250;
-  speed = 1;
+  speed = 5;
   idleTime = 0;
   jumping = false;
+  deadJumpStarted = false;
+
   knockbackVX = 0;
   knockbackUntil = 0;
 
@@ -67,7 +69,7 @@ class Character extends MovableObject {
     'img/2_character_pepe/5_dead/D-54.png',
     'img/2_character_pepe/5_dead/D-55.png',
     'img/2_character_pepe/5_dead/D-56.png',
-    'img/2_character_pepe/5_dead/D-57.png',
+    // 'img/2_character_pepe/5_dead/D-57.png',
   ];
 
   world;
@@ -107,7 +109,7 @@ class Character extends MovableObject {
     },
     jump: {
       images: this.jumpImages,
-      speed: 145,
+      speed: 180,
     },
     hurt: {
       images: this.hurtImages,
@@ -115,7 +117,7 @@ class Character extends MovableObject {
     },
     dead: {
       images: this.deadImages,
-      speed: 150,
+      speed: 240,
     },
   };
 
@@ -140,6 +142,20 @@ class Character extends MovableObject {
   }
 
   updateAnimation() {
+    if (this.isDead()) {
+      this.playAnimation('dead');
+      this.speed = 0;
+
+      if (!this.deadJumpStarted) {
+        this.deadJumpStarted = true;
+        this.speedY = 15; // einmaliger Impuls nach oben
+      }
+
+      this.deadJump();
+      this.world.keyboard = {};
+      return;
+    }
+
     if (this.isHurt()) {
       this.playAnimation('hurt'); // spielt die Hurt-Animation ab
       return;
@@ -220,13 +236,9 @@ class Character extends MovableObject {
 
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
-      this.speedY = 17;
+      this.speedY = 18;
       this.jumping = true;
     }
-  }
-
-  hit() {
-    this.hurtUntil = new Date().getTime() + 1000; // 1 Sekunde unverwundbar nach Treffer
   }
 
   isHurt() {
