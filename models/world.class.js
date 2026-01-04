@@ -16,6 +16,8 @@ class World {
     this.addSingleEnemy(Chicken, this.level.chickenCount);
     this.addSingleEnemy(Chick, this.level.chickCount);
     this.addSingleEnemy(Endboss, this.level.endbossCount);
+    this.addSingleItems(Coins, this.level.coinsCount);
+    this.addSingleItems(Bottles, this.level.bottleCount);
     this.draw();
     this.setWorld();
     this.checkCollisions();
@@ -44,6 +46,10 @@ class World {
     for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy());
   }
 
+  addSingleItems(classItems, count) {
+    for (let i = 0; i < count; i++) this.level.items.push(new classItems());
+  }
+
   // Zeichnet Objekte
   draw() {
     // cleared baum aufrufen das canvas.(Wenn man z.b den character bewegt, dass die alte position gelöscht wird).
@@ -55,6 +61,7 @@ class World {
     // Mehrere Objekte (clouds, enemies, background)
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.items);
     this.ctx.translate(-this.camera_x, 0);
     // Draw() wird immer wieder aufgerufen.
     this.animationFrame();
@@ -81,7 +88,7 @@ class World {
       this.mirrorImgLeft(movableObjects); // Spiegelt das Bild wenn man nach links läuft.
     }
     movableObjects.draw(this.ctx);
-    // movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
+    movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
     if (movableObjects.otherDirection) {
       this.mirrorImgRight(movableObjects); // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
     }

@@ -7,9 +7,6 @@ class Character extends MovableObject {
   jumping = false;
   deadJumpStarted = false;
 
-  knockbackVX = 0;
-  knockbackUntil = 0;
-
   offset = { top: 120, right: 25, bottom: 12, left: 15 };
 
   walkingImages = [
@@ -69,7 +66,6 @@ class Character extends MovableObject {
     'img/2_character_pepe/5_dead/D-54.png',
     'img/2_character_pepe/5_dead/D-55.png',
     'img/2_character_pepe/5_dead/D-56.png',
-    // 'img/2_character_pepe/5_dead/D-57.png',
   ];
 
   world;
@@ -143,12 +139,10 @@ class Character extends MovableObject {
 
   updateAnimation() {
     if (this.isDead()) {
-      this.playAnimation('dead');
-      this.speed = 0;
-
+      this.playAnimation('dead'); // spielt die Todes-Animation ab
       if (!this.deadJumpStarted) {
         this.deadJumpStarted = true;
-        this.speedY = 15; // einmaliger Impuls nach oben
+        this.speedY = 12; // einmaliger Impuls nach oben
       }
 
       this.deadJump();
@@ -169,27 +163,12 @@ class Character extends MovableObject {
       return;
     }
 
-    if (this.idleTime > 5000) {
+    if (this.idleTime > 30000) {
       this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
       return;
     }
 
     this.playAnimation('idle'); // spielt die Idle-Animation ab
-  }
-
-  startAnimationLoop() {
-    this.frameInterval = setInterval(() => {
-      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-      this.trackIdleTime();
-      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
-    }, 50);
-  }
-
-  startMovementLoop() {
-    this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
-    this.movementInterval = setInterval(() => {
-      this.moveCharacter(); // bewegt den Charakter basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
   }
 
   trackIdleTime() {
@@ -200,16 +179,6 @@ class Character extends MovableObject {
       // wenn eine Bewegungstaste gedrückt wird
       this.idleTime = 0; // setzt die Leerlaufzeit zurück
     }
-  }
-
-  clearAnimationInterval() {
-    // löscht das Animationsintervall
-    if (this.animationInterval) clearInterval(this.animationInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
-  }
-
-  clearMovementInterval() {
-    // löscht das Bewegungsintervall
-    if (this.movementInterval) clearInterval(this.movementInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
   }
 
   moveCharacter() {
@@ -224,6 +193,16 @@ class Character extends MovableObject {
     this.jump(); // überprüft und führt den Sprung aus
   }
 
+  clearAnimationInterval() {
+    // löscht das Animationsintervall
+    if (this.animationInterval) clearInterval(this.animationInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
+  }
+
+  clearMovementInterval() {
+    // löscht das Bewegungsintervall
+    if (this.movementInterval) clearInterval(this.movementInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
+  }
+
   moveRight() {
     this.x += this.speed; // bewegt den Charakter nach rechts mit normaler Geschwindigkeit
     this.otherDirection = false; // setzt die Richtung auf rechts
@@ -236,7 +215,7 @@ class Character extends MovableObject {
 
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
-      this.speedY = 18;
+      this.speedY = 15; // setzt die vertikale Geschwindigkeit für den Sprung
       this.jumping = true;
     }
   }

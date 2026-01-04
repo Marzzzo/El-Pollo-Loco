@@ -10,6 +10,7 @@ function init() {
 
   console.log('Mein Character ist', world.character);
   console.log('Meine Enemies sind', world.level.enemies);
+  console.log('Meine Items sind', world.level.items);
 }
 
 window.addEventListener('keydown', (event) => {

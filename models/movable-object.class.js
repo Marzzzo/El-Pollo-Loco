@@ -41,28 +41,51 @@ class MovableObject {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height); // zeichnet das bild.
   }
 
-  // drawFrame(ctx) {
-  //   if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
-  //     ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-  //     ctx.lineWidth = '2'; // linienbreite für den pfad.
-  //     ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
-  //     ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
-  //     ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-  //   }
-  //   if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
-  //     ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-  //     ctx.lineWidth = '2'; // linienbreite für den pfad.
-  //     ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
-  //     ctx.rect(
-  //       this.x + this.offset.left,
-  //       this.y + this.offset.top,
-  //       this.width - this.offset.left - this.offset.right,
-  //       this.height - this.offset.top - this.offset.bottom
-  //     ); // erstellt ein rechteck (für Kollisionsboxen etc).
-  //     ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-  //   }
-  // }
-  // Prüft ob dieses Objekt mit einem anderen Objekt kollidiert.
+  drawFrame(ctx) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+      this.frameOne(ctx);
+    }
+    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+      this.frameTwo(ctx);
+    }
+  }
+
+  frameOne(ctx) {
+    ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+    ctx.lineWidth = '2'; // linienbreite für den pfad.
+    ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
+    ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
+    ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+  }
+
+  frameTwo(ctx) {
+    ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+    ctx.lineWidth = '2'; // linienbreite für den pfad.
+    ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
+    ctx.rect(
+      this.x + this.offset.left,
+      this.y + this.offset.top,
+      this.width - this.offset.left - this.offset.right,
+      this.height - this.offset.top - this.offset.bottom
+    ); // erstellt ein rechteck (für Kollisionsboxen etc).
+    ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+  }
+
+  startAnimationLoop() {
+    this.frameInterval = setInterval(() => {
+      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+      this.trackIdleTime();
+      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
+    }, 1000 / 60); // 60 FPS
+  }
+
+  startMovementLoop() {
+    this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
+    this.movementInterval = setInterval(() => {
+      this.moveCharacter(); // bewegt den Charakter basierend auf Tastatureingaben
+    }, 1000 / 60); // 60 FPS
+  }
+
   isColliding(movableObject) {
     return (
       this.x + this.width - this.offset.right > movableObject.x + movableObject.offset.left && // rechte seite dieses objekts ist rechts von der linken seite des anderen objekts
@@ -83,11 +106,14 @@ class MovableObject {
   isDead() {
     return this.energy == 0; // überprüft ob die energie 0 oder weniger ist
   }
+
   deadJump() {
     if (this.isDead()) {
-      this.acceleration = 1.5;
+      this.acceleration = 0.5;
       this.y -= this.speedY; // hoch, solange speedY positiv ist
       this.speedY -= this.acceleration; // wird kleiner -> irgendwann negativ -> fallen
+      this.clearAnimationInterval(); // stoppt die animation
+      this.clearMovementInterval(); // stoppt die bewegung
     }
   }
 
