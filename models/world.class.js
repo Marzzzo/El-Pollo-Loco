@@ -1,5 +1,6 @@
 class World {
-  character = new Character();
+  character = new Character(); // Erstellt einen neuen Character.
+  endboss = new Endboss(); // Erstellt einen neuen Endboss.
   level = level1; // level wird aus der level1.js geholt.
 
   canvas;
@@ -15,22 +16,29 @@ class World {
     // Hier werden die klassen und der Count übergeben.
     this.addSingleEnemy(Chicken, this.level.chickenCount);
     this.addSingleEnemy(Chick, this.level.chickCount);
-    this.addSingleEnemy(Endboss, this.level.endbossCount);
     this.addSingleItems(Coins, this.level.coinsCount);
     this.addSingleItems(Bottles, this.level.bottleCount);
-    this.draw();
     this.setWorld();
+    this.draw();
     this.checkCollisions();
   }
 
   setWorld() {
     this.character.world = this; // damit der character zugriff auf die welt hat.
+    this.endboss.world = this; // damit der endboss zugriff auf die welt hat.
+    this.level.enemies.forEach((enemy) => {
+      enemy.world = this; // damit jeder enemy zugriff auf die welt hat.
+    });
     if (typeof this.character.animate === 'function') this.character.animate(); // ruft die animate function im character auf.
+    if (typeof this.endboss.animate === 'function') this.endboss.animate(); // ruft die animate function im endboss auf.
   }
 
   // überprüft Kollisionen zwischen dem Charakter und den Feinden
   checkCollisions() {
     setInterval(() => {
+      if (this.character.isColliding(this.endboss)) {
+        this.character.hit();
+      }
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
@@ -48,7 +56,7 @@ class World {
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
   addSingleEnemy(classEnemy, count) {
-    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy()); // fügt ein neues enemy in das array enemies hinzu.
+    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy()); // fügt einen neuen enemy in das array enemies hinzu.
   }
 
   addSingleItems(classItems, count) {
@@ -57,18 +65,15 @@ class World {
 
   // Zeichnet Objekte
   draw() {
-    // cleared baum aufrufen das canvas.(Wenn man z.b den character bewegt, dass die alte position gelöscht wird).
-    // Sonst werden neue bilder gezeichnet und das alte bleibt.
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addToMap(this.character);
-    // Mehrere Objekte (clouds, enemies, background)
+    this.addToMap(this.endboss);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.items);
     this.ctx.translate(-this.camera_x, 0);
-    // Draw() wird immer wieder aufgerufen.
     this.animationFrame();
   }
 
@@ -81,8 +86,8 @@ class World {
 
   // Geht durch die Objecte und Zeichnet diese. Z.b wo mehrere objecte in einem array sind.
   addObjectsToMap(objects) {
+    if (!objects) return; // Sicherheitsabfrage
     objects.forEach((object) => {
-      // geht durch jedes object in dem array durch.
       this.addToMap(object); // ruft addToMap für jedes object auf.
     });
   }

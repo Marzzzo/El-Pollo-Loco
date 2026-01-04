@@ -50,7 +50,7 @@ class MovableObject {
       this instanceof Coins ||
       this instanceof Bottles
     ) {
-      this.frameOne(ctx);
+      // this.frameOne(ctx);
     }
     if (
       this instanceof Character ||
@@ -85,19 +85,46 @@ class MovableObject {
     ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
   }
 
+  playAnimation(type) {
+    if (this.currentAnimation === type) return; // wenn die Animation bereits läuft, nichts tun
+    this.currentAnimation = type; // setzt die aktuelle Animation
+    this.currentImage = 0; // setzt das aktuelle Bild zurück
+    this.clearAnimationInterval(); // löscht das vorherige Animationsintervall
+    let animation = this.animations[type]; // holt die Animationsdaten
+    if (!animation) return; // Sicherheitsabfrage
+    this.animationInterval = setInterval(() => {
+      this.imageLoop(); // ruft die Bildschleifenfunktion auf
+    }, animation.speed); // Geschwindigkeit der Animation
+  }
+
+  imageLoop() {
+    let animation = this.animations[this.currentAnimation]; // holt die aktuelle Animation
+    let i = this.currentImage % animation.images.length; // sorgt dafür, dass die Bilder von vorne beginnen wenn das Ende erreicht ist.
+    let path = animation.images[i]; // Pfad des aktuellen Bildes
+    this.img = this.imageCache[path]; // setzt das Bild des Charakters
+    this.currentImage++; // nächstes Bild
+  }
+
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-      this.trackIdleTime();
       this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
     }, 1000 / 60); // 60 FPS
   }
 
   startMovementLoop() {
     this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
-    this.movementInterval = setInterval(() => {
-      this.moveCharacter(); // bewegt den Charakter basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
+    this.movementInterval = setInterval(() => {}, 1000 / 60); // 60 FPS
+  }
+
+  clearAnimationInterval() {
+    // löscht das Animationsintervall
+    if (this.animationInterval) clearInterval(this.animationInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
+  }
+
+  clearMovementInterval() {
+    // löscht das Bewegungsintervall
+    if (this.movementInterval) clearInterval(this.movementInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
   }
 
   isColliding(movableObject) {
@@ -110,7 +137,7 @@ class MovableObject {
   }
 
   hit() {
-    this.hurtUntil = new Date().getTime() + 1000; // 1 Sekunde unverwundbar nach Treffer
+    this.hurtUntil = new Date().getTime() + 2000; // 1 Sekunde unverwundbar nach Treffer
     this.world.character.energy -= 2; // Energie um 2 reduzieren bei Treffer
     if (this.energy < 0) {
       this.energy = 0; // Energie darf nicht unter 0 fallen
@@ -148,14 +175,16 @@ class MovableObject {
   }
 
   moveRight() {
-    setInterval(() => {
-      this.x += this.speed; // nach links bewegen
+    if (this.moveInterval) return; // <-- verhindert mehrfach starten
+    this.moveInterval = setInterval(() => {
+      this.x += this.speed;
     }, 1000 / 60);
   }
 
   moveLeft() {
-    setInterval(() => {
-      this.x -= this.speed; // nach links bewegen
+    if (this.moveInterval) return; // <-- verhindert mehrfach starten
+    this.moveInterval = setInterval(() => {
+      this.x -= this.speed;
     }, 1000 / 60);
   }
 }

@@ -117,26 +117,6 @@ class Character extends MovableObject {
     },
   };
 
-  playAnimation(type) {
-    if (this.currentAnimation === type) return; // wenn die Animation bereits läuft, nichts tun
-    this.currentAnimation = type; // setzt die aktuelle Animation
-    this.currentImage = 0; // setzt das aktuelle Bild zurück
-    this.clearAnimationInterval(); // löscht das vorherige Animationsintervall
-    let animation = this.animations[type]; // holt die Animationsdaten
-    if (!animation) return; // Sicherheitsabfrage
-    this.animationInterval = setInterval(() => {
-      this.imageLoop(); // ruft die Bildschleifenfunktion auf
-    }, animation.speed); // Geschwindigkeit der Animation
-  }
-
-  imageLoop() {
-    let animation = this.animations[this.currentAnimation]; // holt die aktuelle Animation
-    let i = this.currentImage % animation.images.length; // sorgt dafür, dass die Bilder von vorne beginnen wenn das Ende erreicht ist.
-    let path = animation.images[i]; // Pfad des aktuellen Bildes
-    this.img = this.imageCache[path]; // setzt das Bild des Charakters
-    this.currentImage++; // nächstes Bild
-  }
-
   updateAnimation() {
     if (this.isDead()) {
       this.playAnimation('dead'); // spielt die Todes-Animation ab
@@ -163,7 +143,7 @@ class Character extends MovableObject {
       return;
     }
 
-    if (this.idleTime > 30000) {
+    if (this.idleTime > 20 * 1000) {
       this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
       return;
     }
@@ -181,6 +161,21 @@ class Character extends MovableObject {
     }
   }
 
+  startAnimationLoop() {
+    this.frameInterval = setInterval(() => {
+      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+      this.trackIdleTime();
+      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
+    }, 1000 / 60); // 60 FPS
+  }
+
+  startMovementLoop() {
+    this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
+    this.movementInterval = setInterval(() => {
+      this.moveCharacter(); // bewegt den Charakter basierend auf Tastatureingaben
+    }, 1000 / 60); // 60 FPS
+  }
+
   moveCharacter() {
     if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
     let cameraStop = this.world.level.level_end_x; // Kamera Stopp Position
@@ -193,19 +188,10 @@ class Character extends MovableObject {
     this.jump(); // überprüft und führt den Sprung aus
   }
 
-  clearAnimationInterval() {
-    // löscht das Animationsintervall
-    if (this.animationInterval) clearInterval(this.animationInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
-  }
-
-  clearMovementInterval() {
-    // löscht das Bewegungsintervall
-    if (this.movementInterval) clearInterval(this.movementInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
-  }
-
   moveRight() {
     this.x += this.speed; // bewegt den Charakter nach rechts mit normaler Geschwindigkeit
     this.otherDirection = false; // setzt die Richtung auf rechts
+    console.log('Character x', this.x);
   }
 
   moveLeft() {
@@ -215,7 +201,7 @@ class Character extends MovableObject {
 
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
-      this.speedY = 15; // setzt die vertikale Geschwindigkeit für den Sprung
+      this.speedY = 20; // setzt die vertikale Geschwindigkeit für den Sprung
       this.jumping = true;
     }
   }

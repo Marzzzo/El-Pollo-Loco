@@ -1,13 +1,11 @@
 class Level {
   chickenCount = 4;
   chickCount = 1;
-  endbossCount = 1;
-  coinsCount = 1;
+  coinsCount = 20;
   bottleCount = 1;
   items;
   enemies;
   clouds;
-  coins;
   backgroundObjects;
   level_end_x = 2900; // Kamera end position
 
