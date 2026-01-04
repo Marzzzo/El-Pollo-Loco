@@ -42,10 +42,24 @@ class MovableObject {
   }
 
   drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Chick ||
+      this instanceof Endboss ||
+      this instanceof Coins ||
+      this instanceof Bottles
+    ) {
       this.frameOne(ctx);
     }
-    if (this instanceof Character || this instanceof Chicken || this instanceof Chick || this instanceof Endboss) {
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Chick ||
+      this instanceof Endboss ||
+      this instanceof Coins ||
+      this instanceof Bottles
+    ) {
       this.frameTwo(ctx);
     }
   }

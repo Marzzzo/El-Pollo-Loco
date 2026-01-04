@@ -2,10 +2,10 @@ class Bottles extends MovableObject {
   bottlesImages = ['img/6_salsa_bottle/1_salsa_bottle_on_ground.png', 'img/6_salsa_bottle/2_salsa_bottle_on_ground.png'];
 
   offset = {
-    top: 51,
-    bottom: 101,
-    left: 33,
-    right: 68,
+    top: 15,
+    bottom: 10,
+    left: 40,
+    right: 30,
   };
 
   constructor() {
@@ -13,7 +13,8 @@ class Bottles extends MovableObject {
     this.loadImage(this.bottlesImages[0]);
     this.loadImages(this.bottlesImages);
     this.y = 400;
-    this.x = 380 + Math.random() * 2500;
+    this.x = 380;
+    // this.x = 380 + Math.random() * 2500;
     this.height = 80;
     this.width = 80;
     this.animate();

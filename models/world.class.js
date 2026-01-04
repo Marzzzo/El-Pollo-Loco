@@ -34,8 +34,13 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
-
           console.log('Collision with Character, Energy', this.character.energy);
+        }
+      });
+      this.level.items.forEach((item) => {
+        if (this.character.isColliding(item)) {
+          // item.collect(); // Annahme: Es gibt eine collect-Methode im Item-Objekt
+          console.log('Collected item:', item);
         }
       });
     }, 200);
@@ -43,11 +48,11 @@ class World {
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
   addSingleEnemy(classEnemy, count) {
-    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy());
+    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy()); // fügt ein neues enemy in das array enemies hinzu.
   }
 
   addSingleItems(classItems, count) {
-    for (let i = 0; i < count; i++) this.level.items.push(new classItems());
+    for (let i = 0; i < count; i++) this.level.items.push(new classItems()); // fügt ein neues item in das array items hinzu.
   }
 
   // Zeichnet Objekte
