@@ -1,6 +1,9 @@
 class World {
   character = new Character(); // Erstellt einen neuen Character.
   endboss = new Endboss(); // Erstellt einen neuen Endboss.
+  statusBar = new StatusBar(); // Erstellt eine neue StatusBar.
+  coinsBar = new CoinsBar(); // Erstellt eine neue CoinsBar.
+  bottlesBar = new BottlesBar(); // Erstellt eine neue BottlesBar.
   level = level1; // level wird aus der level1.js geholt.
 
   canvas;
@@ -36,22 +39,38 @@ class World {
   // überprüft Kollisionen zwischen dem Charakter und den Feinden
   checkCollisions() {
     setInterval(() => {
-      if (this.character.isColliding(this.endboss)) {
+      this.isCollidingWithEndboss(); // überprüft Kollision mit dem Endboss
+      this.isCollidingWithEnemies(); // überprüft Kollision mit normalen Feinden
+      this.isCollidingWithItems(); // überprüft Kollision mit sammelbaren Gegenständen
+    }, 50);
+  }
+
+  isCollidingWithEndboss() {
+    if (this.character.isColliding(this.endboss)) {
+      this.character.hit(); // reduziert die Energie des Charakters
+      this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
+    }
+  }
+
+  isCollidingWithEnemies() {
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.isColliding(enemy)) {
         this.character.hit();
+        this.statusBar.setPercentage(this.character.energy);
       }
-      this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy)) {
-          this.character.hit();
-          console.log('Collision with Character, Energy', this.character.energy);
+    });
+  }
+
+  isCollidingWithItems() {
+    this.level.items.forEach((item, index) => {
+      if (this.character.isColliding(item)) {
+        if (item instanceof Coins) {
+          this.collectCoin(index);
+        } else if (item instanceof Bottles) {
+          this.collectBottle(index);
         }
-      });
-      this.level.items.forEach((item) => {
-        if (this.character.isColliding(item)) {
-          // item.collect(); // Annahme: Es gibt eine collect-Methode im Item-Objekt
-          console.log('Collected item:', item);
-        }
-      });
-    }, 200);
+      }
+    });
   }
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
@@ -63,14 +82,44 @@ class World {
     for (let i = 0; i < count; i++) this.level.items.push(new classItems()); // fügt ein neues item in das array items hinzu.
   }
 
+  collectCoin(index) {
+    const coin = this.level.items[index];
+    if (!coin.collected) {
+      coin.collected = true; // Flag setzen
+      this.level.items.splice(index, 1); // Münze aus dem Level entfernen
+      this.coinsBar.setCoins(this.coinsBar.coinsCounter + 1); // Counter um 1 erhöhen
+      console.log(this.coinsBar.coinsCounter);
+      console.log(this.coinsBar);
+    }
+  }
+
+  collectBottle(index) {
+    const bottle = this.level.items[index];
+    if (!bottle.collected) {
+      bottle.collected = true; // Flag setzen
+      this.level.items.splice(index, 1); // Flasche aus dem Level entfernen
+      this.bottlesBar.setBottles(this.bottlesBar.bottleCounter + 1); // Counter um 1 erhöhen
+    }
+  }
+
   // Zeichnet Objekte
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
-    this.addToMap(this.character);
-    this.addToMap(this.endboss);
     this.addObjectsToMap(this.level.clouds);
+    this.addToMap(this.endboss);
+    this.addToMap(this.character);
+
+    this.ctx.translate(-this.camera_x, 0);
+    this.addToMap(this.statusBar); // zeichnet die status bar
+    this.statusBar.drawPercentage(this.ctx); // zeichnet den prozentsatz der status bar
+    this.addToMap(this.coinsBar); // zeichnet die coins bar
+    this.coinsBar.drawCount(this.ctx); // zeichnet den counter der coins bar
+    this.addToMap(this.bottlesBar); // zeichnet die bottles bar
+    this.bottlesBar.drawCount(this.ctx); // zeichnet den counter der bottles bar
+    this.ctx.translate(this.camera_x, 0);
+
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.items);
     this.ctx.translate(-this.camera_x, 0);

@@ -132,6 +132,7 @@ class Character extends MovableObject {
 
     if (this.isHurt()) {
       this.playAnimation('hurt'); // spielt die Hurt-Animation ab
+      this.idleTime = 0;
       return;
     }
     if (this.jumping) {
@@ -191,7 +192,6 @@ class Character extends MovableObject {
   moveRight() {
     this.x += this.speed; // bewegt den Charakter nach rechts mit normaler Geschwindigkeit
     this.otherDirection = false; // setzt die Richtung auf rechts
-    console.log('Character x', this.x);
   }
 
   moveLeft() {

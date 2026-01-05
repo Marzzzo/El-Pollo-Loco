@@ -14,7 +14,7 @@ class Bottles extends MovableObject {
     this.loadImages(this.bottlesImages);
     this.y = 400;
     this.x = 380;
-    // this.x = 380 + Math.random() * 2500;
+    this.x = 380 + Math.random() * 2500;
     this.height = 80;
     this.width = 80;
     this.animate();

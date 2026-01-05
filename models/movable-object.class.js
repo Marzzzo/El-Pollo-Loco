@@ -1,15 +1,10 @@
-class MovableObject {
-  x = 120;
-  y = 400;
-  height = 100;
-  width = 80;
+class MovableObject extends DrawableObject {
   speed = 0.15;
   speedY = 0;
   acceleration = 1;
-  imageCache = {};
-  currentImage = 0;
-  groundLevel = 230;
+
   energy = 100;
+  coins = 0;
   otherDirection = false;
 
   offset = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -35,54 +30,6 @@ class MovableObject {
 
   isOnGround() {
     return this.y === this.groundLevel; // wenn y gleich dem bodenlevel ist, dann ist es auf dem boden.
-  }
-
-  draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height); // zeichnet das bild.
-  }
-
-  drawFrame(ctx) {
-    if (
-      this instanceof Character ||
-      this instanceof Chicken ||
-      this instanceof Chick ||
-      this instanceof Endboss ||
-      this instanceof Coins ||
-      this instanceof Bottles
-    ) {
-      // this.frameOne(ctx);
-    }
-    if (
-      this instanceof Character ||
-      this instanceof Chicken ||
-      this instanceof Chick ||
-      this instanceof Endboss ||
-      this instanceof Coins ||
-      this instanceof Bottles
-    ) {
-      this.frameTwo(ctx);
-    }
-  }
-
-  frameOne(ctx) {
-    ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-    ctx.lineWidth = '2'; // linienbreite für den pfad.
-    ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
-    ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
-    ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-  }
-
-  frameTwo(ctx) {
-    ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-    ctx.lineWidth = '2'; // linienbreite für den pfad.
-    ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
-    ctx.rect(
-      this.x + this.offset.left,
-      this.y + this.offset.top,
-      this.width - this.offset.left - this.offset.right,
-      this.height - this.offset.top - this.offset.bottom
-    ); // erstellt ein rechteck (für Kollisionsboxen etc).
-    ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
   }
 
   playAnimation(type) {
@@ -137,8 +84,9 @@ class MovableObject {
   }
 
   hit() {
-    this.hurtUntil = new Date().getTime() + 2000; // 1 Sekunde unverwundbar nach Treffer
-    this.world.character.energy -= 2; // Energie um 2 reduzieren bei Treffer
+    if (this.isHurt()) return; // wenn das objekt unverwundbar ist, nichts tun
+    this.hurtUntil = new Date().getTime() + 300; // 1 Sekunde unverwundbar nach Treffer
+    this.world.character.energy -= 5; // Energie um 2 reduzieren bei Treffer
     if (this.energy < 0) {
       this.energy = 0; // Energie darf nicht unter 0 fallen
     }
@@ -156,22 +104,6 @@ class MovableObject {
       this.clearAnimationInterval(); // stoppt die animation
       this.clearMovementInterval(); // stoppt die bewegung
     }
-  }
-
-  // Erstellt ein neues bild
-  loadImage(path) {
-    this.img = new Image(); // erstellt ein neues bild.
-    this.img.src = path; // weist den pfad zu.
-  }
-
-  // geht durch das array mit den bildern und füg die in imageCache hinzu.
-  loadImages(arr) {
-    arr.forEach((path) => {
-      // geht durch jedes bild pfad im array durch.
-      let img = new Image(); // erstellt ein neues bild.
-      img.src = path; // weist den pfad zu.
-      this.imageCache[path] = img; // speichert das bild im imageCache mit dem pfad als schlüssel.
-    });
   }
 
   moveRight() {

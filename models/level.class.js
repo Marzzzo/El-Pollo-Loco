@@ -1,8 +1,8 @@
 class Level {
-  chickenCount = 4;
+  chickenCount = 1;
   chickCount = 1;
-  coinsCount = 20;
-  bottleCount = 1;
+  coinsCount = 10;
+  bottleCount = 10;
   items;
   enemies;
   clouds;

@@ -127,21 +127,21 @@ class Endboss extends MovableObject {
     this.moveInterval = setInterval(() => {
       if (!this.world) return; // Sicherheitsabfrage
       this.updateDirectionWithDelay(); // aktualisiert die Richtung mit Verzögerung
-      this.step(); // bewegt den Endboss entsprechend der Richtung
+      this.viewDirection(); // bewegt den Endboss entsprechend der Richtung
     }, 1000 / 60);
   }
 
   updateDirectionWithDelay() {
     const differenz = this.world.character.x - this.x; // Differenz zur Charakterposition
-    if (Math.abs(differenz) < 5) return; // keine Änderung, wenn zu nah
+    if (Math.abs(differenz) < 150) return; // keine Änderung, wenn zu nah
     const newDirection = differenz > 0 ? 1 : -1; // neue Richtung basierend auf der Position des Charakters
     if (newDirection === this.direction) return; // keine Änderung, wenn die Richtung gleich ist
-    if (Date.now() - this.lastTurnTime < 400) return; // Verzögerung überprüfen
+    if (Date.now() - this.lastTurnTime < 100) return; // Verzögerung überprüfen
     this.lastTurnTime = Date.now(); // aktualisiert die letzte Drehzeit
     this.direction = newDirection; // setzt die neue Richtung
   }
 
-  step() {
+  viewDirection() {
     this.otherDirection = this.direction === 1; // setzt die Blickrichtung basierend auf der Bewegungsrichtung
     this.x += this.direction * this.speed; // bewegt den Endboss entsprechend der Richtung
   }
