@@ -1,6 +1,7 @@
 class World {
   character = new Character(); // Erstellt einen neuen Character.
   endboss = new Endboss(); // Erstellt einen neuen Endboss.
+  endbossBar = new EndbossBar(); // Erstellt eine neue EndbossBar.
   statusBar = new StatusBar(); // Erstellt eine neue StatusBar.
   coinsBar = new CoinsBar(); // Erstellt eine neue CoinsBar.
   bottlesBar = new BottlesBar(); // Erstellt eine neue BottlesBar.
@@ -88,8 +89,6 @@ class World {
       coin.collected = true; // Flag setzen
       this.level.items.splice(index, 1); // Münze aus dem Level entfernen
       this.coinsBar.setCoins(this.coinsBar.coinsCounter + 1); // Counter um 1 erhöhen
-      console.log(this.coinsBar.coinsCounter);
-      console.log(this.coinsBar);
     }
   }
 
@@ -112,12 +111,10 @@ class World {
     this.addToMap(this.character);
 
     this.ctx.translate(-this.camera_x, 0);
-    this.addToMap(this.statusBar); // zeichnet die status bar
-    this.statusBar.drawPercentage(this.ctx); // zeichnet den prozentsatz der status bar
-    this.addToMap(this.coinsBar); // zeichnet die coins bar
-    this.coinsBar.drawCount(this.ctx); // zeichnet den counter der coins bar
-    this.addToMap(this.bottlesBar); // zeichnet die bottles bar
-    this.bottlesBar.drawCount(this.ctx); // zeichnet den counter der bottles bar
+    this.showHealthBar();
+    this.showCoinsBar();
+    this.showBottlesBar();
+    this.showEndbossBar();
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.enemies);
@@ -165,5 +162,30 @@ class World {
   mirrorImgRight(movableObjects) {
     movableObjects.x = movableObjects.x * -1; // Spiegelt die x-Position des Objekts wieder zurück.
     this.ctx.restore(); // Stellt den zuvor gespeicherten Zustand des Canvas wieder her.
+  }
+
+  showBottlesBar() {
+    this.addToMap(this.bottlesBar); // zeichnet die bottles bar
+    this.bottlesBar.drawCount(this.ctx); // zeichnet den counter der bottles bar
+  }
+
+  showCoinsBar() {
+    this.addToMap(this.coinsBar); // zeichnet die coins bar
+    this.coinsBar.drawCount(this.ctx); // zeichnet den counter der coins bar
+  }
+
+  showHealthBar() {
+    this.addToMap(this.statusBar); // zeichnet die status bar
+    this.statusBar.drawPercentage(this.ctx); // zeichnet den prozentsatz der status bar
+  }
+
+  showEndbossBar() {
+    if (!this.endbossBarVisible && this.character.x > this.endboss.x - 1000) {
+      this.endbossBarVisible = true;
+    }
+    if (this.endbossBarVisible) {
+      this.addToMap(this.endbossBar);
+      this.endbossBar.drawPercentage(this.ctx);
+    }
   }
 }

@@ -209,4 +209,32 @@ class Character extends MovableObject {
   isHurt() {
     return new Date().getTime() < this.hurtUntil; // überprüft ob der Charakter unverwundbar ist
   }
+
+  isCollidingWithEndboss() {
+    if (this.character.isColliding(this.endboss)) {
+      this.character.hit(); // reduziert die Energie des Charakters
+      this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
+    }
+  }
+
+  isCollidingWithEnemies() {
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.isColliding(enemy)) {
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.energy);
+      }
+    });
+  }
+
+  isCollidingWithItems() {
+    this.level.items.forEach((item, index) => {
+      if (this.character.isColliding(item)) {
+        if (item instanceof Coins) {
+          this.collectCoin(index);
+        } else if (item instanceof Bottles) {
+          this.collectBottle(index);
+        }
+      }
+    });
+  }
 }

@@ -4,6 +4,7 @@ class DrawableObject {
   currentImage = 0;
   groundLevel = 230;
   collected = false;
+  endbossBarVisible = false;
   x = 120;
   y = 400;
   height = 100;

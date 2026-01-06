@@ -52,18 +52,6 @@ class MovableObject extends DrawableObject {
     this.currentImage++; // nächstes Bild
   }
 
-  startAnimationLoop() {
-    this.frameInterval = setInterval(() => {
-      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
-  }
-
-  startMovementLoop() {
-    this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
-    this.movementInterval = setInterval(() => {}, 1000 / 60); // 60 FPS
-  }
-
   clearAnimationInterval() {
     // löscht das Animationsintervall
     if (this.animationInterval) clearInterval(this.animationInterval); // überprüft, ob das Intervall existiert, bevor es gelöscht wird
@@ -85,11 +73,16 @@ class MovableObject extends DrawableObject {
 
   hit() {
     if (this.isHurt()) return; // wenn das objekt unverwundbar ist, nichts tun
-    this.hurtUntil = new Date().getTime() + 300; // 1 Sekunde unverwundbar nach Treffer
-    this.world.character.energy -= 5; // Energie um 2 reduzieren bei Treffer
+    this.hurtUntil = new Date().getTime() + 300; // setzt die unverwundbar zeit auf 300ms
+    this.energy -= 5; // Energie um 2 reduzieren bei Treffer
+
     if (this.energy < 0) {
       this.energy = 0; // Energie darf nicht unter 0 fallen
     }
+  }
+
+  isHurt() {
+    return new Date().getTime() < this.hurtUntil; // überprüft ob der Charakter unverwundbar ist
   }
 
   isDead() {
@@ -101,7 +94,6 @@ class MovableObject extends DrawableObject {
       this.acceleration = 0.5;
       this.y -= this.speedY; // hoch, solange speedY positiv ist
       this.speedY -= this.acceleration; // wird kleiner -> irgendwann negativ -> fallen
-      this.clearAnimationInterval(); // stoppt die animation
       this.clearMovementInterval(); // stoppt die bewegung
     }
   }

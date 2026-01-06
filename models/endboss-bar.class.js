@@ -1,20 +1,20 @@
-class StatusBar extends DrawableObject {
-  StatusBarImages = [
-    'img/7_statusbars/1_statusbar/2_statusbar_health/green/0.png',
-    'img/7_statusbars/1_statusbar/2_statusbar_health/green/20.png',
-    'img/7_statusbars/1_statusbar/2_statusbar_health/green/40.png',
-    'img/7_statusbars/1_statusbar/2_statusbar_health/green/60.png',
-    'img/7_statusbars/1_statusbar/2_statusbar_health/green/80.png',
-    'img/7_statusbars/1_statusbar/2_statusbar_health/green/100.png',
+class EndbossBar extends DrawableObject {
+  endbossBarImages = [
+    'img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
+    'img/7_statusbars/2_statusbar_endboss/blue/blue20.png',
+    'img/7_statusbars/2_statusbar_endboss/blue/blue40.png',
+    'img/7_statusbars/2_statusbar_endboss/blue/blue60.png',
+    'img/7_statusbars/2_statusbar_endboss/blue/blue80.png',
+    'img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
   ];
 
   percentage = 100;
 
   constructor() {
     super();
-    this.loadImages(this.StatusBarImages);
+    this.loadImages(this.endbossBarImages);
     this.setPercentage(100);
-    this.x = 0;
+    this.x = 750;
     this.y = 0;
     this.width = 200;
     this.height = 40;
@@ -23,7 +23,7 @@ class StatusBar extends DrawableObject {
   setPercentage(percentage) {
     // 0 ... 100
     this.percentage = percentage; // setzt den prozentsatz.
-    let path = this.StatusBarImages[this.resolveImageIndex()]; // ermittelt den bildpfad basierend auf dem prozentsatz.
+    let path = this.endbossBarImages[this.resolveImageIndex()]; // ermittelt den bildpfad basierend auf dem prozentsatz.
     this.img = this.imageCache[path]; // setzt das bild aus dem imageCache.
   }
 
@@ -36,8 +36,8 @@ class StatusBar extends DrawableObject {
     const text = `${this.percentage}%`;
 
     // Outline (besser lesbar)
-    ctx.strokeText(text, this.x + this.width - 100, this.y + 32);
-    ctx.fillText(text, this.x + this.width - 100, this.y + 32);
+    ctx.strokeText(text, this.x + this.width - 100, this.y + 27);
+    ctx.fillText(text, this.x + this.width - 100, this.y + 27);
   }
 
   resolveImageIndex() {

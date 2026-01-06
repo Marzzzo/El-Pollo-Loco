@@ -5,6 +5,7 @@ class Endboss extends MovableObject {
   width = 170;
   speed = 2.5;
 
+  energy = 100;
   lastTurnTime = 0;
   turnDelay = 500;
   startTriggered = false;
@@ -96,6 +97,10 @@ class Endboss extends MovableObject {
   };
 
   updateAnimation() {
+    this.endbossAttackCharacter();
+  }
+
+  endbossAttackCharacter() {
     if (!this.startTriggered && this.world.character.x >= 3000) {
       this.startTriggered = true;
       this.phase = 'attack';
@@ -128,6 +133,9 @@ class Endboss extends MovableObject {
       if (!this.world) return; // Sicherheitsabfrage
       this.updateDirectionWithDelay(); // aktualisiert die Richtung mit Verzögerung
       this.viewDirection(); // bewegt den Endboss entsprechend der Richtung
+      if (this.isColliding(this.world.character)) {
+        this.hit(); // reduziert die Energie des Endbosses bei Kollision
+      }
     }, 1000 / 60);
   }
 
@@ -144,5 +152,12 @@ class Endboss extends MovableObject {
   viewDirection() {
     this.otherDirection = this.direction === 1; // setzt die Blickrichtung basierend auf der Bewegungsrichtung
     this.x += this.direction * this.speed; // bewegt den Endboss entsprechend der Richtung
+  }
+
+  startAnimationLoop() {
+    this.frameInterval = setInterval(() => {
+      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
+    }, 1000 / 60); // 60 FPS
   }
 }
