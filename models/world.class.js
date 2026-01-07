@@ -72,6 +72,7 @@ class World {
     this.isCollidingWithEndboss(); // überprüft Kollision mit dem Endboss
     this.isCollidingWithEnemies(); // überprüft Kollision mit normalen Feinden
     this.isCollidingWithItems(); // überprüft Kollision mit sammelbaren Gegenständen
+    this.checkBottleHit(); // überprüft Kollisionen zwischen Flaschen und Gegnern
   }
 
   checkThrowableObjects() {
@@ -82,10 +83,24 @@ class World {
     if (this.dPressed) return;
     this.dPressed = true;
     if (this.bottlesBar.bottleCounter > 0) {
-      let bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100);
+      const directon = this.character.otherDirection ? -1 : 1;
+      let bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100, directon);
       this.throwableObjects.push(bottle);
       this.bottlesBar.setBottles(this.bottlesBar.bottleCounter - 1);
     }
+  }
+
+  checkBottleHit() {
+    if (!this.endboss) return;
+    this.throwableObjects.forEach((bottle) => {
+      if (!bottle) return;
+      if (bottle.hasImpacted) return;
+      if (bottle.isColliding(this.endboss)) {
+        bottle.hasImpacted = true;
+        this.endboss.hitFromBottle();
+        this.endbossBar.setPercentage(this.endboss.energy);
+      }
+    });
   }
 
   isCollidingWithEndboss() {

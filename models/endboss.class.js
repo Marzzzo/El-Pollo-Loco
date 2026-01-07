@@ -10,6 +10,9 @@ class Endboss extends MovableObject {
   turnDelay = 500;
   startTriggered = false;
   phase = 'idle';
+  bottleHurtUntil = 0;
+  isHit = false;
+  deadJumpStarted = false;
 
   offset = { top: 70, right: 25, bottom: 50, left: 30 };
 
@@ -101,6 +104,25 @@ class Endboss extends MovableObject {
   }
 
   endbossAttackCharacter() {
+    if (this.isBottleHurt()) {
+      this.playAnimation('hurt');
+      return;
+    }
+    if (this.phase === 'hurt') {
+      this.phase = 'walk';
+    }
+    if (this.isDead()) {
+      this.playAnimation('dead');
+
+      if (!this.deadJumpStarted) {
+        this.deadJumpStarted = true;
+        this.speedY = 12;
+        clearInterval(this.moveInterval);
+      }
+      this.deadJump();
+      return;
+    }
+
     if (!this.startTriggered && this.world.character.x >= 3000) {
       this.startTriggered = true;
       this.phase = 'attack';
@@ -122,7 +144,32 @@ class Endboss extends MovableObject {
       this.playAnimation('walk');
       return;
     }
+
     this.playAnimation('alert');
+  }
+
+  isBottleHurt() {
+    return Date.now() < this.bottleHurtUntil;
+  }
+
+  hitFromBottle() {
+    if (this.isBottleHurt()) return; // nicht spammen
+    this.energy = Math.max(0, this.energy - 10); // schaden
+    this.bottleHurtUntil = Date.now() + 1000; // 1000ms hurt-phase
+    this.isHit = true;
+    this.phase = 'hurt';
+    if (this.energy <= 80) {
+      this.speed = 3;
+    }
+    if (this.energy <= 50) {
+      this.speed = 3.5;
+    }
+    if (this.energy <= 30) {
+      this.speed = 4;
+    }
+    if (this.energy < 0) {
+      this.energy = 0; // Energie darf nicht unter 0 fallen
+    }
   }
 
   followCharacter() {
@@ -131,10 +178,11 @@ class Endboss extends MovableObject {
     this.direction = -1; // initiale Richtung nach links
     this.moveInterval = setInterval(() => {
       if (!this.world) return; // Sicherheitsabfrage
+      if (this.isBottleHurt()) return; // nicht bewegen, wenn verletzt
       this.updateDirectionWithDelay(); // aktualisiert die Richtung mit Verzögerung
       this.viewDirection(); // bewegt den Endboss entsprechend der Richtung
       if (this.isColliding(this.world.character)) {
-        this.hit(); // reduziert die Energie des Endbosses bei Kollision
+        this.hit(); // reduziert die Energie des Charakters bei Kollision
       }
     }, 1000 / 60);
   }

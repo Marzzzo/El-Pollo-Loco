@@ -92,10 +92,11 @@ class MovableObject extends DrawableObject {
   }
 
   isDead() {
-    return this.energy == 0; // überprüft ob die energie 0 oder weniger ist
+    return this.energy <= 0; // überprüft ob die energie 0 oder weniger ist
   }
 
   deadJump() {
+    if (!this.isDead()) return;
     if (this.isDead()) {
       this.acceleration = 0.5;
       this.y -= this.speedY; // hoch, solange speedY positiv ist
