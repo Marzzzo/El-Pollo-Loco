@@ -10,11 +10,13 @@ class MovableObject extends DrawableObject {
   offset = { top: 0, right: 0, bottom: 0, left: 0 };
 
   applyGravity() {
-    setInterval(() => {
+    if (this.gravityInterval) return; // verhindert mehrfaches Anwenden der Schwerkraft
+    this.gravityInterval = setInterval(() => {
       if (this.isDead()) return; // keine Schwerkraft anwenden, wenn das Objekt tot ist
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY; // aktualisiert die y-Position basierend auf der vertikalen geschwindigkeit.
         this.speedY -= this.acceleration; // verringert die vertikale geschwindigkeit, um den fall zu simulieren.
+        return;
       }
       if (!this.isDead() && this.y >= this.groundLevel) {
         this.y = this.groundLevel; // setzt y auf bodenlevel, wenn es darunter geht.
@@ -25,7 +27,11 @@ class MovableObject extends DrawableObject {
   }
 
   isAboveGround() {
-    return this.y < this.groundLevel; // wenn y kleiner als bodenlevel ist, dann ist es über dem boden.
+    if (this instanceof ThrowableObject) {
+      return true; // <- Boden für Flasche (z.B. groundLevel der Welt)
+    } else {
+      return this.y < 230; // alle anderen Objekte haben Boden bei y = 180
+    }
   }
 
   isOnGround() {
@@ -73,7 +79,7 @@ class MovableObject extends DrawableObject {
 
   hit() {
     if (this.isHurt()) return; // wenn das objekt unverwundbar ist, nichts tun
-    this.hurtUntil = new Date().getTime() + 300; // setzt die unverwundbar zeit auf 300ms
+    this.hurtUntil = new Date().getTime() + 2000; // setzt die unverwundbar zeit auf 300ms
     this.energy -= 5; // Energie um 2 reduzieren bei Treffer
 
     if (this.energy < 0) {

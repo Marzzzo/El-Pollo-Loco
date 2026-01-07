@@ -5,6 +5,7 @@ class World {
   statusBar = new StatusBar(); // Erstellt eine neue StatusBar.
   coinsBar = new CoinsBar(); // Erstellt eine neue CoinsBar.
   bottlesBar = new BottlesBar(); // Erstellt eine neue BottlesBar.
+  throwableObjects = []; // Array für die geworfenen Objekte
   level = level1; // level wird aus der level1.js geholt.
 
   canvas;
@@ -24,7 +25,30 @@ class World {
     this.addSingleItems(Bottles, this.level.bottleCount);
     this.setWorld();
     this.draw();
-    this.checkCollisions();
+    this.run();
+  }
+
+  // Zeichnet Objekte
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.translate(this.camera_x, 0);
+    this.addObjectsToMap(this.level.backgroundObjects);
+    this.addObjectsToMap(this.level.clouds);
+    this.addToMap(this.endboss);
+    this.addToMap(this.character);
+    this.addObjectsToMap(this.throwableObjects);
+
+    this.ctx.translate(-this.camera_x, 0);
+    this.showHealthBar();
+    this.showCoinsBar();
+    this.showBottlesBar();
+    this.showEndbossBar();
+    this.ctx.translate(this.camera_x, 0);
+
+    this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.items);
+    this.ctx.translate(-this.camera_x, 0);
+    this.animationFrame();
   }
 
   setWorld() {
@@ -37,13 +61,31 @@ class World {
     if (typeof this.endboss.animate === 'function') this.endboss.animate(); // ruft die animate function im endboss auf.
   }
 
-  // überprüft Kollisionen zwischen dem Charakter und den Feinden
-  checkCollisions() {
+  run() {
     setInterval(() => {
-      this.isCollidingWithEndboss(); // überprüft Kollision mit dem Endboss
-      this.isCollidingWithEnemies(); // überprüft Kollision mit normalen Feinden
-      this.isCollidingWithItems(); // überprüft Kollision mit sammelbaren Gegenständen
+      this.checkCollisions(); // überprüft Kollisionen zwischen dem Charakter und den Feinden
+      this.checkThrowableObjects(); // überprüft Kollisionen zwischen den geworfenen Objekten und den Feinden
     }, 50);
+  }
+
+  checkCollisions() {
+    this.isCollidingWithEndboss(); // überprüft Kollision mit dem Endboss
+    this.isCollidingWithEnemies(); // überprüft Kollision mit normalen Feinden
+    this.isCollidingWithItems(); // überprüft Kollision mit sammelbaren Gegenständen
+  }
+
+  checkThrowableObjects() {
+    if (!this.keyboard.D) {
+      this.dPressed = false;
+      return;
+    }
+    if (this.dPressed) return;
+    this.dPressed = true;
+    if (this.bottlesBar.bottleCounter > 0) {
+      let bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100);
+      this.throwableObjects.push(bottle);
+      this.bottlesBar.setBottles(this.bottlesBar.bottleCounter - 1);
+    }
   }
 
   isCollidingWithEndboss() {
@@ -99,28 +141,6 @@ class World {
       this.level.items.splice(index, 1); // Flasche aus dem Level entfernen
       this.bottlesBar.setBottles(this.bottlesBar.bottleCounter + 1); // Counter um 1 erhöhen
     }
-  }
-
-  // Zeichnet Objekte
-  draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.addObjectsToMap(this.level.clouds);
-    this.addToMap(this.endboss);
-    this.addToMap(this.character);
-
-    this.ctx.translate(-this.camera_x, 0);
-    this.showHealthBar();
-    this.showCoinsBar();
-    this.showBottlesBar();
-    this.showEndbossBar();
-    this.ctx.translate(this.camera_x, 0);
-
-    this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.level.items);
-    this.ctx.translate(-this.camera_x, 0);
-    this.animationFrame();
   }
 
   animationFrame() {
