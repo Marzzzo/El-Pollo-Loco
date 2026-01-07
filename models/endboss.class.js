@@ -161,11 +161,14 @@ class Endboss extends MovableObject {
     if (this.energy <= 80) {
       this.speed = 3;
     }
-    if (this.energy <= 50) {
+    if (this.energy <= 60) {
       this.speed = 3.5;
     }
-    if (this.energy <= 30) {
+    if (this.energy <= 40) {
       this.speed = 4;
+    }
+    if (this.energy <= 20) {
+      this.speed = 5;
     }
     if (this.energy < 0) {
       this.energy = 0; // Energie darf nicht unter 0 fallen
