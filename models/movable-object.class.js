@@ -2,7 +2,7 @@ class MovableObject extends DrawableObject {
   speed = 0.15;
   speedY = 0;
   acceleration = 1;
-
+  hurtUntil = 0;
   energy = 100;
   coins = 0;
   otherDirection = false;
@@ -81,7 +81,29 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) return; // wenn das objekt unverwundbar ist, nichts tun
     this.hurtUntil = new Date().getTime() + 2000; // setzt die unverwundbar zeit auf 300ms
     this.energy -= 5; // Energie um 2 reduzieren bei Treffer
+    if (this.energy < 0) {
+      this.energy = 0; // Energie darf nicht unter 0 fallen
+    }
+  }
 
+  hitFromBottle() {
+    if (this.isBottleHurt()) return; // nicht spammen
+    this.energy = Math.max(0, this.energy - 10); // schaden
+    this.bottleHurtUntil = Date.now() + 1000; // 1000ms hurt-phase
+    this.isHit = true;
+    this.phase = 'hurt';
+    if (this.energy <= 80) {
+      this.speed = 3;
+    }
+    if (this.energy <= 60) {
+      this.speed = 3.5;
+    }
+    if (this.energy <= 40) {
+      this.speed = 4;
+    }
+    if (this.energy <= 20) {
+      this.speed = 5;
+    }
     if (this.energy < 0) {
       this.energy = 0; // Energie darf nicht unter 0 fallen
     }
@@ -89,6 +111,10 @@ class MovableObject extends DrawableObject {
 
   isHurt() {
     return new Date().getTime() < this.hurtUntil; // überprüft ob der Charakter unverwundbar ist
+  }
+
+  isBottleHurt() {
+    return Date.now() < this.bottleHurtUntil;
   }
 
   isDead() {

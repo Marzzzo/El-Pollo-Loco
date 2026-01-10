@@ -5,6 +5,7 @@ class Character extends MovableObject {
   speed = 5;
   idleTime = 0;
   jumping = false;
+  hurtUntil = 0;
   deadJumpStarted = false;
 
   offset = { top: 120, right: 25, bottom: 12, left: 15 };

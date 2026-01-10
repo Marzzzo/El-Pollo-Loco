@@ -64,7 +64,7 @@ class World {
   run() {
     setInterval(() => {
       this.checkCollisions(); // überprüft Kollisionen zwischen dem Charakter und den Feinden
-      this.checkThrowableObjects(); // überprüft Kollisionen zwischen den geworfenen Objekten und den Feinden
+      this.handleThrowBottle(); // behandelt das Werfen von Flaschen
     }, 50);
   }
 
@@ -75,7 +75,7 @@ class World {
     this.checkBottleHit(); // überprüft Kollisionen zwischen Flaschen und Gegnern
   }
 
-  checkThrowableObjects() {
+  handleThrowBottle() {
     if (!this.keyboard.D) {
       this.dPressed = false;
       return;
@@ -84,26 +84,55 @@ class World {
     this.dPressed = true;
     if (this.bottlesBar.bottleCounter > 0) {
       const directon = this.character.otherDirection ? -1 : 1;
-      let bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100, directon);
+      const bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100, directon);
       this.throwableObjects.push(bottle);
       this.bottlesBar.setBottles(this.bottlesBar.bottleCounter - 1);
     }
   }
 
   checkBottleHit() {
-    if (!this.endboss) return;
     this.throwableObjects.forEach((bottle) => {
-      if (!bottle) return;
-      if (bottle.hasImpacted) return;
-      if (bottle.isColliding(this.endboss)) {
-        bottle.hasImpacted = true;
-        this.endboss.hitFromBottle();
-        this.endbossBar.setPercentage(this.endboss.energy);
-      }
+      if (!bottle || bottle.hasImpacted) return;
+      // Endboss bekommt Schaden
+      this.endbossHitFromBottle(bottle);
+      // Normale Enemies sterben sofort
+      this.enemiesHitFromBottle(bottle);
     });
   }
 
+  endbossHitFromBottle(bottle) {
+    if (this.endboss && bottle.isColliding(this.endboss)) {
+      bottle.hasImpacted = true;
+      this.endboss.hitFromBottle();
+      this.endbossBar.setPercentage(this.endboss.energy);
+      return;
+    }
+  }
+
+  enemiesHitFromBottle(bottle) {
+    this.level.enemies.forEach((enemy) => {
+      if (bottle.hasImpacted) return;
+      if (!bottle.isColliding(enemy)) return;
+      bottle.hasImpacted = true;
+      this.killEnemy(enemy);
+    });
+  }
+
+  killEnemy(enemy) {
+    if (enemy.energy <= 0) return;
+    enemy.energy = 0;
+    enemy.speed = 0;
+    clearInterval(enemy.moveInterval);
+    enemy.moveInterval = null;
+    enemy.playAnimation?.('dead');
+    setTimeout(() => {
+      const i = this.level.enemies.indexOf(enemy);
+      if (i !== -1) this.level.enemies.splice(i, 1);
+    }, 2000);
+  }
+
   isCollidingWithEndboss() {
+    if (this.endboss.energy <= 0) return;
     if (this.character.isColliding(this.endboss)) {
       this.character.hit(); // reduziert die Energie des Charakters
       this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
@@ -112,10 +141,19 @@ class World {
 
   isCollidingWithEnemies() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy)) {
-        this.character.hit();
-        this.statusBar.setPercentage(this.character.energy);
+      if (!this.character.isColliding(enemy)) return;
+      if (enemy.energy <= 0) return;
+
+      const fallingOnTop = this.character.speedY < 0 && this.character.y < enemy.y;
+
+      if (fallingOnTop) {
+        this.killEnemy(enemy); // Dead-Animation + später entfernen
+        this.character.speedY = 12; // Bounce (optional)
+        return;
       }
+
+      this.character.hit();
+      this.statusBar.setPercentage(this.character.energy);
     });
   }
 

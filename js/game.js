@@ -7,10 +7,6 @@ let keyboard = new Keyboard();
 function init() {
   canvas = document.getElementById('canvas'); // greift auf das canvas über die ID zu.
   world = new World(canvas, keyboard); // neue welt wird erstellt und das canvas wird übergeben in den constructor in der world.
-  console.log('Meine Welt ist', world);
-  // console.log('Mein Character ist', world.character);
-  // console.log('Meine Enemies sind', world.level.enemies);
-  // console.log('Meine Items sind', world.level.items);
 }
 
 window.addEventListener('keydown', (event) => {

@@ -148,33 +148,6 @@ class Endboss extends MovableObject {
     this.playAnimation('alert');
   }
 
-  isBottleHurt() {
-    return Date.now() < this.bottleHurtUntil;
-  }
-
-  hitFromBottle() {
-    if (this.isBottleHurt()) return; // nicht spammen
-    this.energy = Math.max(0, this.energy - 10); // schaden
-    this.bottleHurtUntil = Date.now() + 1000; // 1000ms hurt-phase
-    this.isHit = true;
-    this.phase = 'hurt';
-    if (this.energy <= 80) {
-      this.speed = 3;
-    }
-    if (this.energy <= 60) {
-      this.speed = 3.5;
-    }
-    if (this.energy <= 40) {
-      this.speed = 4;
-    }
-    if (this.energy <= 20) {
-      this.speed = 5;
-    }
-    if (this.energy < 0) {
-      this.energy = 0; // Energie darf nicht unter 0 fallen
-    }
-  }
-
   followCharacter() {
     if (this.moveInterval) return; // verhindert mehrfach starten
     this.lastTurnTime = Date.now(); // initialisiert die letzte Drehzeit
