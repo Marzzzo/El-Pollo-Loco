@@ -8,14 +8,15 @@ class Coins extends MovableObject {
     right: 43,
   };
 
-  constructor() {
+  spawnPoints = [300, 700, 1100, 1400, 1700, 3000, 3400];
+
+  constructor(i) {
     super();
     this.loadImage(this.coinsImages[0]);
     this.loadImages(this.coinsImages);
     this.animate();
-    this.y = 380;
-    this.x = 180;
-    this.x = 180 + Math.random() * 2500;
+    this.y = 250;
+    this.x = this.spawnPoints[i % this.spawnPoints.length];
     this.height = 120;
     this.width = 120;
   }

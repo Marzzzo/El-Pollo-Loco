@@ -202,7 +202,7 @@ class Character extends MovableObject {
 
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
-      this.speedY = 20; // setzt die vertikale Geschwindigkeit für den Sprung
+      this.speedY = 15; // setzt die vertikale Geschwindigkeit für den Sprung
       this.jumping = true;
     }
   }

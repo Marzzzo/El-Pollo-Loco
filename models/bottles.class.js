@@ -8,13 +8,14 @@ class Bottles extends MovableObject {
     right: 30,
   };
 
-  constructor() {
+  spawnPoints = [600, 1000, 1400, 1800, 2200, 2600, 3000];
+
+  constructor(i) {
     super();
     this.loadImage(this.bottlesImages[0]);
     this.loadImages(this.bottlesImages);
     this.y = 410;
-    this.x = 380;
-    this.x = 380 + Math.random() * 2500;
+    this.x = this.spawnPoints[i % this.spawnPoints.length];
     this.height = 70;
     this.width = 60;
     this.animate();
