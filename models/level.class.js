@@ -1,5 +1,5 @@
 class Level {
-  chickenCount = 5;
+  chickenCount = 7;
   chickCount = 5;
   coinsCount = 10;
   bottleCount = 20;

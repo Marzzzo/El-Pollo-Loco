@@ -3,6 +3,7 @@ class Chicken extends MovableObject {
   width = 60;
   x = 300;
   energy = 5;
+  spawnPoints = [600, 1000, 1400, 1800, 2200, 2600, 3000];
 
   offset = { top: 20, right: 10, bottom: 20, left: 10 };
 
@@ -14,14 +15,14 @@ class Chicken extends MovableObject {
 
   deadImages = ['img/3_enemies_chicken/chicken_normal/2_dead/dead.png'];
 
-  constructor() {
+  constructor(i) {
     super();
     this.loadImage(this.walkImages[0]);
     this.loadImages(this.walkImages);
     this.loadImages(this.deadImages);
     this.moveLeft();
     this.animate();
-    this.x += Math.random() * 2500;
+    this.x = this.spawnPoints[i % this.spawnPoints.length];
     this.speed = 0.15 + Math.random() * 0.35;
   }
 

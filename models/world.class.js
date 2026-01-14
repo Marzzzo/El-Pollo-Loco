@@ -17,6 +17,7 @@ class World {
     this.ctx = canvas.getContext('2d'); // CanvasRenderingContext2D (das man auf dem canvas zeichnen kann).
     this.canvas = canvas; // Das canvas wird in der variable der klasse gespeichert.
     this.keyboard = keyboard; // keyboard wird in der variable der klasse gespeichert.
+    this.throwCooldown = false; // Cooldown für das Werfen von Flaschen
 
     // Hier werden die klassen und der Count übergeben.
     this.addSingleEnemy(Chicken, this.level.chickenCount);
@@ -76,58 +77,59 @@ class World {
   }
 
   handleThrowBottle() {
-    if (!this.keyboard.D) {
-      this.dPressed = false;
-      return;
-    }
-    if (this.dPressed) return;
-    this.dPressed = true;
+    if (!this.keyboard.D || this.throwCooldown) return; // überprüft ob die Taste 'D' gedrückt wird und ob der Cooldown aktiv ist
+    this.throwCooldown = true; // setzt den Cooldown, um schnelles Werfen zu verhindern
     if (this.bottlesBar.bottleCounter > 0) {
-      const directon = this.character.otherDirection ? -1 : 1;
-      const bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100, directon);
-      this.throwableObjects.push(bottle);
-      this.bottlesBar.setBottles(this.bottlesBar.bottleCounter - 1);
+      const direction = this.character.otherDirection ? -1 : 1; // bestimmt die Wurfrichtung basierend auf der Blickrichtung des Charakters
+      const bottle = new ThrowableObject(this.character.x + 20, this.character.y + 100, direction); // erstellt ein neues ThrowableObject (Flasche)
+      this.throwableObjects.push(bottle); // fügt die Flasche dem Array der geworfenen Objekte hinzu
+      this.bottlesBar.setBottles(this.bottlesBar.bottleCounter - 1); // verringert die Anzahl der verfügbaren Flaschen in der BottlesBar um 1
     }
+    setTimeout(() => {
+      this.throwCooldown = false; // setzt den Cooldown nach 2 Sekunden zurück
+    }, 2000);
   }
 
   checkBottleHit() {
     this.throwableObjects.forEach((bottle) => {
-      if (!bottle || bottle.hasImpacted) return;
-      // Endboss bekommt Schaden
-      this.endbossHitFromBottle(bottle);
-      // Normale Enemies sterben sofort
-      this.enemiesHitFromBottle(bottle);
+      if (!bottle || bottle.hasImpacted) return; // überspringt Flaschen, die bereits getroffen haben
+      this.endbossHitFromBottle(bottle); // überprüft Kollisionen zwischen Flaschen und dem Endboss
+      this.enemiesHitFromBottle(bottle); // überprüft Kollisionen zwischen Flaschen und normalen Gegnern
     });
+    this.throwableObjects = this.throwableObjects.filter((bottle) => !bottle.isRemoved); // Entfernt Flaschen, die als entfernt markiert sind
   }
 
   endbossHitFromBottle(bottle) {
-    if (this.endboss && bottle.isColliding(this.endboss)) {
-      bottle.hasImpacted = true;
-      this.endboss.hitFromBottle();
-      this.endbossBar.setPercentage(this.endboss.energy);
-      return;
-    }
+    if (!this.endboss) return; // Sicherheitsabfrage
+    if (bottle.hasImpacted) return; // überspringt Flaschen, die bereits getroffen haben
+    if (!bottle.isColliding(this.endboss)) return; // keine Kollision
+    bottle.impact(); // Flasche trifft den Endboss
+    this.endboss.hitFromBottle(); // reduziert die Energie des Endboss
+    this.endbossBar.setPercentage(this.endboss.energy); // aktualisiert die Anzeige der Endboss-Leiste
   }
 
   enemiesHitFromBottle(bottle) {
-    this.level.enemies.forEach((enemy) => {
-      if (bottle.hasImpacted) return;
-      if (!bottle.isColliding(enemy)) return;
-      bottle.hasImpacted = true;
-      this.killEnemy(enemy);
+    this.level.enemies.forEach((enemy, index) => {
+      if (bottle.hasImpacted) return; // überspringt Flaschen, die bereits getroffen haben
+      if (!bottle.isColliding(enemy)) return; // keine Kollision
+      bottle.impact(); // Flasche trifft den Gegner
+      this.killEnemy(enemy); // tötet den Gegner
+      setTimeout(() => {
+        this.level.enemies.splice(index, 1); // entfernt den Gegner aus dem Level
+      }, 2000);
     });
   }
 
   killEnemy(enemy) {
-    if (enemy.energy <= 0) return;
-    enemy.energy = 0;
-    enemy.speed = 0;
-    clearInterval(enemy.moveInterval);
-    enemy.moveInterval = null;
-    enemy.playAnimation?.('dead');
+    if (enemy.energy <= 0) return; // überspringt bereits getötete Gegner
+    enemy.energy = 0; // setzt die Energie des Gegners auf 0
+    enemy.speed = 0; // stoppt die Bewegung des Gegners
+    clearInterval(enemy.moveInterval); // stoppt die Bewegungsanimation
+    enemy.moveInterval = null; // setzt das Bewegungsintervall auf null
+    enemy.playAnimation?.('dead'); // startet die Dead-Animation, falls vorhanden
     setTimeout(() => {
-      const i = this.level.enemies.indexOf(enemy);
-      if (i !== -1) this.level.enemies.splice(i, 1);
+      const i = this.level.enemies.indexOf(enemy); // findet den Index des Gegners im Array
+      if (i !== -1) this.level.enemies.splice(i, 1); // entfernt den Gegner aus dem Level
     }, 2000);
   }
 
@@ -143,9 +145,7 @@ class World {
     this.level.enemies.forEach((enemy) => {
       if (!this.character.isColliding(enemy)) return;
       if (enemy.energy <= 0) return;
-
-      const fallingOnTop = this.character.speedY < 0 && this.character.y < enemy.y;
-
+      const fallingOnTop = this.character.speedY < 0 && this.character.y < enemy.y; // Überprüft, ob der Charakter auf den Gegner fällt
       if (fallingOnTop) {
         this.killEnemy(enemy); // Dead-Animation + später entfernen
         this.character.speedY = 12; // Bounce (optional)
@@ -171,11 +171,11 @@ class World {
 
   // fügt mit einer Vorschleife ein Enemy in das Array enemies.
   addSingleEnemy(classEnemy, count) {
-    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy()); // fügt einen neuen enemy in das array enemies hinzu.
+    for (let i = 0; i < count; i++) this.level.enemies.push(new classEnemy(i)); // fügt einen neuen enemy in das array enemies hinzu.
   }
 
   addSingleItems(classItems, count) {
-    for (let i = 0; i < count; i++) this.level.items.push(new classItems()); // fügt ein neues item in das array items hinzu.
+    for (let i = 0; i < count; i++) this.level.items.push(new classItems(i)); // fügt ein neues item in das array items hinzu.
   }
 
   collectCoin(index) {
@@ -188,7 +188,7 @@ class World {
   }
 
   collectBottle(index) {
-    const bottle = this.level.items[index];
+    const bottle = this.level.items[index]; // Flasche im Level
     if (!bottle.collected) {
       bottle.collected = true; // Flag setzen
       this.level.items.splice(index, 1); // Flasche aus dem Level entfernen
@@ -254,11 +254,13 @@ class World {
 
   showEndbossBar() {
     if (!this.endbossBarVisible && this.character.x > this.endboss.x - 1000) {
-      this.endbossBarVisible = true;
+      // zeigt die endboss bar an wenn der character nahe genug am endboss ist.
+      this.endbossBarVisible = true; // setzt die variable auf true damit die endboss bar angezeigt wird.
     }
     if (this.endbossBarVisible) {
-      this.addToMap(this.endbossBar);
-      this.endbossBar.drawPercentage(this.ctx);
+      // wenn die variable true ist wird die endboss bar angezeigt.
+      this.addToMap(this.endbossBar); // zeichnet die endboss bar
+      this.endbossBar.drawPercentage(this.ctx); // zeichnet den prozentsatz der endboss bar
     }
   }
 }

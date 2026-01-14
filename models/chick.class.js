@@ -5,6 +5,8 @@ class Chick extends MovableObject {
   width = 50;
   energy = 5;
 
+  spawnPoints = [400, 800, 1200, 1600, 2000, 2400, 2800];
+
   offset = { top: 10, right: 10, bottom: 15, left: 10 };
 
   walkImages = [
@@ -15,14 +17,14 @@ class Chick extends MovableObject {
 
   deadImages = ['img/3_enemies_chicken/chicken_small/2_dead/dead.png'];
 
-  constructor() {
+  constructor(i) {
     super();
     this.loadImage(this.walkImages[0]);
     this.loadImages(this.walkImages);
     this.loadImages(this.deadImages);
     this.animate();
     this.moveLeft();
-    this.x = 300 + Math.random() * 2500;
+    this.x = this.spawnPoints[i % this.spawnPoints.length];
   }
 
   animations = {
