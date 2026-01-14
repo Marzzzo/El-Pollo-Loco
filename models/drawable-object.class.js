@@ -30,47 +30,47 @@ class DrawableObject {
     });
   }
 
-  // drawFrame(ctx) {
-  //   if (
-  //     this instanceof Character ||
-  //     this instanceof Chicken ||
-  //     this instanceof Chick ||
-  //     this instanceof Endboss ||
-  //     this instanceof Coins ||
-  //     this instanceof Bottles
-  //   ) {
-  //     // this.frameOne(ctx);
-  //   }
-  //   if (
-  //     this instanceof Character ||
-  //     this instanceof Chicken ||
-  //     this instanceof Chick ||
-  //     this instanceof Endboss ||
-  //     this instanceof Coins ||
-  //     this instanceof Bottles
-  //   ) {
-  //     this.frameTwo(ctx);
-  //   }
-  // }
+  drawFrame(ctx) {
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Chick ||
+      this instanceof Endboss ||
+      this instanceof Coins ||
+      this instanceof Bottles
+    ) {
+      // this.frameOne(ctx);
+    }
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Chick ||
+      this instanceof Endboss ||
+      this instanceof Coins ||
+      this instanceof Bottles
+    ) {
+      this.frameTwo(ctx);
+    }
+  }
 
-  // frameOne(ctx) {
-  //   ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-  //   ctx.lineWidth = '2'; // linienbreite für den pfad.
-  //   ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
-  //   ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
-  //   ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-  // }
+  frameOne(ctx) {
+    ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+    ctx.lineWidth = '2'; // linienbreite für den pfad.
+    ctx.strokeStyle = 'red'; // linienfarbe für den pfad.
+    ctx.rect(this.x, this.y, this.width, this.height); // erstellt ein rechteck (für Kollisionsboxen etc).
+    ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+  }
 
-  // frameTwo(ctx) {
-  //   ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
-  //   ctx.lineWidth = '2'; // linienbreite für den pfad.
-  //   ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
-  //   ctx.rect(
-  //     this.x + this.offset.left,
-  //     this.y + this.offset.top,
-  //     this.width - this.offset.left - this.offset.right,
-  //     this.height - this.offset.top - this.offset.bottom
-  //   ); // erstellt ein rechteck (für Kollisionsboxen etc).
-  //   ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
-  // }
+  frameTwo(ctx) {
+    ctx.beginPath(); // beginnt einen neuen Pfad (für Kollisionsboxen etc).
+    ctx.lineWidth = '2'; // linienbreite für den pfad.
+    ctx.strokeStyle = 'blue'; // linienfarbe für den pfad.
+    ctx.rect(
+      this.x + this.offset.left,
+      this.y + this.offset.top,
+      this.width - this.offset.left - this.offset.right,
+      this.height - this.offset.top - this.offset.bottom
+    ); // erstellt ein rechteck (für Kollisionsboxen etc).
+    ctx.stroke(); // zeichnet den pfad (für Kollisionsboxen etc).
+  }
 }

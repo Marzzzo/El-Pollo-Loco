@@ -1,8 +1,8 @@
 class Endboss extends MovableObject {
   x = 3500;
-  y = 200;
-  height = 300;
-  width = 170;
+  y = 220;
+  height = 280;
+  width = 150;
   speed = 2.5;
 
   energy = 100;
@@ -14,7 +14,7 @@ class Endboss extends MovableObject {
   isHit = false;
   deadJumpStarted = false;
 
-  offset = { top: 70, right: 25, bottom: 50, left: 30 };
+  offset = { top: 110, right: 25, bottom: 50, left: 30 };
 
   walkImages = [
     'img/4_enemie_boss_chicken/1_walk/G1.png',

@@ -136,8 +136,13 @@ class World {
   isCollidingWithEndboss() {
     if (this.endboss.energy <= 0) return;
     if (this.character.isColliding(this.endboss)) {
-      this.character.hit(); // reduziert die Energie des Charakters
-      this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
+      const fallingOnTop = this.character.speedY < 0 && this.character.y < this.endboss.y; // Überprüft, ob der Charakter auf den Gegner fällt
+      if (fallingOnTop) {
+        this.character.speedY = 12; // Bounce (optional)
+        this.endboss.hitFromBottle(); // reduziert die Energie des Endboss
+        this.endbossBar.setPercentage(this.endboss.energy); // aktualisiert die Anzeige der Endboss-Leiste
+        return;
+      }
     }
   }
 
@@ -151,7 +156,6 @@ class World {
         this.character.speedY = 12; // Bounce (optional)
         return;
       }
-
       this.character.hit();
       this.statusBar.setPercentage(this.character.energy);
     });
@@ -217,7 +221,7 @@ class World {
       this.mirrorImgLeft(movableObjects); // Spiegelt das Bild wenn man nach links läuft.
     }
     movableObjects.draw(this.ctx);
-    // movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
+    movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
     if (movableObjects.otherDirection) {
       this.mirrorImgRight(movableObjects); // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
     }
