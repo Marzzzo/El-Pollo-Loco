@@ -16,7 +16,9 @@ class Coins extends MovableObject {
     this.loadImages(this.coinsImages);
     this.animate();
     this.y = 250;
-    this.x = this.spawnPoints[i % this.spawnPoints.length];
+    const base = this.spawnPoints[i % this.spawnPoints.length];
+    const round = Math.floor(i / this.spawnPoints.length);
+    this.x = base + round * 80;
     this.height = 120;
     this.width = 120;
   }

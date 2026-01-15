@@ -70,10 +70,10 @@ class World {
   }
 
   checkCollisions() {
-    this.isCollidingWithEndboss(); // überprüft Kollision mit dem Endboss
-    this.isCollidingWithEnemies(); // überprüft Kollision mit normalen Feinden
-    this.isCollidingWithItems(); // überprüft Kollision mit sammelbaren Gegenständen
-    this.checkBottleHit(); // überprüft Kollisionen zwischen Flaschen und Gegnern
+    if (this.fightWithEndboss()) return; // überprüft Kollision mit dem Endboss
+    if (this.fightWithEnemies()) return; // überprüft Kollision mit dem Endboss
+    if (this.collectItems()) return; // überprüft Kollision mit dem Endboss
+    if (this.checkBottleHit()) return; // überprüft Kollision mit dem Endboss
   }
 
   handleThrowBottle() {
@@ -133,43 +133,32 @@ class World {
     }, 2000);
   }
 
-  isCollidingWithEndboss() {
-    if (this.endboss.energy <= 0) return;
-    if (this.character.isColliding(this.endboss)) {
-      const fallingOnTop = this.character.speedY < 0 && this.character.y < this.endboss.y; // Überprüft, ob der Charakter auf den Gegner fällt
-      if (fallingOnTop) {
-        this.character.speedY = 12; // Bounce (optional)
-        this.endboss.hitFromBottle(); // reduziert die Energie des Endboss
-        this.endbossBar.setPercentage(this.endboss.energy); // aktualisiert die Anzeige der Endboss-Leiste
-        return;
-      }
+  fightWithEndboss() {
+    if (this.endboss.energy <= 0) return; // überspringt, wenn der Endboss bereits besiegt ist
+    if (!this.character.isColliding(this.endboss)) return; // keine Kollision
+    if (this.character.speedY < 0 && !this.endboss.isDead()) {
+      this.character.speedY = 12; // Bounce
+      this.endboss.hitFromBottle(); // reduziert die Energie des Endboss
+      this.endbossBar.setPercentage(this.endboss.energy); // aktualisiert die Anzeige der Endboss-Leiste
+      return;
     }
+    if (this.character.isAboveGround()) return; // kein Schaden, wenn der Charakter in der Luft ist
+    this.character.hit(); // reduziert die Energie des Charakters
+    this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
   }
 
-  isCollidingWithEnemies() {
+  fightWithEnemies() {
     this.level.enemies.forEach((enemy) => {
-      if (!this.character.isColliding(enemy)) return;
-      if (enemy.energy <= 0) return;
-      const fallingOnTop = this.character.speedY < 0 && this.character.y < enemy.y; // Überprüft, ob der Charakter auf den Gegner fällt
-      if (fallingOnTop) {
-        this.killEnemy(enemy); // Dead-Animation + später entfernen
-        this.character.speedY = 12; // Bounce (optional)
+      if (enemy.energy <= 0) return; // überspringt, wenn der Gegner bereits besiegt ist
+      if (!this.character.isColliding(enemy)) return; // keine Kollision
+      if (this.character.speedY < 0) {
+        this.killEnemy(enemy); // tötet den Gegner
+        this.character.speedY = 12; // Bounce
         return;
       }
-      this.character.hit();
-      this.statusBar.setPercentage(this.character.energy);
-    });
-  }
-
-  isCollidingWithItems() {
-    this.level.items.forEach((item, index) => {
-      if (this.character.isColliding(item)) {
-        if (item instanceof Coins) {
-          this.collectCoin(index);
-        } else if (item instanceof Bottles) {
-          this.collectBottle(index);
-        }
-      }
+      if (this.character.isAboveGround()) return; // kein Schaden, wenn der Charakter in der Luft ist
+      this.character.hit(); // reduziert die Energie des Charakters
+      this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
     });
   }
 
@@ -180,6 +169,18 @@ class World {
 
   addSingleItems(classItems, count) {
     for (let i = 0; i < count; i++) this.level.items.push(new classItems(i)); // fügt ein neues item in das array items hinzu.
+  }
+
+  collectItems() {
+    this.level.items.forEach((item, index) => {
+      if (this.character.isColliding(item)) {
+        if (item instanceof Coins) {
+          this.collectCoin(index);
+        } else if (item instanceof Bottles) {
+          this.collectBottle(index);
+        }
+      }
+    });
   }
 
   collectCoin(index) {
@@ -221,7 +222,7 @@ class World {
       this.mirrorImgLeft(movableObjects); // Spiegelt das Bild wenn man nach links läuft.
     }
     movableObjects.draw(this.ctx);
-    movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
+    // movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
     if (movableObjects.otherDirection) {
       this.mirrorImgRight(movableObjects); // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
     }

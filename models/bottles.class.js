@@ -15,7 +15,10 @@ class Bottles extends MovableObject {
     this.loadImage(this.bottlesImages[0]);
     this.loadImages(this.bottlesImages);
     this.y = 410;
-    this.x = this.spawnPoints[i % this.spawnPoints.length];
+
+    const base = this.spawnPoints[i % this.spawnPoints.length];
+    const round = Math.floor(i / this.spawnPoints.length);
+    this.x = base + round * 80;
     this.height = 70;
     this.width = 60;
     this.animate();

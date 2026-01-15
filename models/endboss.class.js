@@ -104,7 +104,7 @@ class Endboss extends MovableObject {
   }
 
   endbossAttackCharacter() {
-    if (this.isBottleHurt()) {
+    if (this.isEndbossBottleHurt()) {
       this.playAnimation('hurt');
       return;
     }
@@ -154,11 +154,11 @@ class Endboss extends MovableObject {
     this.direction = -1; // initiale Richtung nach links
     this.moveInterval = setInterval(() => {
       if (!this.world) return; // Sicherheitsabfrage
-      if (this.isBottleHurt()) return; // nicht bewegen, wenn verletzt
+      if (this.isEndbossBottleHurt()) return; // nicht bewegen, wenn verletzt
       this.updateDirectionWithDelay(); // aktualisiert die Richtung mit Verzögerung
       this.viewDirection(); // bewegt den Endboss entsprechend der Richtung
       if (this.isColliding(this.world.character)) {
-        this.hit(); // reduziert die Energie des Charakters bei Kollision
+        this.world.fightWithEndboss(); // löst den Kampf mit dem Endboss aus
       }
     }, 1000 / 60);
   }
