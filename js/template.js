@@ -11,13 +11,8 @@ function startScreenTemplate() {
                     <img class="icons" src="./icons/sound-on.png" alt="" />
                 </div>
             </div>
-            <div class="headline-right">
-                <div class="single-icon-box">
-                    <img class="icons" src="./icons/fullscreen.png" alt="" />
-                </div>
-            </div>
-        </div>
-        <img class="start-image" src="img/9_intro_outro_screens/start/startscreen_1.png" alt="startscreen-image" />`;
+          </div>
+            <img class="start-image" src="img/9_intro_outro_screens/start/startscreen_1.png" alt="startscreen-image" />`;
 }
 
 function controlTemplate() {

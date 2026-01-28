@@ -68,6 +68,7 @@ class Endboss extends MovableObject {
     this.loadImages(this.attackImages);
     this.loadImages(this.hurtImages);
     this.loadImages(this.deadImages);
+    this.winScreenStarted = false;
   }
 
   animate() {
@@ -119,6 +120,16 @@ class Endboss extends MovableObject {
         this.speedY = 12;
         clearInterval(this.moveInterval);
       }
+
+      // Win-Screen nach 2 Sekunden
+      if (!this.winScreenStarted) {
+        this.winScreenStarted = true;
+
+        setTimeout(() => {
+          openWinScreen();
+        }, 2000);
+      }
+
       this.deadJump();
       return;
     }
