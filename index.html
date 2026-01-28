@@ -23,14 +23,27 @@
     <script src="models/bottles.class.js"></script>
     <script src="models/throwable-object.class.js"></script>
     <script src="models/keyboard.class.js"></script>
-
     <script src="models/level.class.js"></script>
     <script src="levels/level1.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/template.js"></script>
   </head>
-  <body onload="init()">
+  <body onload="renderOverlays()">
     <h1>El pollo loco</h1>
+    <div id="startScreen" class="start-screen">
+      <!--startscreem rendered here-->
+    </div>
+    <div id="controlScreen" class="control-screen d-none">
+      <!--Controlscreen rendered here-->
+    </div>
 
-    <canvas id="canvas" width="960" height="540"></canvas>
+    <canvas class="d-none" id="canvas" width="960" height="540"></canvas>
+
+    <div id="winScreen" class="win-screen d-none">
+      <!--winScreen rendered here-->
+    </div>
+
+    <div id="loseScreen" class="lose-screen d-none"></div>
   </body>
 </html>

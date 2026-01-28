@@ -1,0 +1,69 @@
+const SCREENS = ['startScreen', 'controlScreen', 'winScreen', 'endScreen'];
+
+function hideAllScreens() {
+  for (const id of SCREENS) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('d-none');
+  }
+}
+
+function showScreen(id) {
+  hideAllScreens();
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('d-none');
+}
+
+function showCanvas(show) {
+  const canvas = document.getElementById('canvas');
+  if (!canvas) return;
+  if (show) canvas.classList.remove('d-none');
+  else canvas.classList.add('d-none');
+}
+
+function startGame() {
+  showCanvas(true);
+  hideAllScreens();
+  init();
+}
+
+function returnToMenu() {
+  showCanvas(false);
+  showScreen('startScreen');
+}
+
+function openControlMenu() {
+  showCanvas(false);
+  showScreen('controlScreen');
+}
+
+function openWinScreen() {
+  showCanvas(false);
+  showScreen('winScreen');
+}
+
+function renderOverlays() {
+  renderStartscreen();
+  renderControlScreen();
+  renderWinScreen();
+  renderLoseScreen();
+}
+
+function renderStartscreen() {
+  let contentRef = document.getElementById('startScreen');
+  contentRef.innerHTML = startScreenTemplate();
+}
+
+function renderControlScreen() {
+  let contentRef = document.getElementById('controlScreen');
+  contentRef.innerHTML = controlTemplate();
+}
+
+function renderWinScreen() {
+  let contentRef = document.getElementById('winScreen');
+  contentRef.innerHTML = winTemplate();
+}
+
+function renderLoseScreen() {
+  let contentRef = document.getElementById('loseScreen');
+  contentRef.innerHTML = loseTemplate();
+}

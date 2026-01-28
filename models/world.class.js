@@ -114,9 +114,6 @@ class World {
       if (!bottle.isColliding(enemy)) return; // keine Kollision
       bottle.impact(); // Flasche trifft den Gegner
       this.killEnemy(enemy); // tötet den Gegner
-      setTimeout(() => {
-        this.level.enemies.splice(index, 1); // entfernt den Gegner aus dem Level
-      }, 2000);
     });
   }
 
