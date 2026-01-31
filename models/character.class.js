@@ -74,6 +74,7 @@ class Character extends MovableObject {
   constructor() {
     super();
     this.currentImage = 0;
+    this.loseScreenShown = false;
     this.applyGravity();
     this.loadImage(this.idleImages[0]); // lädt das erste Bild als Startbild
     this.loadImages(this.idleImages); // lädt alle Bilder für die Animation
@@ -128,7 +129,12 @@ class Character extends MovableObject {
 
       this.deadJump();
       this.world.keyboard = {};
-      return;
+      if (!this.loseScreenShown) {
+        this.loseScreenShown = true;
+        setTimeout(() => {
+          openLoseScreen(); // zeigt den Game-Over-Bildschirm nach 1 Sekunde
+        }, 2000);
+      }
     }
 
     if (this.isHurt()) {

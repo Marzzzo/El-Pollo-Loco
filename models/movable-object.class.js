@@ -103,7 +103,7 @@ class MovableObject extends DrawableObject {
   hit() {
     if (this.isHurt()) return; // wenn das objekt unverwundbar ist, nichts tun
     this.hurtUntil = new Date().getTime() + 2000; // setzt die unverwundbar zeit auf 300ms
-    this.energy -= 5; // Energie um 2 reduzieren bei Treffer
+    this.energy -= 10; // Energie um 2 reduzieren bei Treffer
     if (this.energy < 0) {
       this.energy = 0; // Energie darf nicht unter 0 fallen
     }

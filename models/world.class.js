@@ -145,6 +145,7 @@ class World {
   }
 
   fightWithEnemies() {
+    if (this.character.isDead()) return; // überspringt, wenn der Charakter tot ist
     this.level.enemies.forEach((enemy) => {
       if (enemy.energy <= 0) return; // überspringt, wenn der Gegner bereits besiegt ist
       if (!this.character.isColliding(enemy)) return; // keine Kollision

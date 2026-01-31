@@ -1,4 +1,4 @@
-const SCREENS = ['startScreen', 'controlScreen', 'winScreen', 'endScreen'];
+const SCREENS = ['startScreen', 'controlScreen', 'winScreen', 'loseScreen'];
 
 function hideAllScreens() {
   for (const id of SCREENS) {
@@ -39,6 +39,11 @@ function openControlMenu() {
 function openWinScreen() {
   showCanvas(false);
   showScreen('winScreen');
+}
+
+function openLoseScreen() {
+  showCanvas(false);
+  showScreen('loseScreen');
 }
 
 function renderOverlays() {

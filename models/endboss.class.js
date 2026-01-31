@@ -114,17 +114,13 @@ class Endboss extends MovableObject {
     }
     if (this.isDead()) {
       this.playAnimation('dead');
-
       if (!this.deadJumpStarted) {
         this.deadJumpStarted = true;
         this.speedY = 12;
         clearInterval(this.moveInterval);
       }
-
-      // Win-Screen nach 2 Sekunden
       if (!this.winScreenStarted) {
         this.winScreenStarted = true;
-
         setTimeout(() => {
           openWinScreen();
         }, 2000);
