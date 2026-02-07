@@ -36,7 +36,7 @@
     <script src="js/template.js"></script>
   </head>
   <body onload="renderOverlays()">
-    <h1>El pollo loco</h1>
+    <h1>El Pollo Loco</h1>
     <div class="canvas-container">
       <div class="rotate-screen">
         <div class="rotate-icon-container">
@@ -44,21 +44,32 @@
           <p>Please rotate your Device!</p>
         </div>
       </div>
-      <div id="startScreen" class="start-screen">
-        <!--startscreem rendered here-->
-      </div>
-      <div id="controlScreen" class="control-screen d-none">
-        <!--Controlscreen rendered here-->
-      </div>
 
-      <canvas class="d-none" id="canvas" width="960" height="540"></canvas>
+      <div class="game-wrapper">
+        <div id="startScreen" class="start-screen">
+          <!--startscreem rendered here-->
+        </div>
+        <div id="controlScreen" class="control-screen d-none">
+          <!--Controlscreen rendered here-->
+        </div>
+        <div id="winScreen" class="win-screen d-none">
+          <!--winScreen rendered here-->
+        </div>
 
-      <div id="winScreen" class="win-screen d-none">
-        <!--winScreen rendered here-->
-      </div>
-
-      <div id="loseScreen" class="lose-screen d-none">
-        <!--loseScreen rendered here-->
+        <div id="loseScreen" class="lose-screen d-none">
+          <!--loseScreen rendered here-->
+        </div>
+        <canvas class="d-none" id="canvas" width="960" height="540"></canvas>
+        <div class="controls">
+          <div class="left-controls">
+            <img src="icons/buttonLeft.png" alt="button-left" />
+            <img src="icons/buttonRight.png" alt="button-right" />
+          </div>
+          <div class="right-controls">
+            <img src="icons/buttonUp.png" alt="button.up" />
+            <img src="icons/bottle.png" alt="bottle-button" />
+          </div>
+        </div>
       </div>
     </div>
   </body>

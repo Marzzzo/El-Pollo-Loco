@@ -17,8 +17,8 @@ function startScreenTemplate() {
 
 function controlTemplate() {
   return `<div class="headline-controls">
-        <h2>Controls</h2>
-        <div class="box-position">
+          <div class="box-position">
+            <h2>Controls</h2>
           <div class="back-icon-box">
             <img onclick="returnToMenu()" class="icons" src="./icons/return.png" alt="" />
           </div>
