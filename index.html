@@ -31,9 +31,9 @@
     <script src="models/keyboard.class.js"></script>
     <script src="models/level.class.js"></script>
     <script src="levels/level1.js"></script>
-    <script src="js/game.js"></script>
     <script src="js/script.js"></script>
     <script src="js/template.js"></script>
+    <script src="js/game.js"></script>
   </head>
   <body onload="renderOverlays()">
     <h1>El Pollo Loco</h1>
@@ -62,12 +62,12 @@
         <canvas class="d-none" id="canvas" width="960" height="540"></canvas>
         <div class="controls">
           <div class="left-controls">
-            <img src="icons/buttonLeft.png" alt="button-left" />
-            <img src="icons/buttonRight.png" alt="button-right" />
+            <img id="btnLeft" src="icons/buttonLeft.png" alt="button-left" draggable="false" oncontextmenu="return false;" />
+            <img id="btnRight" src="icons/buttonRight.png" alt="button-right" draggable="false" oncontextmenu="return false;" />
           </div>
           <div class="right-controls">
-            <img src="icons/buttonUp.png" alt="button.up" />
-            <img src="icons/bottle.png" alt="bottle-button" />
+            <img id="btnJump" src="icons/buttonUp.png" alt="button.up" draggable="false" oncontextmenu="return false;" />
+            <img id="btnThrow" src="icons/bottle.png" alt="bottle-button" draggable="false" oncontextmenu="return false;" />
           </div>
         </div>
       </div>

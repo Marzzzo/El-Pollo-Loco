@@ -118,6 +118,7 @@ class Endboss extends MovableObject {
         this.deadJumpStarted = true;
         this.speedY = 12;
         clearInterval(this.moveInterval);
+        this.world.stop();
       }
       if (!this.winScreenStarted) {
         this.winScreenStarted = true;

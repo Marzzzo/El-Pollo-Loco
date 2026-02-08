@@ -56,8 +56,8 @@ body {
   display: none;
   justify-content: space-between;
   bottom: 10px;
-  padding: 0 10px;
-  pointer-events: none;
+  padding: 0 20px;
+  pointer-events: auto;
   width: 100%;
 }
 
@@ -68,12 +68,14 @@ body {
 }
 
 .controls img {
-  width: 40px;
-  height: 40px;
-  pointer-events: auto; /* klickbar */
+  width: 50px;
+  height: 50px;
+  pointer-events: auto;
+  -webkit-user-select: none;
   user-select: none;
   -webkit-user-drag: none;
   touch-action: none;
+  -webkit-touch-callout: none;
 }
 
 .start-screen,
@@ -364,7 +366,7 @@ p {
   }
   .headline {
     top: 0;
-    padding-top: calc(env(safe-area-inset-top) + 60px);
+    padding-top: calc(env(safe-area-inset-top) + 20px);
     padding-left: calc(env(safe-area-inset-top) + 20px);
   }
 }

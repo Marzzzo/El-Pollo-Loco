@@ -21,6 +21,7 @@ function showCanvas(show) {
 }
 
 function startGame() {
+  if (window.world) world.stop();
   showCanvas(true);
   hideAllScreens();
   init();

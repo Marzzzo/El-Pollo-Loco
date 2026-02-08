@@ -63,10 +63,14 @@ class World {
   }
 
   run() {
-    setInterval(() => {
+    this.runInterval = setInterval(() => {
       this.checkCollisions(); // überprüft Kollisionen zwischen dem Charakter und den Feinden
       this.handleThrowBottle(); // behandelt das Werfen von Flaschen
     }, 50);
+  }
+
+  stop() {
+    clearInterval(this.runInterval);
   }
 
   checkCollisions() {
