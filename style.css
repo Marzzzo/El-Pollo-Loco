@@ -40,7 +40,6 @@ body {
 .game-wrapper {
   position: relative;
   width: 100%;
-  max-width: 960px;
   border-radius: 15px;
   overflow: hidden;
 }
@@ -68,8 +67,8 @@ body {
 }
 
 .controls img {
-  width: 50px;
-  height: 50px;
+  width: 64px;
+  height: 64px;
   pointer-events: auto;
   -webkit-user-select: none;
   user-select: none;
@@ -324,7 +323,7 @@ p {
   #startScreen {
     display: none !important;
   }
-  canvas {
+  #canvas {
     display: none !important;
   }
   .rotate-screen {
@@ -332,16 +331,13 @@ p {
   }
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media (hover: hover) and (pointer: fine) {
   .controls {
-    display: flex;
-  }
-  h1 {
-    display: none;
+    display: none !important;
   }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1400px) {
   canvas,
   .game-wrapper,
   .start-image,
@@ -350,11 +346,17 @@ p {
   .lose-screen {
     border-radius: 0 !important;
   }
+
   .canvas-container {
     padding: 0 !important;
   }
+
   .headline-controls {
     gap: 12px;
+  }
+
+  h1 {
+    display: none !important;
   }
 
   h2 {
@@ -364,17 +366,22 @@ p {
   h3 {
     font-size: 28px;
   }
+
   .headline {
     top: 0;
     padding-top: calc(env(safe-area-inset-top) + 20px);
     padding-left: calc(env(safe-area-inset-top) + 20px);
   }
+
+  .controls {
+    display: flex !important;
+  }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1400px) {
   #canvas {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     max-width: none;
     max-height: none;
     border-radius: 0;

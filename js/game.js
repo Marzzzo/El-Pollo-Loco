@@ -8,7 +8,7 @@ function init() {
   canvas = document.getElementById('canvas'); // greift auf das canvas über die ID zu.
   level1 = createLevel1();
   world = new World(canvas, keyboard); // neue welt wird erstellt und das canvas wird übergeben in den constructor in der world.
-  initTouchControls();
+  bindBtsPressEvents();
 }
 
 window.addEventListener('keydown', (event) => {
@@ -41,25 +41,37 @@ window.addEventListener('keyup', (event) => {
   }
 });
 
-function initTouchControls() {
-  const btnLeft = document.getElementById('btnLeft');
-  const btnRight = document.getElementById('btnRight');
-  const btnJump = document.getElementById('btnJump');
-  const btnThrow = document.getElementById('btnThrow');
-
-  // LEFT
-  btnLeft.ontouchstart = () => (keyboard.LEFT = true);
-  btnLeft.ontouchend = () => (keyboard.LEFT = false);
-
-  // RIGHT
-  btnRight.ontouchstart = () => (keyboard.RIGHT = true);
-  btnRight.ontouchend = () => (keyboard.RIGHT = false);
-
-  // JUMP
-  btnJump.ontouchstart = () => (keyboard.SPACE = true);
-  btnJump.ontouchend = () => (keyboard.SPACE = false);
-
-  // THROW
-  btnThrow.ontouchstart = () => (keyboard.D = true);
-  btnThrow.ontouchend = () => (keyboard.D = false);
+function bindBtsPressEvents() {
+  document.getElementById('btnLeft').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    keyboard.LEFT = true;
+  });
+  document.getElementById('btnLeft').addEventListener('touchend', (event) => {
+    event.preventDefault();
+    keyboard.LEFT = false;
+  });
+  document.getElementById('btnRight').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    keyboard.RIGHT = true;
+  });
+  document.getElementById('btnRight').addEventListener('touchend', (event) => {
+    event.preventDefault();
+    keyboard.RIGHT = false;
+  });
+  document.getElementById('btnJump').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    keyboard.SPACE = true;
+  });
+  document.getElementById('btnJump').addEventListener('touchend', (event) => {
+    event.preventDefault();
+    keyboard.SPACE = false;
+  });
+  document.getElementById('btnThrow').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    keyboard.D = true;
+  });
+  document.getElementById('btnThrow').addEventListener('touchend', (event) => {
+    event.preventDefault();
+    keyboard.D = false;
+  });
 }
