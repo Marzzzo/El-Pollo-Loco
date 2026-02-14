@@ -5,7 +5,7 @@ class Chicken extends MovableObject {
   energy = 5;
   spawnPoints = [600, 1000, 1400, 1800, 2200, 2600, 3000];
 
-  offset = { top: 20, right: 10, bottom: 20, left: 10 };
+  offset = { top: 5, right: 2, bottom: 5, left: 2 };
 
   walkImages = [
     'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',

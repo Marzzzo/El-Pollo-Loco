@@ -93,30 +93,12 @@ class Character extends MovableObject {
   }
 
   animations = {
-    idle: {
-      images: this.idleImages,
-      speed: 200,
-    },
-    longIdle: {
-      images: this.longIdleImages,
-      speed: 200,
-    },
-    walk: {
-      images: this.walkingImages,
-      speed: 100,
-    },
-    jump: {
-      images: this.jumpImages,
-      speed: 180,
-    },
-    hurt: {
-      images: this.hurtImages,
-      speed: 200,
-    },
-    dead: {
-      images: this.deadImages,
-      speed: 240,
-    },
+    idle: { images: this.idleImages, speed: 200 },
+    longIdle: { images: this.longIdleImages, speed: 200 },
+    walk: { images: this.walkingImages, speed: 100 },
+    jump: { images: this.jumpImages, speed: 180 },
+    hurt: { images: this.hurtImages, speed: 200 },
+    dead: { images: this.deadImages, speed: 240 },
   };
 
   updateAnimation() {
@@ -178,22 +160,28 @@ class Character extends MovableObject {
   }
 
   startMovementLoop() {
-    this.clearMovementInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
-    this.movementInterval = setInterval(() => {
-      this.moveCharacter(); // bewegt den Charakter basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
+    this.clearMovementInterval();
+    this.movementInterval = setInterval(() => this.moveCharacter(), 1000 / 60);
   }
 
   moveCharacter() {
     if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-    let cameraStop = this.world.level.level_end_x; // Kamera Stopp Position
+    this.canMoveCharacter();
+    this.cameraMovementCharacter();
+    this.jump(); // überprüft und führt den Sprung aus
+  }
+
+  canMoveCharacter() {
     let levelEnd = this.world.level.level_end_x + 720; // Level Ende Position
     if (this.world.keyboard.RIGHT && this.x < levelEnd) this.moveRight(); // bewegt nach rechts
     if (this.world.keyboard.LEFT && this.x >= -800) this.moveLeft(); // bewegt nach links
+  }
+
+  cameraMovementCharacter() {
+    let cameraStop = this.world.level.level_end_x; // Kamera Stopp Position
     if (this.x < cameraStop) {
       this.world.camera_x = -this.x + 150; // aktualisiert die Kameraposition basierend auf der Charakterposition
     }
-    this.jump(); // überprüft und führt den Sprung aus
   }
 
   moveRight() {

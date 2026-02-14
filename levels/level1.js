@@ -1,7 +1,7 @@
 function createLevel1() {
   return new Level(
-    [], // enemies (leer, World füllt die)
-    [], // items (leer, World füllt die)
+    (enemies = []),
+    (items = []),
     [
       new Cloud('img/5_background/layers/4_clouds/1.png', 0),
       new Cloud('img/5_background/layers/4_clouds/2.png', 750),

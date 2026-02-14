@@ -224,7 +224,7 @@ class World {
       this.mirrorImgLeft(movableObjects); // Spiegelt das Bild wenn man nach links läuft.
     }
     movableObjects.draw(this.ctx);
-    // movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
+    movableObjects.drawFrame(this.ctx); // zeichnet den hitbox rahmen (nur zum testen sichtbar).
     if (movableObjects.otherDirection) {
       this.mirrorImgRight(movableObjects); // Spiegelt das Bild wieder in die Standard Richtung wenn man nach rechts läuft.
     }

@@ -7,7 +7,7 @@ class Chick extends MovableObject {
 
   spawnPoints = [400, 800, 1200, 1600, 2000, 2400, 2800];
 
-  offset = { top: 10, right: 10, bottom: 15, left: 10 };
+  offset = { top: 5, right: 3, bottom: 5, left: 3 };
 
   walkImages = [
     'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',

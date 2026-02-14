@@ -15,12 +15,7 @@ class ThrowableObject extends MovableObject {
     'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
   ];
 
-  offset = {
-    top: 15,
-    bottom: 10,
-    left: 40,
-    right: 30,
-  };
+  offset = { top: 15, bottom: 10, left: 10, right: 10 };
 
   constructor(x, y, direction) {
     super();
@@ -39,14 +34,8 @@ class ThrowableObject extends MovableObject {
   }
 
   animations = {
-    rotate: {
-      images: this.rotateBottleImages,
-      speed: 100,
-    },
-    splash: {
-      images: this.splashBottleImages,
-      speed: 150,
-    },
+    rotate: { images: this.rotateBottleImages, speed: 100 },
+    splash: { images: this.splashBottleImages, speed: 150 },
   };
 
   animate() {
@@ -75,15 +64,19 @@ class ThrowableObject extends MovableObject {
 
   impact() {
     if (this.hasImpacted) return; // Verhindert mehrfaches Aufrufen
-    this.hasImpacted = true; // Markiert die Flasche als getroffen
-    clearInterval(this.gravityInterval); // Stoppt die Schwerkraft
-    clearInterval(this.throwInterval); // Stoppt die seitliche Bewegung
-    this.playAnimation('splash'); // Startet die Splash-Animation
-    const splashTime = this.animations.splash.images.length * this.animations.splash.speed; // Berechnet die Gesamtdauer der Splash-Animation
+    let splashTime = this.animations.splash.images.length * this.animations.splash.speed; // Berechnet die Gesamtdauer der Splash-Animation
+    this.playBottleSplash();
     setTimeout(() => {
       this.clearAnimationInterval(); // Stoppt die Animation
       this.isRemoved = true; // Markiert die Flasche zur Entfernung aus dem Spiel
     }, splashTime);
+  }
+
+  playBottleSplash() {
+    this.hasImpacted = true; // Markiert die Flasche als getroffen
+    clearInterval(this.gravityInterval); // Stoppt die Schwerkraft
+    clearInterval(this.throwInterval); // Stoppt die seitliche Bewegung
+    this.playAnimation('splash'); // Startet die Splash-Animation
   }
 
   applyGravity() {
@@ -99,14 +92,14 @@ class ThrowableObject extends MovableObject {
   }
 
   throw() {
-    this.speedY = 15;
+    this.speedY = 12;
     this.acceleration = 1; // falls du das brauchst (sonst kommt es aus MovableObject)
     this.applyGravity();
 
     clearInterval(this.throwInterval); // stellt sicher, dass kein vorheriges Intervall läuft
     this.throwInterval = setInterval(() => {
       if (this.hasImpacted) return; // stoppt die seitliche Bewegung nach dem Aufprall
-      this.x += 8 * this.direction; // Richtung: 1 = rechts, -1 = links
+      this.x += 7 * this.direction; // Richtung: 1 = rechts, -1 = links
     }, 25);
   }
 }

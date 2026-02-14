@@ -78,26 +78,11 @@ class Endboss extends MovableObject {
   }
 
   animations = {
-    walk: {
-      images: this.walkImages,
-      speed: 200,
-    },
-    alert: {
-      images: this.alertImages,
-      speed: 250,
-    },
-    attack: {
-      images: this.attackImages,
-      speed: 300,
-    },
-    hurt: {
-      images: this.hurtImages,
-      speed: 100,
-    },
-    dead: {
-      images: this.deadImages,
-      speed: 100,
-    },
+    walk: { images: this.walkImages, speed: 200 },
+    alert: { images: this.alertImages, speed: 250 },
+    attack: { images: this.attackImages, speed: 300 },
+    hurt: { images: this.hurtImages, speed: 100 },
+    dead: { images: this.deadImages, speed: 100 },
   };
 
   updateAnimation() {
@@ -126,7 +111,6 @@ class Endboss extends MovableObject {
           openWinScreen();
         }, 2000);
       }
-
       this.deadJump();
       return;
     }
@@ -134,7 +118,6 @@ class Endboss extends MovableObject {
     if (!this.startTriggered && this.world.character.x >= 3000) {
       this.startTriggered = true;
       this.phase = 'attack';
-
       setTimeout(() => {
         this.phase = 'walk';
         this.followCharacter();
@@ -152,7 +135,6 @@ class Endboss extends MovableObject {
       this.playAnimation('walk');
       return;
     }
-
     this.playAnimation('alert');
   }
 
