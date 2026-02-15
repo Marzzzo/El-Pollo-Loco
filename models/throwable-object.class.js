@@ -46,8 +46,8 @@ class ThrowableObject extends MovableObject {
 
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
-      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
+      this.updateAnimation();
+    }, 1000 / 60);
   }
 
   updateAnimation() {
@@ -63,20 +63,20 @@ class ThrowableObject extends MovableObject {
   }
 
   impact() {
-    if (this.hasImpacted) return; // Verhindert mehrfaches Aufrufen
-    let splashTime = this.animations.splash.images.length * this.animations.splash.speed; // Berechnet die Gesamtdauer der Splash-Animation
+    if (this.hasImpacted) return;
+    let splashTime = this.animations.splash.images.length * this.animations.splash.speed;
     this.playBottleSplash();
     setTimeout(() => {
-      this.clearAnimationInterval(); // Stoppt die Animation
-      this.isRemoved = true; // Markiert die Flasche zur Entfernung aus dem Spiel
+      this.clearAnimationInterval();
+      this.isRemoved = true;
     }, splashTime);
   }
 
   playBottleSplash() {
-    this.hasImpacted = true; // Markiert die Flasche als getroffen
-    clearInterval(this.gravityInterval); // Stoppt die Schwerkraft
-    clearInterval(this.throwInterval); // Stoppt die seitliche Bewegung
-    this.playAnimation('splash'); // Startet die Splash-Animation
+    this.hasImpacted = true;
+    clearInterval(this.gravityInterval);
+    clearInterval(this.throwInterval);
+    this.playAnimation('splash');
   }
 
   applyGravity() {
@@ -93,13 +93,13 @@ class ThrowableObject extends MovableObject {
 
   throw() {
     this.speedY = 12;
-    this.acceleration = 1; // falls du das brauchst (sonst kommt es aus MovableObject)
+    this.acceleration = 1;
     this.applyGravity();
 
-    clearInterval(this.throwInterval); // stellt sicher, dass kein vorheriges Intervall läuft
+    clearInterval(this.throwInterval);
     this.throwInterval = setInterval(() => {
-      if (this.hasImpacted) return; // stoppt die seitliche Bewegung nach dem Aufprall
-      this.x += 7 * this.direction; // Richtung: 1 = rechts, -1 = links
+      if (this.hasImpacted) return;
+      this.x += 7 * this.direction;
     }, 25);
   }
 }

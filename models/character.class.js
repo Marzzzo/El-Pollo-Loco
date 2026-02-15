@@ -76,8 +76,8 @@ class Character extends MovableObject {
     this.currentImage = 0;
     this.loseScreenShown = false;
     this.applyGravity();
-    this.loadImage(this.idleImages[0]); // lädt das erste Bild als Startbild
-    this.loadImages(this.idleImages); // lädt alle Bilder für die Animation
+    this.loadImage(this.idleImages[0]);
+    this.loadImages(this.idleImages);
     this.loadImages(this.walkingImages);
     this.loadImages(this.longIdleImages);
     this.loadImages(this.jumpImages);
@@ -86,10 +86,10 @@ class Character extends MovableObject {
   }
 
   animate() {
-    this.clearAnimationInterval(); // löscht vorherige intervals, um Doppelungen zu vermeiden.
-    this.playAnimation('idle'); // startet mit der Idle-Animation
-    this.startAnimationLoop(); // startet die Animationsschleife
-    this.startMovementLoop(); // startet die Bewegungsschleife
+    this.clearAnimationInterval();
+    this.playAnimation('idle');
+    this.startAnimationLoop();
+    this.startMovementLoop();
   }
 
   animations = {
@@ -102,61 +102,70 @@ class Character extends MovableObject {
   };
 
   updateAnimation() {
-    if (this.isDead()) {
-      this.playAnimation('dead'); // spielt die Todes-Animation ab
-      if (!this.deadJumpStarted) {
-        this.deadJumpStarted = true;
-        this.speedY = 12; // einmaliger Impuls nach oben
-      }
+    if (this.handleDead()) return;
+    if (this.handleHurt()) return;
+    if (this.handleJump()) return;
+    if (this.handleWalk()) return;
+    if (this.handleLongIdle()) return;
+    this.playAnimation('idle');
+  }
 
-      this.deadJump();
-      this.world.keyboard = {};
-      if (!this.loseScreenShown) {
-        this.loseScreenShown = true;
-        setTimeout(() => {
-          openLoseScreen(); // zeigt den Game-Over-Bildschirm nach 1 Sekunde
-        }, 2000);
-      }
+  handleDead() {
+    if (!this.isDead()) return false;
+    this.idleTime = 0;
+    this.playAnimation('dead');
+    if (!this.deadJumpStarted) {
+      this.deadJumpStarted = true;
+      this.speedY = 12;
     }
+    this.deadJump();
+    this.world.keyboard = {};
+    if (!this.loseScreenShown) {
+      this.loseScreenShown = true;
+      setTimeout(() => openLoseScreen(), 2000);
+    }
+    return true;
+  }
 
-    if (this.isHurt()) {
-      this.playAnimation('hurt'); // spielt die Hurt-Animation ab
-      this.idleTime = 0;
-      return;
-    }
-    if (this.jumping) {
-      this.playAnimation('jump'); // spielt die Sprung-Animation ab
-      return;
-    }
-    if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-      this.playAnimation('walk'); // spielt die Geh-Animation ab
-      return;
-    }
+  handleHurt() {
+    if (!this.isHurt()) return false;
+    this.playAnimation('hurt');
+    this.idleTime = 0;
+    return true;
+  }
 
-    if (this.idleTime > 20 * 1000) {
-      this.playAnimation('longIdle'); // spielt die Long-Idle-Animation ab
-      return;
-    }
+  handleJump() {
+    if (!this.jumping) return false;
+    this.playAnimation('jump');
+    return true;
+  }
 
-    this.playAnimation('idle'); // spielt die Idle-Animation ab
+  handleWalk() {
+    if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) return false;
+    this.playAnimation('walk');
+    return true;
+  }
+
+  handleLongIdle() {
+    if (this.idleTime < 20 * 1000) return false;
+    this.playAnimation('longIdle');
+    return true;
   }
 
   trackIdleTime() {
     if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT && !this.world.keyboard.SPACE) {
-      // wenn keine Bewegungstasten gedrückt werden
-      this.idleTime += 60; // erhöht die Leerlaufzeit um 50ms
+      this.idleTime += 60;
     } else {
-      // wenn eine Bewegungstaste gedrückt wird
-      this.idleTime = 0; // setzt die Leerlaufzeit zurück
+      this.idleTime = 0;
     }
   }
 
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
-      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+      if (!this.world || !this.world.keyboard) return;
       this.trackIdleTime();
-      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
+      this.updateAnimation();
+    }, 1000 / 60);
   }
 
   startMovementLoop() {
@@ -165,50 +174,50 @@ class Character extends MovableObject {
   }
 
   moveCharacter() {
-    if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
+    if (!this.world || !this.world.keyboard) return;
     this.canMoveCharacter();
     this.cameraMovementCharacter();
-    this.jump(); // überprüft und führt den Sprung aus
+    this.jump();
   }
 
   canMoveCharacter() {
-    let levelEnd = this.world.level.level_end_x + 720; // Level Ende Position
-    if (this.world.keyboard.RIGHT && this.x < levelEnd) this.moveRight(); // bewegt nach rechts
-    if (this.world.keyboard.LEFT && this.x >= -800) this.moveLeft(); // bewegt nach links
+    let levelEnd = this.world.level.level_end_x + 720;
+    if (this.world.keyboard.RIGHT && this.x < levelEnd) this.moveRight();
+    if (this.world.keyboard.LEFT && this.x >= -800) this.moveLeft();
   }
 
   cameraMovementCharacter() {
-    let cameraStop = this.world.level.level_end_x; // Kamera Stopp Position
+    let cameraStop = this.world.level.level_end_x;
     if (this.x < cameraStop) {
-      this.world.camera_x = -this.x + 150; // aktualisiert die Kameraposition basierend auf der Charakterposition
+      this.world.camera_x = -this.x + 150;
     }
   }
 
   moveRight() {
-    this.x += this.speed; // bewegt den Charakter nach rechts mit normaler Geschwindigkeit
-    this.otherDirection = false; // setzt die Richtung auf rechts
+    this.x += this.speed;
+    this.otherDirection = false;
   }
 
   moveLeft() {
-    this.x -= this.speed; // bewegt den Charakter nach links
-    this.otherDirection = true; // setzt die Richtung auf links
+    this.x -= this.speed;
+    this.otherDirection = true;
   }
 
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
-      this.speedY = 18; // setzt die vertikale Geschwindigkeit für den Sprung
+      this.speedY = 18;
       this.jumping = true;
     }
   }
 
   isHurt() {
-    return new Date().getTime() < this.hurtUntil; // überprüft ob der Charakter unverwundbar ist
+    return new Date().getTime() < this.hurtUntil;
   }
 
   isCollidingWithEndboss() {
     if (this.character.isColliding(this.endboss)) {
-      this.character.hit(); // reduziert die Energie des Charakters
-      this.statusBar.setPercentage(this.character.energy); // aktualisiert die Anzeige der Statusleiste
+      this.character.hit();
+      this.statusBar.setPercentage(this.character.energy);
     }
   }
 
@@ -224,11 +233,8 @@ class Character extends MovableObject {
   isCollidingWithItems() {
     this.level.items.forEach((item, index) => {
       if (this.character.isColliding(item)) {
-        if (item instanceof Coins) {
-          this.collectCoin(index);
-        } else if (item instanceof Bottles) {
-          this.collectBottle(index);
-        }
+        if (item instanceof Coins) this.collectCoin(index);
+        else if (item instanceof Bottles) this.collectBottle(index);
       }
     });
   }

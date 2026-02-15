@@ -21,10 +21,9 @@ class BottlesBar extends DrawableObject {
   }
 
   setBottles(bottleCounter) {
-    // 0 ... 100
-    this.bottleCounter = bottleCounter; // setzt die stückzahl.
-    let path = this.bottlesBarImages[this.resolveImageIndex()]; // ermittelt den bildpfad basierend auf dem prozentsatz.
-    this.img = this.imageCache[path]; // setzt das bild aus dem imageCache.
+    this.bottleCounter = bottleCounter;
+    let path = this.bottlesBarImages[this.resolveImageIndex()];
+    this.img = this.imageCache[path];
   }
 
   drawCount(ctx) {
@@ -32,10 +31,7 @@ class BottlesBar extends DrawableObject {
     ctx.fillStyle = 'black';
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
-
     const text = `${this.bottleCounter} x`;
-
-    // Outline (besser lesbar)
     ctx.strokeText(text, this.x + this.width - 100, this.y + 32);
     ctx.fillText(text, this.x + this.width - 100, this.y + 32);
   }

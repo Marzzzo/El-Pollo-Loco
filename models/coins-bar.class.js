@@ -21,10 +21,9 @@ class CoinsBar extends DrawableObject {
   }
 
   setCoins(coinsCounter) {
-    // 0 ... 100
-    this.coinsCounter = coinsCounter; // setzt die stückzahl.
-    let path = this.coinsBarImages[this.resolveImageIndex()]; // ermittelt den bildpfad basierend auf dem prozentsatz.
-    this.img = this.imageCache[path]; // setzt das bild aus dem imageCache.
+    this.coinsCounter = coinsCounter;
+    let path = this.coinsBarImages[this.resolveImageIndex()];
+    this.img = this.imageCache[path];
   }
 
   drawCount(ctx) {
@@ -32,10 +31,7 @@ class CoinsBar extends DrawableObject {
     ctx.fillStyle = 'black';
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
-
     const text = `${this.coinsCounter} x`;
-
-    // Outline (besser lesbar)
     ctx.strokeText(text, this.x + this.width - 100, this.y + 32);
     ctx.fillText(text, this.x + this.width - 100, this.y + 32);
   }

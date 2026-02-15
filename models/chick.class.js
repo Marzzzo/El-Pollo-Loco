@@ -54,7 +54,7 @@ class Chick extends MovableObject {
 
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
-      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
+      this.updateAnimation();
+    }, 1000 / 60);
   }
 }

@@ -7,13 +7,12 @@ class Level {
   enemies;
   clouds;
   backgroundObjects;
-  level_end_x = 2900; // Kamera end position
+  level_end_x = 2900;
 
-  // Übergabe der Arrays
   constructor(enemies, items, clouds, backgroundObjects) {
-    this.enemies = enemies; // Array mit mehreren Enemys
-    this.items = items; // Array mit mehreren Coins
-    this.clouds = clouds; // Array mit mehreren Clouds
-    this.backgroundObjects = backgroundObjects; // Array mit mehreren BackgroundObjects
+    this.enemies = enemies;
+    this.items = items;
+    this.clouds = clouds;
+    this.backgroundObjects = backgroundObjects;
   }
 }

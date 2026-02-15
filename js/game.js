@@ -1,13 +1,11 @@
-// Variablen
 let canvas;
-let world; // Variable für eine neue welt.
+let world;
 let keyboard = new Keyboard();
 
-// Ruft diese function über onload auf, wenn html geladen ist.
 function init() {
-  canvas = document.getElementById('canvas'); // greift auf das canvas über die ID zu.
+  canvas = document.getElementById('canvas');
   level1 = createLevel1();
-  world = new World(canvas, keyboard); // neue welt wird erstellt und das canvas wird übergeben in den constructor in der world.
+  world = new World(canvas, keyboard);
   bindBtsPressEvents();
 }
 

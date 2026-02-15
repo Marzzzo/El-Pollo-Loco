@@ -90,88 +90,104 @@ class Endboss extends MovableObject {
   }
 
   endbossAttackCharacter() {
-    if (this.isEndbossBottleHurt()) {
-      this.playAnimation('hurt');
-      return;
-    }
-    if (this.phase === 'hurt') {
-      this.phase = 'walk';
-    }
-    if (this.isDead()) {
-      this.playAnimation('dead');
-      if (!this.deadJumpStarted) {
-        this.deadJumpStarted = true;
-        this.speedY = 12;
-        clearInterval(this.moveInterval);
-        this.world.stop();
-      }
-      if (!this.winScreenStarted) {
-        this.winScreenStarted = true;
-        setTimeout(() => {
-          openWinScreen();
-        }, 2000);
-      }
-      this.deadJump();
-      return;
-    }
-
-    if (!this.startTriggered && this.world.character.x >= 3000) {
-      this.startTriggered = true;
-      this.phase = 'attack';
-      setTimeout(() => {
-        this.phase = 'walk';
-        this.followCharacter();
-      }, 3000);
-    }
-    if (this.phase === 'attack') {
-      this.playAnimation('attack');
-      return;
-    }
-    if (this.phase === 'alert') {
-      this.playAnimation('alert');
-      return;
-    }
-    if (this.phase === 'walk') {
-      this.playAnimation('walk');
-      return;
-    }
+    if (this.handleBottleDamage()) return;
+    if (this.phase === 'hurt') this.phase = 'walk';
+    if (this.handleDead()) return;
+    if (this.handleStartTrigger()) return;
+    if (this.handlePhase()) return;
     this.playAnimation('alert');
   }
 
+  handleStartTrigger() {
+    if (this.startTriggered) return false;
+    if (this.world.character.x < 3000) return false;
+    this.startTriggered = true;
+    this.phase = 'attack';
+    setTimeout(() => {
+      this.phase = 'walk';
+      this.followCharacter();
+    }, 3000);
+    return true;
+  }
+
+  handlePhase() {
+    if (this.phase === 'attack') {
+      this.playAnimation('attack');
+      return true;
+    }
+    if (this.phase === 'alert') {
+      this.playAnimation('alert');
+      return true;
+    }
+    if (this.phase === 'walk') {
+      this.playAnimation('walk');
+      return true;
+    }
+    return false;
+  }
+
+  handleBottleDamage() {
+    if (!this.isEndbossBottleHurt()) return false;
+    this.playAnimation('hurt');
+    return true;
+  }
+
+  handleDead() {
+    if (!this.isDead()) return false;
+    this.playAnimation('dead');
+    if (!this.deadJumpStarted) this.playDeadJump();
+    if (!this.winScreenStarted) this.showWinScreen();
+    this.deadJump();
+    return true;
+  }
+
+  showWinScreen() {
+    this.winScreenStarted = true;
+    setTimeout(() => openWinScreen(), 2000);
+  }
+
+  playDeadJump() {
+    this.deadJumpStarted = true;
+    this.speedY = 12;
+    clearInterval(this.moveInterval);
+    this.world.stop();
+    this.world.keyboard = {};
+  }
+
   followCharacter() {
-    if (this.moveInterval) return; // verhindert mehrfach starten
-    this.lastTurnTime = Date.now(); // initialisiert die letzte Drehzeit
-    this.direction = -1; // initiale Richtung nach links
+    if (this.moveInterval) return;
+    this.lastTurnTime = Date.now();
+    this.direction = -1;
     this.moveInterval = setInterval(() => {
-      if (!this.world) return; // Sicherheitsabfrage
-      if (this.isEndbossBottleHurt()) return; // nicht bewegen, wenn verletzt
-      this.updateDirectionWithDelay(); // aktualisiert die Richtung mit Verzögerung
-      this.viewDirection(); // bewegt den Endboss entsprechend der Richtung
+      if (!this.world) return;
+      if (this.isEndbossBottleHurt()) return;
+      this.updateDirectionWithDelay();
+      this.viewDirection();
       if (this.isColliding(this.world.character)) {
-        this.world.fightWithEndboss(); // löst den Kampf mit dem Endboss aus
+        this.world.fightWithEndboss();
       }
     }, 1000 / 60);
   }
 
   updateDirectionWithDelay() {
-    const differenz = this.world.character.x - this.x; // Differenz zur Charakterposition
-    if (Math.abs(differenz) < 150) return; // keine Änderung, wenn zu nah
-    const newDirection = differenz > 0 ? 1 : -1; // neue Richtung basierend auf der Position des Charakters
-    if (newDirection === this.direction) return; // keine Änderung, wenn die Richtung gleich ist
-    if (Date.now() - this.lastTurnTime < 100) return; // Verzögerung überprüfen
-    this.lastTurnTime = Date.now(); // aktualisiert die letzte Drehzeit
-    this.direction = newDirection; // setzt die neue Richtung
+    const differenz = this.world.character.x - this.x;
+    if (Math.abs(differenz) < 150) return;
+    const newDirection = differenz > 0 ? 1 : -1;
+    if (newDirection === this.direction) return;
+    if (Date.now() - this.lastTurnTime < 100) return;
+    this.lastTurnTime = Date.now();
+    this.direction = newDirection;
   }
 
   viewDirection() {
-    this.otherDirection = this.direction === 1; // setzt die Blickrichtung basierend auf der Bewegungsrichtung
-    this.x += this.direction * this.speed; // bewegt den Endboss entsprechend der Richtung
+    this.otherDirection = this.direction === 1;
+    this.x += this.direction * this.speed;
   }
 
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
-      if (!this.world || !this.world.keyboard) return; // Sicherheitsabfrage
-      this.updateAnimation(); // aktualisiert die Animation basierend auf Tastatureingaben
-    }, 1000 / 60); // 60 FPS
+      if (!this.world || !this.world.keyboard) return;
+      this.updateAnimation();
+    }, 1000 / 60);
   }
 }
