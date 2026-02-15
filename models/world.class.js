@@ -101,6 +101,7 @@ class World {
     if (bottle.hasImpacted) return;
     if (!bottle.isColliding(this.endboss)) return;
     bottle.impact();
+    startLoop(sfx.splash);
     this.endboss.hitFromBottle();
     this.endbossBar.setPercentage(this.endboss.energy);
   }
@@ -110,6 +111,7 @@ class World {
       if (bottle.hasImpacted) return;
       if (!bottle.isColliding(enemy)) return;
       bottle.impact();
+      startLoop(sfx.splash);
       this.killEnemy(enemy);
     });
   }
@@ -121,6 +123,7 @@ class World {
     clearInterval(enemy.moveInterval);
     enemy.moveInterval = null;
     enemy.playAnimation?.('dead');
+    startLoop(sfx.enemiesDies);
     setTimeout(() => {
       const i = this.level.enemies.indexOf(enemy);
       if (i !== -1) this.level.enemies.splice(i, 1);
@@ -178,6 +181,7 @@ class World {
     const coin = this.level.items[index];
     if (!coin.collected) {
       coin.collected = true;
+      playOneShot(sfx.coin);
       this.level.items.splice(index, 1);
       this.coinsBar.setCoins(this.coinsBar.coinsCounter + 1);
     }
@@ -187,6 +191,7 @@ class World {
     const bottle = this.level.items[index];
     if (!bottle.collected) {
       bottle.collected = true;
+      playOneShot(sfx.bottle);
       this.level.items.splice(index, 1);
       this.bottlesBar.setBottles(this.bottlesBar.bottleCounter + 1);
     }

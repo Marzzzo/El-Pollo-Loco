@@ -1,0 +1,56 @@
+let bgMusicOn = false;
+
+const sfx = {
+  background: new Audio('audio/background-music.mp3'),
+  coin: new Audio('audio/coin.mp3'),
+  bottle: new Audio('audio/bottle.mp3'),
+  jump: new Audio('audio/jump.wav'),
+  hit: new Audio('audio/hurt.wav'),
+  walk: new Audio('audio/steps.wav'),
+  throw: new Audio('audio/throw.mp3'),
+  splash: new Audio('audio/bottleBreak.mp3'),
+  enemiesDies: new Audio('audio/chickenDies.mp3'),
+  bossEnrage: new Audio('audio/bossEnrage.mp3'),
+};
+
+sfx.background.loop = true;
+sfx.background.volume = 0.15;
+sfx.walk.loop = true;
+sfx.walk.volume = 1;
+sfx.bossEnrage.volume = 1;
+
+function updateBackgroundMusic() {
+  if (bgMusicOn) {
+    sfx.background.play().catch(() => {});
+  } else {
+    sfx.background.pause();
+    sfx.background.currentTime = 0;
+  }
+}
+
+function playOneShot(audio) {
+  if (!bgMusicOn) return;
+  const a = audio.cloneNode();
+  a.volume = audio.volume;
+  a.play().catch(() => {});
+}
+
+function startLoop(audio) {
+  if (!bgMusicOn) return;
+  if (!audio.paused) return;
+  audio.play().catch(() => {});
+}
+
+function stopLoop(audio) {
+  if (audio.paused) return;
+  audio.pause();
+  audio.currentTime = 0;
+}
+
+function toggleSound() {
+  bgMusicOn = !bgMusicOn;
+  const img = document.querySelector('#sound img');
+  img.src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
+  updateBackgroundMusic();
+  if (!bgMusicOn) stopLoop(sfx.walk);
+}

@@ -29,6 +29,7 @@ function startGame() {
 
 function returnToMenu() {
   showCanvas(false);
+  updateBackgroundMusic();
   showScreen('startScreen');
 }
 

@@ -85,8 +85,11 @@ class ThrowableObject extends MovableObject {
       if (this.hasImpacted) return;
       this.y -= this.speedY;
       this.speedY -= this.acceleration;
+      startLoop(sfx.throw);
       if (this.y >= this.groundY) {
+        stopLoop(sfx.throw);
         this.impact();
+        startLoop(sfx.splash);
       }
     }, 1000 / 30);
   }

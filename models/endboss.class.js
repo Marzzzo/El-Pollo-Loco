@@ -113,6 +113,7 @@ class Endboss extends MovableObject {
   handlePhase() {
     if (this.phase === 'attack') {
       this.playAnimation('attack');
+      startLoop(sfx.bossEnrage);
       return true;
     }
     if (this.phase === 'alert') {
@@ -129,6 +130,7 @@ class Endboss extends MovableObject {
   handleBottleDamage() {
     if (!this.isEndbossBottleHurt()) return false;
     this.playAnimation('hurt');
+    startLoop(sfx.bossEnrage);
     return true;
   }
 

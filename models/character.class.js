@@ -112,6 +112,7 @@ class Character extends MovableObject {
 
   handleDead() {
     if (!this.isDead()) return false;
+    stopLoop(sfx.walk);
     this.idleTime = 0;
     this.playAnimation('dead');
     if (!this.deadJumpStarted) {
@@ -129,6 +130,7 @@ class Character extends MovableObject {
 
   handleHurt() {
     if (!this.isHurt()) return false;
+    stopLoop(sfx.walk);
     this.playAnimation('hurt');
     this.idleTime = 0;
     return true;
@@ -136,13 +138,19 @@ class Character extends MovableObject {
 
   handleJump() {
     if (!this.jumping) return false;
+    stopLoop(sfx.walk);
     this.playAnimation('jump');
     return true;
   }
 
   handleWalk() {
-    if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) return false;
+    const walking = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
+    if (!walking || !this.isOnGround()) {
+      stopLoop(sfx.walk);
+      return false;
+    }
     this.playAnimation('walk');
+    startLoop(sfx.walk);
     return true;
   }
 
@@ -207,6 +215,7 @@ class Character extends MovableObject {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
       this.speedY = 18;
       this.jumping = true;
+      startLoop(sfx.jump);
     }
   }
 

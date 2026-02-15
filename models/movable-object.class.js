@@ -92,6 +92,7 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) return;
     this.hurtUntil = new Date().getTime() + 1000;
     this.energy -= 10;
+    startLoop(sfx.hit);
     if (this.energy < 0) {
       this.energy = 0;
     }

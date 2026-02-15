@@ -7,8 +7,8 @@ function startScreenTemplate() {
                 <div class="single-icon-box" onclick='openControlMenu()'>
                     <img class="icons" src="./icons/controller-icon.png" alt="" />
                 </div>
-                <div class="single-icon-box">
-                    <img class="icons" src="./icons/sound-on.png" alt="" />
+                <div class="single-icon-box" onclick = 'toggleSound()' id = 'sound'>
+                    <img class="icons" src="./icons/sound-off.png" alt="" />
                 </div>
             </div>
           </div>

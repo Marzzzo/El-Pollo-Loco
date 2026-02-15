@@ -220,9 +220,8 @@ p {
 
 .box-position {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 100px;
   width: 100%;
 }
 
