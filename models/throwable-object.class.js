@@ -85,9 +85,7 @@ class ThrowableObject extends MovableObject {
       if (this.hasImpacted) return;
       this.y -= this.speedY;
       this.speedY -= this.acceleration;
-      startLoop(sfx.throw);
       if (this.y >= this.groundY) {
-        stopLoop(sfx.throw);
         this.impact();
         startLoop(sfx.splash);
       }
@@ -98,7 +96,7 @@ class ThrowableObject extends MovableObject {
     this.speedY = 12;
     this.acceleration = 1;
     this.applyGravity();
-
+    playOneShot(sfx.throw);
     clearInterval(this.throwInterval);
     this.throwInterval = setInterval(() => {
       if (this.hasImpacted) return;
