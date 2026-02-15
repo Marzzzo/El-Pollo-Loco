@@ -134,6 +134,7 @@ class World {
     if (this.endboss.energy <= 0) return;
     if (!this.character.isColliding(this.endboss)) return;
     if (this.character.speedY < 0 && !this.endboss.isDead()) {
+      startLoop(sfx.jump);
       this.character.speedY = 12;
       this.endboss.hitFromBottle();
       this.endbossBar.setPercentage(this.endboss.energy);
@@ -151,6 +152,7 @@ class World {
       if (!this.character.isColliding(enemy)) return;
       if (this.character.speedY < 0) {
         this.killEnemy(enemy);
+        startLoop(sfx.jump);
         this.character.speedY = 12;
         return;
       }

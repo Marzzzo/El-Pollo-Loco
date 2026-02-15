@@ -22,28 +22,33 @@ function showCanvas(show) {
 
 function startGame() {
   if (window.world) world.stop();
+  playOneShot(sfx.buttonClick);
   showCanvas(true);
   hideAllScreens();
   init();
 }
 
 function returnToMenu() {
+  playOneShot(sfx.buttonClick);
   showCanvas(false);
   updateBackgroundMusic();
   showScreen('startScreen');
 }
 
 function openControlMenu() {
+  playOneShot(sfx.buttonClick);
   showCanvas(false);
   showScreen('controlScreen');
 }
 
 function openWinScreen() {
+  playOneShot(sfx.buttonClick);
   showCanvas(false);
   showScreen('winScreen');
 }
 
 function openLoseScreen() {
+  playOneShot(sfx.buttonClick);
   showCanvas(false);
   showScreen('loseScreen');
 }

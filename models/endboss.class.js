@@ -139,7 +139,6 @@ class Endboss extends MovableObject {
     this.playAnimation('dead');
     if (!this.deadJumpStarted) this.playDeadJump();
     if (!this.winScreenStarted) this.showWinScreen();
-
     this.deadJump();
     return true;
   }
@@ -152,6 +151,7 @@ class Endboss extends MovableObject {
   playDeadJump() {
     this.deadJumpStarted = true;
     this.speedY = 12;
+    stopLoop(sfx.bossEnrage);
     startLoop(sfx.enemiesDies);
     clearInterval(this.moveInterval);
     this.world.stop();
