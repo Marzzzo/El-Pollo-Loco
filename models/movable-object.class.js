@@ -82,9 +82,9 @@ class MovableObject extends DrawableObject {
     this.isHit = true;
     this.phase = 'hurt';
     if (this.energy <= 80) this.speed = 4;
-    if (this.energy <= 60) this.speed = 4.5;
-    if (this.energy <= 40) this.speed = 7;
-    if (this.energy <= 20) this.speed = 8;
+    if (this.energy <= 60) this.speed = 5;
+    if (this.energy <= 40) this.speed = 6;
+    if (this.energy <= 20) this.speed = 7;
     if (this.energy < 0) this.energy = 0;
   }
 

@@ -16,14 +16,12 @@ const sfx = {
   bounceJump: new Audio('audio/bounce.mp3'),
 };
 
-sfx.background.loop = true;
 sfx.background.volume = 0.15;
-sfx.walk.loop = true;
 sfx.walk.volume = 1;
 sfx.bossEnrage.volume = 1;
 sfx.buttonClick.volume = 0.2;
 sfx.enemiesDies.volume = 1;
-sfx.chickenTalk.volume = 0.5;
+sfx.chickenTalk.volume = 0.2;
 
 function updateBackgroundMusic() {
   if (bgMusicOn) {
