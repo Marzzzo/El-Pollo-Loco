@@ -28,6 +28,7 @@ function updateBackgroundMusic() {
     sfx.background.play().catch(() => {});
   } else {
     sfx.background.pause();
+    sfx.background.currentTime = 0;
   }
 }
 
