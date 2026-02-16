@@ -107,7 +107,7 @@ class World {
   }
 
   enemiesHitFromBottle(bottle) {
-    this.level.enemies.forEach((enemy, index) => {
+    this.level.enemies.forEach((enemy) => {
       if (bottle.hasImpacted) return;
       if (!bottle.isColliding(enemy)) return;
       bottle.impact();
@@ -134,7 +134,7 @@ class World {
     if (this.endboss.energy <= 0) return;
     if (!this.character.isColliding(this.endboss)) return;
     if (this.character.speedY < 0 && !this.endboss.isDead()) {
-      startLoop(sfx.jump);
+      playOneShot(sfx.bounceJump);
       this.character.speedY = 12;
       this.endboss.hitFromBottle();
       this.endbossBar.setPercentage(this.endboss.energy);
@@ -152,7 +152,7 @@ class World {
       if (!this.character.isColliding(enemy)) return;
       if (this.character.speedY < 0) {
         this.killEnemy(enemy);
-        startLoop(sfx.jump);
+        playOneShot(sfx.bounceJump);
         this.character.speedY = 12;
         return;
       }

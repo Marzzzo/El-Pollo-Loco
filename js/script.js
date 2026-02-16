@@ -26,6 +26,7 @@ function startGame() {
   showCanvas(true);
   hideAllScreens();
   init();
+  updateBackgroundMusic();
 }
 
 function returnToMenu() {
@@ -63,6 +64,10 @@ function renderOverlays() {
 function renderStartscreen() {
   let contentRef = document.getElementById('startScreen');
   contentRef.innerHTML = startScreenTemplate();
+  const img = document.querySelector('#sound img');
+  if (img) {
+    img.src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
+  }
 }
 
 function renderControlScreen() {
