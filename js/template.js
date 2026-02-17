@@ -107,18 +107,16 @@ function imprintTemplate() {
   return `
     <div class="overlay">
       <div class="overlay-content">
-        <div class="single-icon-box" onclick="closeImprint()">
+        <div class="back-icon-box" onclick="closeImprint()">
           <img class="icons" src="./icons/close.png" alt="close" />
         </div>
-
-        <h2>Impressum</h2>
-
-        <p>
-          Angaben gemäß § 5 DDG<br><br>
+          <h2>Impressum</h2>
+          <p>
+          Angaben gemäß § 5 DDG<br>
           Marco Burdick<br>
           Oberfeld 20<br>
           33142 Büren<br>
-          Deutschland<br><br>
+          Deutschland<br>
           E-Mail: marco.burdick@web.de
         </p>
       </div>
