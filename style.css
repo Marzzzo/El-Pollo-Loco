@@ -324,6 +324,17 @@ p {
   transition: transform 0.4s ease-in-out;
 }
 
+.sound-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .single-icon-box-endscreen:hover {
   background-color: rgba(255, 255, 255, 0.4);
   cursor: pointer;

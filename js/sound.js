@@ -86,14 +86,20 @@ function toggleSound() {
 
 function updateSoundIcons() {
   const src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
-  const startBox = document.getElementById('sound');
-  if (startBox) {
-    const img = startBox.getElementsByTagName('img')[0];
-    if (img) img.src = src;
+  const start = document.getElementById('sound');
+  if (start) {
+    if (start.tagName === 'IMG') start.src = src;
+    else {
+      const img = start.getElementsByTagName('img')[0];
+      if (img) img.src = src;
+    }
   }
-  const ingameBox = document.getElementById('soundToggle');
-  if (ingameBox) {
-    const img = ingameBox.getElementsByTagName('img')[0];
-    if (img) img.src = src;
+  const ingame = document.getElementById('sound-toggle') || document.getElementById('soundToggle');
+  if (ingame) {
+    if (ingame.tagName === 'IMG') ingame.src = src;
+    else {
+      const img = ingame.getElementsByTagName('img')[0];
+      if (img) img.src = src;
+    }
   }
 }

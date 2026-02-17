@@ -26,6 +26,7 @@ function startGame() {
   showCanvas(true);
   hideAllScreens();
   init();
+  updateSoundIcons();
   updateBackgroundMusic();
 }
 
