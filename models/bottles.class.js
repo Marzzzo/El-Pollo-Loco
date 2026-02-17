@@ -3,7 +3,7 @@ class Bottles extends MovableObject {
 
   offset = { top: 15, bottom: 10, left: 20, right: 20 };
 
-  spawnPoints = [600, 1000, 1400, 1800, 2200, 2600, 3000];
+  spawnPoints = [400, 800, 1200, 1600, 2000, 2400, 2800];
 
   constructor(i) {
     super();

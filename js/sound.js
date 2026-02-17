@@ -1,4 +1,5 @@
 let bgMusicOn = localStorage.getItem('soundOn') === 'true';
+let activeOneShots = [];
 
 const sfx = {
   background: new Audio('audio/background-music.mp3'),
@@ -16,12 +17,15 @@ const sfx = {
   bounceJump: new Audio('audio/bounce.mp3'),
 };
 
-sfx.background.volume = 0.15;
-sfx.walk.volume = 1;
-sfx.bossEnrage.volume = 1;
+sfx.background.loop = true;
+sfx.background.volume = 0.1;
+sfx.walk.volume = 0.6;
+sfx.bossEnrage.volume = 0.5;
 sfx.buttonClick.volume = 0.2;
 sfx.enemiesDies.volume = 1;
-sfx.chickenTalk.volume = 0.2;
+sfx.chickenTalk.volume = 0.1;
+sfx.jump.volume = 0.4;
+sfx.bounceJump.volume = 0.6;
 
 function updateBackgroundMusic() {
   if (bgMusicOn) {
@@ -36,6 +40,10 @@ function playOneShot(audio) {
   if (!bgMusicOn) return;
   const a = audio.cloneNode();
   a.volume = audio.volume;
+  activeOneShots.push(a);
+  a.onended = () => {
+    activeOneShots = activeOneShots.filter((x) => x !== a);
+  };
   a.play().catch(() => {});
 }
 
@@ -51,11 +59,41 @@ function stopLoop(audio) {
   audio.currentTime = 0;
 }
 
+function stopAllSound() {
+  Object.values(sfx).forEach((a) => {
+    if (!a) return;
+    a.pause();
+    a.currentTime = 0;
+  });
+  activeOneShots.forEach((a) => {
+    a.pause();
+    a.currentTime = 0;
+  });
+  activeOneShots = [];
+}
+
 function toggleSound() {
   bgMusicOn = !bgMusicOn;
-  localStorage.setItem('soundOn', bgMusicOn);
-  const img = document.querySelector('#sound img');
-  img.src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
+  localStorage.setItem('soundOn', String(bgMusicOn));
+  updateSoundIcons();
   updateBackgroundMusic();
-  if (!bgMusicOn) stopLoop(sfx.walk);
+  if (!bgMusicOn) {
+    stopAllSound();
+  } else {
+    updateBackgroundMusic();
+  }
+}
+
+function updateSoundIcons() {
+  const src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
+  const startBox = document.getElementById('sound');
+  if (startBox) {
+    const img = startBox.getElementsByTagName('img')[0];
+    if (img) img.src = src;
+  }
+  const ingameBox = document.getElementById('soundToggle');
+  if (ingameBox) {
+    const img = ingameBox.getElementsByTagName('img')[0];
+    if (img) img.src = src;
+  }
 }

@@ -8,7 +8,7 @@ class Coins extends MovableObject {
     right: 43,
   };
 
-  spawnPoints = [300, 700, 1100, 1400, 1700, 3000, 3400];
+  spawnPoints = [200, 600, 1000, 1400, 1800, 2200, 2600];
 
   constructor(i) {
     super();

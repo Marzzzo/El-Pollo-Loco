@@ -54,11 +54,20 @@ function openLoseScreen() {
   showScreen('loseScreen');
 }
 
+function openImprint() {
+  document.getElementById('imprint').classList.remove('d-none');
+}
+
+function closeImprint() {
+  document.getElementById('imprint').classList.add('d-none');
+}
+
 function renderOverlays() {
   renderStartscreen();
   renderControlScreen();
   renderWinScreen();
   renderLoseScreen();
+  renderImprint();
 }
 
 function renderStartscreen() {
@@ -83,4 +92,9 @@ function renderWinScreen() {
 function renderLoseScreen() {
   let contentRef = document.getElementById('loseScreen');
   contentRef.innerHTML = loseTemplate();
+}
+
+function renderImprint() {
+  let contentRef = document.getElementById('imprint');
+  contentRef.innerHTML = imprintTemplate();
 }

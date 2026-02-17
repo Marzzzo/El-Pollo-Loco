@@ -48,7 +48,7 @@ class Chicken extends MovableObject {
       this.playAnimation('dead');
     } else {
       this.playAnimation('walk');
-      startLoop(sfx.chickenTalk);
+      setTimeout(() => startLoop(sfx.chickenTalk), 3000);
     }
   }
 
