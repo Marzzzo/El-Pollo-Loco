@@ -56,10 +56,12 @@ function openLoseScreen() {
 }
 
 function openImprint() {
+  playOneShot(sfx.buttonClick);
   document.getElementById('imprint').classList.remove('d-none');
 }
 
 function closeImprint() {
+  playOneShot(sfx.buttonClick);
   document.getElementById('imprint').classList.add('d-none');
 }
 

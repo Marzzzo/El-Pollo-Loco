@@ -87,6 +87,7 @@ function toggleSound() {
 function updateSoundIcons() {
   const src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
   const start = document.getElementById('sound');
+  playOneShot(sfx.buttonClick);
   if (start) {
     if (start.tagName === 'IMG') start.src = src;
     else {
@@ -95,6 +96,7 @@ function updateSoundIcons() {
     }
   }
   const ingame = document.getElementById('soundToggle');
+  playOneShot(sfx.buttonClick);
   if (ingame) {
     if (ingame.tagName === 'IMG') ingame.src = src;
     else {
