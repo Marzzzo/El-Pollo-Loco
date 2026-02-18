@@ -94,7 +94,7 @@ function updateSoundIcons() {
       if (img) img.src = src;
     }
   }
-  const ingame = document.getElementById('sound-toggle') || document.getElementById('soundToggle');
+  const ingame = document.getElementById('soundToggle');
   if (ingame) {
     if (ingame.tagName === 'IMG') ingame.src = src;
     else {
