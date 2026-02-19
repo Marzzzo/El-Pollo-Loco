@@ -1,3 +1,14 @@
+/**
+ * Creates and returns the first game level instance.
+ * The level includes:
+ * - An empty enemies array (to be populated later)
+ * - An empty items array (to be populated later)
+ * - A sequence of cloud objects for parallax scrolling
+ * - Multiple layered background objects positioned horizontally
+ * Background elements are repeated at fixed intervals
+ * to create a continuous scrolling environment.
+ * @returns {Level} A fully configured Level instance.
+ */
 function createLevel1() {
   return new Level(
     (enemies = []),

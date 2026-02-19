@@ -71,6 +71,21 @@ class Character extends MovableObject {
 
   world;
 
+  animations = {
+    idle: { images: this.idleImages, speed: 200 },
+    longIdle: { images: this.longIdleImages, speed: 200 },
+    walk: { images: this.walkingImages, speed: 100 },
+    jump: { images: this.jumpImages, speed: 180 },
+    hurt: { images: this.hurtImages, speed: 200 },
+    dead: { images: this.deadImages, speed: 240 },
+  };
+
+  /**
+   * Creates a new character instance.
+   * Initializes default properties, applies gravity,
+   * and preloads all required animation images.
+   * @constructor
+   */
   constructor() {
     super();
     this.currentImage = 0;
@@ -85,6 +100,13 @@ class Character extends MovableObject {
     this.loadImages(this.deadImages);
   }
 
+  /**
+   * Starts the character animation system.
+   * Clears existing animation intervals,
+   * sets the default idle animation,
+   * and starts both animation and movement loops.
+   * @returns {void}
+   */
   animate() {
     this.clearAnimationInterval();
     this.playAnimation('idle');
@@ -92,15 +114,14 @@ class Character extends MovableObject {
     this.startMovementLoop();
   }
 
-  animations = {
-    idle: { images: this.idleImages, speed: 200 },
-    longIdle: { images: this.longIdleImages, speed: 200 },
-    walk: { images: this.walkingImages, speed: 100 },
-    jump: { images: this.jumpImages, speed: 180 },
-    hurt: { images: this.hurtImages, speed: 200 },
-    dead: { images: this.deadImages, speed: 240 },
-  };
-
+  /**
+   * Updates the current animation state of the character.
+   * Checks animation states in priority order:
+   * dead → hurt → jump → walk → long idle → idle.
+   * Stops further checks once a matching state is handled.
+   *
+   * @returns {void}
+   */
   updateAnimation() {
     if (this.handleDead()) return;
     if (this.handleHurt()) return;
@@ -110,6 +131,14 @@ class Character extends MovableObject {
     this.playAnimation('idle');
   }
 
+  /**
+   * Handles the dead state of the character.
+   * Stops movement sounds, plays the death animation,
+   * triggers the death jump effect, disables player input,
+   * and opens the lose screen after a delay.
+   * @returns {boolean} Returns true if the dead state was handled,
+   * otherwise false.
+   */
   handleDead() {
     if (!this.isDead()) return false;
     stopLoop(sfx.walk);
@@ -128,6 +157,13 @@ class Character extends MovableObject {
     return true;
   }
 
+  /**
+   * Handles the hurt state of the character.
+   * Stops walking sound effects, plays the hurt animation,
+   * and resets the idle timer.
+   * @returns {boolean} Returns true if the hurt state was handled,
+   * otherwise false.
+   */
   handleHurt() {
     if (!this.isHurt()) return false;
     stopLoop(sfx.walk);
@@ -136,6 +172,13 @@ class Character extends MovableObject {
     return true;
   }
 
+  /**
+   * Handles the jump state of the character.
+   * Stops walking sound effects and plays the jump animation
+   * while the character is in the jumping state.
+   * @returns {boolean} Returns true if the jump state was handled,
+   * otherwise false.
+   */
   handleJump() {
     if (!this.jumping) return false;
     stopLoop(sfx.walk);
@@ -143,6 +186,15 @@ class Character extends MovableObject {
     return true;
   }
 
+  /**
+   * Handles the walking state of the character.
+   * Checks if movement keys are pressed and the character
+   * is on the ground. Plays the walking animation and
+   * starts the walking sound loop.
+   * Stops the walking sound if conditions are not met.
+   * @returns {boolean} Returns true if the walking state was handled,
+   * otherwise false.
+   */
   handleWalk() {
     const walking = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
     if (!walking || !this.isOnGround()) {
@@ -154,12 +206,25 @@ class Character extends MovableObject {
     return true;
   }
 
+  /**
+   * Handles the long idle state of the character.
+   * Plays the long idle animation if the character
+   * has been inactive for a specified duration.
+   * @returns {boolean} Returns true if the long idle state was handled,
+   * otherwise false.
+   */
   handleLongIdle() {
     if (this.idleTime < 20 * 1000) return false;
     this.playAnimation('longIdle');
     return true;
   }
 
+  /**
+   * Tracks the character's idle time.
+   * Increases the idle timer if no movement or jump keys
+   * are pressed. Resets the idle timer when input is detected.
+   * @returns {void}
+   */
   trackIdleTime() {
     if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT && !this.world.keyboard.SPACE) {
       this.idleTime += 60;
@@ -168,6 +233,14 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Starts the main animation loop.
+   * Runs at 60 FPS and continuously updates
+   * the character's idle time and animation state.
+   * Ensures the world and keyboard objects exist
+   * before executing updates.
+   * @returns {void}
+   */
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       if (!this.world || !this.world.keyboard) return;
@@ -176,11 +249,24 @@ class Character extends MovableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Starts the movement loop.
+   * Clears any existing movement interval and
+   * runs the character movement logic at 60 FPS.
+   * @returns {void}
+   */
   startMovementLoop() {
     this.clearMovementInterval();
     this.movementInterval = setInterval(() => this.moveCharacter(), 1000 / 60);
   }
 
+  /**
+   * Executes the character movement logic.
+   * Checks for valid world and keyboard references,
+   * then processes movement permissions,
+   * camera adjustments, and jump behavior.
+   * @returns {void}
+   */
   moveCharacter() {
     if (!this.world || !this.world.keyboard) return;
     this.canMoveCharacter();
@@ -188,12 +274,25 @@ class Character extends MovableObject {
     this.jump();
   }
 
+  /**
+   * Handles horizontal character movement.
+   * Checks keyboard input and ensures the character
+   * stays within the defined level boundaries
+   * before moving left or right.
+   * @returns {void}
+   */
   canMoveCharacter() {
     let levelEnd = this.world.level.level_end_x + 720;
     if (this.world.keyboard.RIGHT && this.x < levelEnd) this.moveRight();
     if (this.world.keyboard.LEFT && this.x >= -800) this.moveLeft();
   }
 
+  /**
+   * Updates the camera position based on the character's location.
+   * Moves the camera horizontally while the character
+   * is within the level bounds, creating a side-scrolling effect.
+   * @returns {void}
+   */
   cameraMovementCharacter() {
     let cameraStop = this.world.level.level_end_x;
     if (this.x < cameraStop) {
@@ -201,16 +300,37 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Moves the character to the right.
+   * Increases the x-position based on the current speed
+   * and sets the character direction to face right.
+   * @returns {void}
+   */
   moveRight() {
     this.x += this.speed;
     this.otherDirection = false;
   }
 
+  /**
+   * Moves the character to the left.
+   * Decreases the x-position based on the current speed
+   * and sets the character direction to face left.
+   * @returns {void}
+   */
   moveLeft() {
     this.x -= this.speed;
     this.otherDirection = true;
   }
 
+  /**
+   * Triggers the jump action.
+   * Initiates a jump when the jump key is pressed,
+   * the character is not already jumping,
+   * and the character is on the ground.
+   * Sets the vertical speed, activates the jumping state,
+   * and starts the jump sound effect.
+   * @returns {void}
+   */
   jump() {
     if (this.world.keyboard.SPACE && !this.jumping && !this.isAboveGround()) {
       this.speedY = 18;
@@ -219,10 +339,23 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Checks whether the character is currently in the hurt state.
+   * Compares the current time with the stored hurt duration
+   * to determine if the hurt animation/state is still active.
+   * @returns {boolean} Returns true if the character is hurt,
+   * otherwise false.
+   */
   isHurt() {
     return new Date().getTime() < this.hurtUntil;
   }
 
+  /**
+   * Checks for a collision between the character and the endboss.
+   * If a collision is detected, the character takes damage
+   * and the status bar is updated to reflect the new energy level.
+   * @returns {void}
+   */
   isCollidingWithEndboss() {
     if (this.character.isColliding(this.endboss)) {
       this.character.hit();
@@ -230,6 +363,13 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Checks for collisions between the character and all enemies.
+   * Iterates through all enemies in the level and applies damage
+   * to the character if a collision is detected.
+   * Updates the status bar to reflect the current energy level.
+   * @returns {void}
+   */
   isCollidingWithEnemies() {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
@@ -239,6 +379,12 @@ class Character extends MovableObject {
     });
   }
 
+  /**
+   * Checks for collisions between the character and collectible items.
+   * Iterates through all items in the level and triggers
+   * the appropriate collect function depending on the item type.
+   * @returns {void}
+   */
   isCollidingWithItems() {
     this.level.items.forEach((item, index) => {
       if (this.character.isColliding(item)) {

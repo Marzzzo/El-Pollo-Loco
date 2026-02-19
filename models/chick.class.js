@@ -17,16 +17,6 @@ class Chick extends MovableObject {
 
   deadImages = ['img/3_enemies_chicken/chicken_small/2_dead/dead.png'];
 
-  constructor(i) {
-    super();
-    this.loadImage(this.walkImages[0]);
-    this.loadImages(this.walkImages);
-    this.loadImages(this.deadImages);
-    this.animate();
-    this.moveLeft();
-    this.x = this.spawnPoints[i % this.spawnPoints.length];
-  }
-
   animations = {
     walk: {
       images: this.walkImages,
@@ -38,12 +28,40 @@ class Chick extends MovableObject {
     },
   };
 
+  /**
+   * Creates a new enemy instance.
+   * Loads all required images (walk and dead animations),
+   * starts the animation loop, moves the enemy to the left,
+   * and sets its spawn position based on the given index.
+   * @param {number} i - Index used to determine the spawn position.
+   */
+  constructor(i) {
+    super();
+    this.loadImage(this.walkImages[0]);
+    this.loadImages(this.walkImages);
+    this.loadImages(this.deadImages);
+    this.animate();
+    this.moveLeft();
+    this.x = this.spawnPoints[i % this.spawnPoints.length];
+  }
+
+  /**
+   * Starts the enemy animation.
+   * Clears any existing animation interval,
+   * plays the walking animation,
+   * and starts the animation loop.
+   */
   animate() {
     this.clearAnimationInterval();
     this.playAnimation('walk');
     this.startAnimationLoop();
   }
 
+  /**
+   * Updates the current animation state.
+   * Plays the death animation if the enemy is dead.
+   * Otherwise, continues the walking animation.
+   */
   updateAnimation() {
     if (this.isDead()) {
       this.playAnimation('dead');
@@ -52,6 +70,11 @@ class Chick extends MovableObject {
     }
   }
 
+  /**
+   * Starts the animation loop.
+   * Executes the updateAnimation method
+   * at 60 frames per second.
+   */
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       this.updateAnimation();

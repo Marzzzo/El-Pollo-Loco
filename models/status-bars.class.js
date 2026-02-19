@@ -37,7 +37,18 @@ const bottlesBarImages = [
 value = 0;
 
 class StatusBar extends DrawableObject {
-  constructor(images, x, y, mode, width = 200, height = 40) {
+  /**
+   * Creates a new status bar instance.
+   * Initializes position, dimensions, display mode,
+   * loads the provided images, and sets the initial value to 0.
+   * @param {string[]} images - Array of image paths for the status bar states.
+   * @param {number} x - X position of the status bar on the canvas.
+   * @param {number} y - Y position of the status bar on the canvas.
+   * @param {string} mode - Display mode (e.g. health, coins, bottles).
+   * @param {number} [width=190] - Width of the status bar.
+   * @param {number} [height=40] - Height of the status bar.
+   */
+  constructor(images, x, y, mode, width = 190, height = 40) {
     super();
     this.images = images;
     this.mode = mode;
@@ -49,26 +60,46 @@ class StatusBar extends DrawableObject {
     this.setValue(0);
   }
 
+  /**
+   * Updates the current value of the status bar.
+   * Determines the correct image based on the given value
+   * and updates the displayed image accordingly.
+   * @param {number} value - The new value to set (e.g. health, coins, bottles).
+   */
   setValue(value) {
     this.value = value;
     const index = this.resolveImageIndex(value);
     this.img = this.imageCache[this.images[index]];
   }
 
+  /**
+   * Draws centered text on the canvas relative to this object.
+   * The text is horizontally centered within the object's width
+   * and rendered with both stroke and fill for better visibility.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   * @param {string} text - The text to display.
+   * @param {number} [offsetY=0] - Optional vertical offset for fine positioning.
+   */
   drawText(ctx, text, offsetY = 0) {
     ctx.font = '15px Arial';
     ctx.fillStyle = 'black';
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
-
     const textWidth = ctx.measureText(text).width;
     const textX = this.x + this.width / 2 - textWidth / 2;
     const textY = this.y + 32 + offsetY;
-
     ctx.strokeText(text, textX, textY);
     ctx.fillText(text, textX, textY);
   }
 
+  /**
+   * Resolves the correct image index based on the current value
+   * and display mode.
+   * In "count" mode, the index is determined by fixed quantity steps.
+   * In "percent" mode, the index is determined by percentage thresholds.
+   * @param {number} value - The current value to evaluate.
+   * @returns {number} The corresponding image index.
+   */
   resolveImageIndex(value) {
     if (this.mode === 'count') {
       if (value >= 10) return 5;

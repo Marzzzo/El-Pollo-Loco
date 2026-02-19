@@ -59,6 +59,21 @@ class Endboss extends MovableObject {
 
   world;
 
+  animations = {
+    walk: { images: this.walkImages, speed: 200 },
+    alert: { images: this.alertImages, speed: 250 },
+    attack: { images: this.attackImages, speed: 300 },
+    hurt: { images: this.hurtImages, speed: 100 },
+    dead: { images: this.deadImages, speed: 100 },
+  };
+
+  /**
+   * Creates a new boss instance.
+   * Initializes the animation state,
+   * loads all required image sequences
+   * (alert, walk, attack, hurt, dead),
+   * and prepares the win screen state.
+   */
   constructor() {
     super();
     this.currentImage = 0;
@@ -71,24 +86,34 @@ class Endboss extends MovableObject {
     this.winScreenStarted = false;
   }
 
+  /**
+   * Starts the boss animation sequence.
+   * Clears any existing animation interval,
+   * plays the alert animation,
+   * and starts the animation loop.
+   */
   animate() {
     this.clearAnimationInterval();
     this.playAnimation('alert');
     this.startAnimationLoop();
   }
 
-  animations = {
-    walk: { images: this.walkImages, speed: 200 },
-    alert: { images: this.alertImages, speed: 250 },
-    attack: { images: this.attackImages, speed: 300 },
-    hurt: { images: this.hurtImages, speed: 100 },
-    dead: { images: this.deadImages, speed: 100 },
-  };
-
+  /**
+   * Updates the boss animation state.
+   * Triggers the boss attack behavior
+   * against the character.
+   */
   updateAnimation() {
     this.endbossAttackCharacter();
   }
 
+  /**
+   * Controls the boss attack logic and animation flow.
+   * Handles damage from bottles, death state,
+   * start trigger activation, and phase transitions.
+   * Falls back to the alert animation if no other
+   * state condition is active.
+   */
   endbossAttackCharacter() {
     if (this.handleBottleDamage()) return;
     if (this.phase === 'hurt') this.phase = 'walk';
@@ -98,6 +123,15 @@ class Endboss extends MovableObject {
     this.playAnimation('alert');
   }
 
+  /**
+   * Handles the boss start trigger.
+   * Activates the boss attack phase once the character
+   * reaches a specific x-position. After a short delay,
+   * the boss switches to the walk phase and follows
+   * the character.
+   * @returns {boolean} Returns true if the trigger was activated,
+   * otherwise false.
+   */
   handleStartTrigger() {
     if (this.startTriggered) return false;
     if (this.world.character.x < 3000) return false;
@@ -110,6 +144,14 @@ class Endboss extends MovableObject {
     return true;
   }
 
+  /**
+   * Handles the current boss phase.
+   * Plays the corresponding animation
+   * based on the active phase (attack, alert, walk).
+   * Also triggers the boss enrage sound during attack.
+   * @returns {boolean} Returns true if a phase was handled,
+   * otherwise false.
+   */
   handlePhase() {
     if (this.phase === 'attack') {
       this.playAnimation('attack');
@@ -127,6 +169,14 @@ class Endboss extends MovableObject {
     return false;
   }
 
+  /**
+   * Handles damage caused by a bottle hit.
+   * Checks if the boss was hit by a bottle.
+   * If true, plays the hurt animation
+   * and triggers the boss enrage sound.
+   * @returns {boolean} Returns true if damage was handled,
+   * otherwise false.
+   */
   handleBottleDamage() {
     if (!this.isEndbossBottleHurt()) return false;
     this.playAnimation('hurt');
@@ -134,6 +184,14 @@ class Endboss extends MovableObject {
     return true;
   }
 
+  /**
+   * Handles the boss death state.
+   * Plays the death animation, triggers the death jump
+   * sequence once, shows the win screen once,
+   * and updates the ongoing death jump movement.
+   * @returns {boolean} Returns true if the boss is dead
+   * and the death logic was executed, otherwise false.
+   */
   handleDead() {
     if (!this.isDead()) return false;
     this.playAnimation('dead');
@@ -143,11 +201,22 @@ class Endboss extends MovableObject {
     return true;
   }
 
+  /**
+   * Triggers the win screen after the boss is defeated.
+   * Ensures the win screen is only started once
+   * and opens it after a short delay.
+   */
   showWinScreen() {
     this.winScreenStarted = true;
     setTimeout(() => openWinScreen(), 2000);
   }
 
+  /**
+   * Initiates the boss death jump sequence.
+   * Sets the upward jump speed, stops the boss enrage sound,
+   * plays the death sound, stops movement,
+   * and disables world controls.
+   */
   playDeadJump() {
     this.deadJumpStarted = true;
     this.speedY = 12;
@@ -158,6 +227,13 @@ class Endboss extends MovableObject {
     this.world.keyboard = {};
   }
 
+  /**
+   * Starts the follow behavior of the boss.
+   * Initializes movement tracking and continuously updates
+   * the boss direction toward the character.
+   * Handles delayed direction changes and collision detection.
+   * Stops execution if the boss is hurt or the world is unavailable.
+   */
   followCharacter() {
     if (this.moveInterval) return;
     this.lastTurnTime = Date.now();
@@ -173,6 +249,12 @@ class Endboss extends MovableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Updates the boss movement direction with a delay.
+   * Calculates the distance to the character and
+   * changes direction only if the distance threshold
+   * is exceeded and a minimum delay time has passed.
+   */
   updateDirectionWithDelay() {
     const differenz = this.world.character.x - this.x;
     if (Math.abs(differenz) < 150) return;
@@ -183,11 +265,22 @@ class Endboss extends MovableObject {
     this.direction = newDirection;
   }
 
+  /**
+   * Updates the visual direction and movement of the boss.
+   * Adjusts the sprite orientation based on the current
+   * movement direction and updates the x-position.
+   */
   viewDirection() {
     this.otherDirection = this.direction === 1;
     this.x += this.direction * this.speed;
   }
 
+  /**
+   * Starts the animation loop.
+   * Calls updateAnimation at 60 frames per second.
+   * Stops execution if the world or keyboard state
+   * is not available.
+   */
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       if (!this.world || !this.world.keyboard) return;

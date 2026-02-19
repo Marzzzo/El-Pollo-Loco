@@ -17,6 +17,20 @@ class ThrowableObject extends MovableObject {
 
   offset = { top: 15, bottom: 10, left: 10, right: 10 };
 
+  animations = {
+    rotate: { images: this.rotateBottleImages, speed: 100 },
+    splash: { images: this.splashBottleImages, speed: 150 },
+  };
+
+  /**
+   * Creates a new throwable bottle instance.
+   * Initializes position, direction, size, and ground reference.
+   * Loads rotation and splash animations, then starts the
+   * throw movement and animation immediately.
+   * @param {number} x - Initial X position of the bottle.
+   * @param {number} y - Initial Y position of the bottle.
+   * @param {number} direction - Throw direction (e.g. 1 for right, -1 for left).
+   */
   constructor(x, y, direction) {
     super();
     this.loadImage(this.rotateBottleImages[0]);
@@ -33,23 +47,35 @@ class ThrowableObject extends MovableObject {
     this.throw();
   }
 
-  animations = {
-    rotate: { images: this.rotateBottleImages, speed: 100 },
-    splash: { images: this.splashBottleImages, speed: 150 },
-  };
-
+  /**
+   * Starts the bottle animation.
+   * Clears any existing animation interval,
+   * sets the rotation animation as active,
+   * and begins the animation loop.
+   */
   animate() {
     this.clearAnimationInterval();
     this.playAnimation('rotate');
     this.startAnimationLoop();
   }
 
+  /**
+   * Starts the animation loop at 60 FPS.
+   * Repeatedly calls the updateAnimation method
+   * to cycle through animation frames.
+   */
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       this.updateAnimation();
     }, 1000 / 60);
   }
 
+  /**
+   * Updates the current bottle animation state.
+   * Plays the splash animation after impact.
+   * Triggers impact when the bottle reaches the ground.
+   * Otherwise continues the rotation animation while flying.
+   */
   updateAnimation() {
     if (this.hasImpacted) {
       this.playAnimation('splash');
@@ -62,6 +88,12 @@ class ThrowableObject extends MovableObject {
     this.playAnimation('rotate');
   }
 
+  /**
+   * Handles the bottle impact event.
+   * Prevents duplicate impacts, plays the splash animation and sound,
+   * and schedules the bottle for removal after the splash animation
+   * has finished.
+   */
   impact() {
     if (this.hasImpacted) return;
     let splashTime = this.animations.splash.images.length * this.animations.splash.speed;
@@ -72,6 +104,11 @@ class ThrowableObject extends MovableObject {
     }, splashTime);
   }
 
+  /**
+   * Plays the bottle splash sequence.
+   * Marks the bottle as impacted, stops gravity and throw movement,
+   * and switches the animation to the splash state.
+   */
   playBottleSplash() {
     this.hasImpacted = true;
     clearInterval(this.gravityInterval);
@@ -79,6 +116,12 @@ class ThrowableObject extends MovableObject {
     this.playAnimation('splash');
   }
 
+  /**
+   * Applies gravity to the bottle.
+   * Starts a gravity loop running at 30 FPS.
+   * Updates vertical position using speed and acceleration.
+   * Triggers impact and splash sound when the bottle hits the ground.
+   */
   applyGravity() {
     clearInterval(this.gravityInterval);
     this.gravityInterval = setInterval(() => {
@@ -92,6 +135,13 @@ class ThrowableObject extends MovableObject {
     }, 1000 / 30);
   }
 
+  /**
+   * Initiates the bottle throw.
+   * Sets the initial vertical speed and acceleration,
+   * applies gravity, plays the throw sound effect,
+   * and starts horizontal movement in the given direction
+   * until impact occurs.
+   */
   throw() {
     this.speedY = 12;
     this.acceleration = 1;

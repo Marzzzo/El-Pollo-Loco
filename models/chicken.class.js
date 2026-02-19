@@ -15,17 +15,6 @@ class Chicken extends MovableObject {
 
   deadImages = ['img/3_enemies_chicken/chicken_normal/2_dead/dead.png'];
 
-  constructor(i) {
-    super();
-    this.loadImage(this.walkImages[0]);
-    this.loadImages(this.walkImages);
-    this.loadImages(this.deadImages);
-    this.moveLeft();
-    this.animate();
-    this.x = this.spawnPoints[i % this.spawnPoints.length];
-    this.speed = 0.15 + Math.random() * 0.35;
-  }
-
   animations = {
     walk: {
       images: this.walkImages,
@@ -37,12 +26,43 @@ class Chicken extends MovableObject {
     },
   };
 
+  /**
+   * Creates a new enemy instance.
+   * Loads all required images (walk and dead animations),
+   * starts movement and animation,
+   * sets the spawn position based on the given index,
+   * and assigns a random movement speed.
+   * @param {number} i - Index used to determine the spawn position.
+   */
+  constructor(i) {
+    super();
+    this.loadImage(this.walkImages[0]);
+    this.loadImages(this.walkImages);
+    this.loadImages(this.deadImages);
+    this.moveLeft();
+    this.animate();
+    this.x = this.spawnPoints[i % this.spawnPoints.length];
+    this.speed = 0.15 + Math.random() * 0.35;
+  }
+
+  /**
+   * Starts the animation sequence.
+   * Clears any existing animation interval,
+   * plays the walking animation,
+   * and starts the animation loop.
+   */
   animate() {
     this.clearAnimationInterval();
     this.playAnimation('walk');
     this.startAnimationLoop();
   }
 
+  /**
+   * Updates the current animation state.
+   * Plays the death animation if the enemy is dead.
+   * Otherwise, continues the walking animation
+   * and triggers a delayed chicken sound effect.
+   */
   updateAnimation() {
     if (this.isDead()) {
       this.playAnimation('dead');
@@ -52,6 +72,11 @@ class Chicken extends MovableObject {
     }
   }
 
+  /**
+   * Starts the animation loop.
+   * Calls the updateAnimation method
+   * at 60 frames per second.
+   */
   startAnimationLoop() {
     this.frameInterval = setInterval(() => {
       this.updateAnimation();

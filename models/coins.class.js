@@ -10,6 +10,14 @@ class Coins extends MovableObject {
 
   spawnPoints = [200, 600, 1000, 1400, 1800, 2200, 2600];
 
+  /**
+   * Creates a new coin instance.
+   * Loads all coin images, starts the animation,
+   * sets the vertical position, and calculates
+   * the horizontal spawn position based on the index.
+   * Coins are spaced evenly in multiple rounds.
+   * @param {number} i - Index used to calculate the spawn position.
+   */
   constructor(i) {
     super();
     this.loadImage(this.coinsImages[0]);
@@ -23,6 +31,12 @@ class Coins extends MovableObject {
     this.width = 120;
   }
 
+  /**
+   * Starts the coin animation.
+   * Cycles through the coin images
+   * at a fixed interval to create
+   * a spinning animation effect.
+   */
   animate() {
     setInterval(() => {
       let i = this.currentImage % this.coinsImages.length;

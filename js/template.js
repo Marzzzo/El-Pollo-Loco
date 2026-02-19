@@ -1,3 +1,14 @@
+/**
+ * Generates the HTML template for the start screen.
+ * The template includes:
+ * - Play button (starts the game)
+ * - Control menu button
+ * - Sound toggle button
+ * - Imprint (legal information) link
+ * - Start screen background image
+ * Event handling is attached via inline onclick attributes.
+ * @returns {string} The HTML string for the start screen.
+ */
 function startScreenTemplate() {
   return `<div class="headline">
             <div class="headline-left">
@@ -18,6 +29,17 @@ function startScreenTemplate() {
             <img class="start-image" src="img/9_intro_outro_screens/start/startscreen_1.png" alt="startscreen-image" />`;
 }
 
+/**
+ * Generates the HTML template for the control screen.
+ * The template includes:
+ * - A headline section with a back button
+ * - A list of control instructions (Left, Right, Jump, Throw)
+ * - Corresponding key icons for each action
+ * - A background image
+ * The back button uses an inline onclick handler to return
+ * to the main menu.
+ * @returns {string} The HTML string for the control screen.
+ */
 function controlTemplate() {
   return `<div class="headline-controls">
           <div class="box-position">
@@ -62,6 +84,15 @@ function controlTemplate() {
       <img class="start-image" src="img/9_intro_outro_screens/start/startscreen_1.png" alt="startscreen-image" />`;
 }
 
+/**
+ * Generates the HTML template for the win screen.
+ * The template includes:
+ * - A win image displayed in the center
+ * - A restart button (starts a new game)
+ * - A "back to menu" button
+ * Event handling is attached via inline onclick attributes.
+ * @returns {string} The HTML string for the win screen.
+ */
 function winTemplate() {
   return `      <div class="you-win-container">
         <img class="win-img" src="img/You won, you lost/You win B.png" alt="you-win" />
@@ -82,6 +113,15 @@ function winTemplate() {
       </div>`;
 }
 
+/**
+ * Generates the HTML template for the lose screen.
+ * The template includes:
+ * - A lose image displayed in the center
+ * - A restart button (starts a new game)
+ * - A "back to menu" button
+ * Event handling is attached via inline onclick attributes.
+ * @returns {string} The HTML string for the lose screen.
+ */
 function loseTemplate() {
   return `      <div class="you-win-container">
         <img class="win-img" src="img/You won, you lost/You lost.png" alt="you-win" />
@@ -103,6 +143,16 @@ function loseTemplate() {
       </div>`;
 }
 
+/**
+ * Generates the HTML template for the imprint (legal information) overlay.
+ * The template includes:
+ * - A fullscreen overlay container
+ * - A close button to hide the imprint section
+ * - Legal information according to § 5 DDG
+ * The close button uses an inline onclick handler
+ * to trigger the closeImprint() function.
+ * @returns {string} The HTML string for the imprint overlay.
+ */
 function imprintTemplate() {
   return `
     <div class="overlay">
