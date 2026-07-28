@@ -175,7 +175,7 @@ function renderStartscreen() {
   contentRef.innerHTML = startScreenTemplate();
   const img = document.querySelector('#sound img');
   if (img) {
-    img.src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
+    img.src = bgMusicOn ? 'assets/icons/sound-on.png' : 'assets/icons/sound-off.png';
   }
 }
 

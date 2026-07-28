@@ -13,13 +13,13 @@ function startScreenTemplate() {
   return `<div class="headline">
             <div class="headline-left">
                 <div class="single-icon-box" onclick="startGame()">
-                    <img class="icons" src="./icons/play-button.png" alt="" />
+                    <img class="icons" src="assets/icons/play-button.png" alt="" />
                 </div>
                 <div class="single-icon-box" onclick='openControlMenu()'>
-                    <img class="icons" src="./icons/controller-icon.png" alt="" />
+                    <img class="icons" src="assets/icons/controller-icon.png" alt="" />
                 </div>
                 <div class="single-icon-box" onclick = 'toggleSound()' id = 'sound'>
-                    <img class="icons" src="./icons/sound-off.png" alt="" />
+                    <img class="icons" src="assets/icons/sound-off.png" alt="" />
                 </div>
             </div>
             <div class="headline-right" onclick='openImprint()'>
@@ -45,7 +45,7 @@ function controlTemplate() {
           <div class="box-position">
             <h2>Controls</h2>
           <div class="back-icon-box">
-            <img onclick="returnToMenu()" class="icons" src="./icons/return.png" alt="" />
+            <img onclick="returnToMenu()" class="icons" src="assets/icons/return.png" alt="" />
           </div>
         </div>
         <div class="control-content">
@@ -53,7 +53,7 @@ function controlTemplate() {
             <h3>Left</h3>
           </div>
           <div>
-            <img src="./icons/key-left.png" alt="" />
+            <img src="assets/icons/key-left.png" alt="" />
           </div>
         </div>
         <div class="control-content">
@@ -61,7 +61,7 @@ function controlTemplate() {
             <h3>Right</h3>
           </div>
           <div>
-            <img src="./icons/key-right.png" alt="" />
+            <img src="assets/icons/key-right.png" alt="" />
           </div>
         </div>
         <div class="control-content">
@@ -69,7 +69,7 @@ function controlTemplate() {
             <h3>Jump</h3>
           </div>
           <div>
-            <img src="./icons/key-space.png" alt="" />
+            <img src="assets/icons/key-space.png" alt="" />
           </div>
         </div>
         <div class="control-content">
@@ -77,7 +77,7 @@ function controlTemplate() {
             <h3>Throw</h3>
           </div>
           <div>
-            <img src="./icons/key-D.png" alt="" />
+            <img src="assets/icons/key-D.png" alt="" />
           </div>
         </div>
       </div>
@@ -100,13 +100,13 @@ function winTemplate() {
       <div class="endscreen-buttons">
         <div class="button-section">
           <div class="single-icon-box-endscreen" onclick="startGame()">
-            <img class="icons-endscreen" src="icons/play-button.png" alt="play" />
+            <img class="icons-endscreen" src="assets/icons/play-button.png" alt="play" />
           </div>
           <h3>restart</h3>
         </div>
         <div class="button-section">
           <div class="single-icon-box-endscreen" onclick="returnToMenu()">
-            <img class="icons-endscreen" src="icons/return.png" alt="return" />
+            <img class="icons-endscreen" src="assets/icons/return.png" alt="return" />
           </div>
           <h3>back to menu</h3>
         </div>
@@ -130,13 +130,13 @@ function loseTemplate() {
       <div class="endscreen-buttons">
         <div class="button-section">
           <div class="single-icon-box-endscreen" onclick="startGame()">
-            <img class="icons-endscreen" src="icons/play-button.png" alt="play" />
+            <img class="icons-endscreen" src="assets/icons/play-button.png" alt="play" />
           </div>
           <h3>restart</h3>
         </div>
         <div class="button-section">
           <div class="single-icon-box-endscreen" onclick="returnToMenu()">
-            <img class="icons-endscreen" src="icons/return.png" alt="return" />
+            <img class="icons-endscreen" src="assets/icons/return.png" alt="return" />
           </div>
           <h3>back to menu</h3>
         </div>
@@ -158,7 +158,7 @@ function imprintTemplate() {
     <div class="overlay">
       <div class="overlay-content">
         <div class="back-icon-box" onclick="closeImprint()">
-          <img class="icons" src="./icons/close.png" alt="close" />
+          <img class="icons" src="assets/icons/close.png" alt="close" />
         </div>
           <h2>Impressum</h2>
           <p>
@@ -167,7 +167,7 @@ function imprintTemplate() {
           Oberfeld 20<br>
           33142 Büren<br>
           Deutschland<br>
-          E-Mail: marco.burdick@web.de
+          E-Mail: kontakt@marco-burdick.de
         </p>
       </div>
     </div>

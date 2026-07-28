@@ -151,7 +151,7 @@ function toggleSound() {
  * @returns {void}
  */
 function updateSoundIcons() {
-  const src = bgMusicOn ? 'icons/sound-on.png' : 'icons/sound-off.png';
+  const src = bgMusicOn ? 'assets/icons/sound-on.png' : 'assets/icons/sound-off.png';
   const start = document.getElementById('sound');
   playOneShot(sfx.buttonClick);
   if (start) {
